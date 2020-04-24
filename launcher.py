@@ -4,6 +4,12 @@ import matplotlib.dates as mdates
 
 from pandas import DataFrame
 
+""" Column names for National Data
+['data' 'stato' 'ricoverati_con_sintomi' 'terapia_intensiva'
+ 'totale_ospedalizzati' 'isolamento_domiciliare' 'totale_positivi'
+ 'variazione_totale_positivi' 'nuovi_positivi' 'dimessi_guariti'
+ 'deceduti' 'totale_casi' 'tamponi' 'casi_testati' 'note_it' 'note_en']
+"""
 url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
 
 
@@ -16,6 +22,10 @@ def create_time_plot_total_numbers(data):
     df = DataFrame(data, columns=['data', 'deceduti', 'dimessi_guariti'])
     # figure variable can be used later to save the image of the plot
     figure, axis = plt.subplots(figsize=(11, 5))
+    # Set absolute position in the window
+    manager = plt.get_current_fig_manager()
+    manager.window.wm_geometry('+0+0')
+
     df_formatted = pd.to_datetime(df['data'])
 
     axis.plot(df_formatted, df['deceduti'], label='Deceduti')
@@ -41,8 +51,12 @@ def create_time_plot_relative_numbers(data):
     df = DataFrame(data, columns=['data', 'nuovi_positivi'])
     # figure variable can be used later to save the image of the plot
     figure, axis = plt.subplots(figsize=(11, 5))
+    # Set absolute position in the window
+    manager = plt.get_current_fig_manager()
+    manager.window.wm_geometry('+0+500')
+
     df_formatted = pd.to_datetime(df['data'])
-    axis.plot(df_formatted, df['nuovi_positivi'], label='Nuovi Positivi')
+    line, = axis.plot(df_formatted, df['nuovi_positivi'], label='Nuovi Positivi')
 
     set_labels_and_title_for_axis(axis, x_name='Time', y_name='N° of People', title='COVID-19')
 
@@ -67,8 +81,8 @@ def set_labels_and_title_for_axis(axis, x_name="X axis", y_name="Y axis", title=
 
 
 if __name__ == '__main__':
-    print("Hello world!")
     national_data = load_csv(url_csv_national_data)
+    print(national_data.columns.values)
     create_time_plot_relative_numbers(national_data)
     create_time_plot_total_numbers(national_data)
     plt.show()
