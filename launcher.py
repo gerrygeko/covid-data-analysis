@@ -9,6 +9,7 @@ from matplotlib.dates import date2num
  'variazione_totale_positivi' 'nuovi_positivi' 'dimessi_guariti'
  'deceduti' 'totale_casi' 'tamponi' 'casi_testati' 'note_it' 'note_en']
 """
+
 url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/" \
                         "dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
 
