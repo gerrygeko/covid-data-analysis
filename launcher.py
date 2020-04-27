@@ -170,12 +170,8 @@ def run_application():
     axis = create_time_plot_relative_numbers(national_data, axis_3, figure)
     create_bar_graph_latest_number(national_data, axis_2)
     create_bar_graph_latest_number(national_data, axis_4)
-    animation = FuncAnimation(figure,
-                              func=func,
-                              fargs=(national_data, axis),
-                              frames=len(national_data.index.tolist()),
-                              interval=25,
-                              blit=True)
+    animation = FuncAnimation(figure, func=func, fargs=(national_data, axis), frames=len(national_data.index.tolist()),
+                              interval=25, blit=True, repeat=False)
     # Show the plot figure
     plt.show()
 
