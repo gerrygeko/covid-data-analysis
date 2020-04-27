@@ -79,6 +79,7 @@ def create_bar_graph_latest_number(df, axis):
 
     # Customize the major grid
     axis.grid(which='major', linestyle='-', linewidth='0.5', color='grey')
+    #
 
     axis.legend(loc=2, prop={'size': 9})
 
