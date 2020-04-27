@@ -49,7 +49,6 @@ def create_time_plot_relative_numbers(df, axis, figure):
     df_formatted = pd.to_datetime(df['data'])
     line, = axis.plot([], [], label='Nuovi Positivi')
     axis.plot(df_formatted, df['dimessi_giornalieri'], label='Dimessi Giornalieri')
-
     set_labels_and_title_for_axis(axis, y_name='N° of People')
 
     axis.minorticks_on()
@@ -63,7 +62,6 @@ def create_time_plot_relative_numbers(df, axis, figure):
     axis.grid(which='minor', linestyle=':', linewidth='0.5', color='grey')
     axis.grid(True)
     axis.legend()
-
     return line
 
 
@@ -148,18 +146,21 @@ def calculate_and_add_daily_variance_of_tamponi(national_data):
     national_data['tamponi_giornalieri'] = list_tamponi_giornalieri
 
 
-def init(axis):
-    axis.set_data([], [])
+# def init(axis):
+#     axis.set_data([], [])
 
 
 def func(i, national_data, axis):
+    #axis.set_data([], [])
     # print(national_data.iloc[i]['data'].date)
     value_x = datetime.datetime.strptime(national_data.iloc[i]['data'], '%Y-%m-%dT%H:%M:%S')
     print(value_x)
-    x = mdates.date2num(value_x)
-    print(x)
-    y = national_data.iloc[i]['nuovi_positivi']
-    axis.set_data(x, y)
+    x_data.append(mdates.date2num(value_x))
+    #print(x)
+    y_data.append(national_data.iloc[i]['nuovi_positivi'])
+    #axis.set_xdata()
+    axis.set_xdata(x_data)
+    axis.set_ydata(y_data)
     return axis
 
 
@@ -173,9 +174,8 @@ def run_application():
     axis = create_time_plot_relative_numbers(national_data, axis_3, figure)
     create_bar_graph_latest_number(national_data, axis_2)
     create_bar_graph_latest_number(national_data, axis_4)
-    animation = FuncAnimation(figure, func=func, init_func=init(axis), fargs=(national_data, axis),
+    animation = FuncAnimation(figure, func=func, fargs=(national_data, axis),
                   frames=100, interval=1000)
-
     # Show the plot figure
     plt.show()
 
