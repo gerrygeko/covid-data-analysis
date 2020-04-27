@@ -146,8 +146,9 @@ def calculate_and_add_daily_variance_of_tamponi(national_data):
     national_data['tamponi_giornalieri'] = list_tamponi_giornalieri
 
 
-# def init(axis):
-#     axis.set_data([], [])
+def init(axis):
+    axis.set_data([], [])
+    return axis,
 
 
 def func(i, national_data, axis):
@@ -156,7 +157,7 @@ def func(i, national_data, axis):
     y_data.append(national_data.iloc[i]['nuovi_positivi'])
     axis.set_xdata(x_data)
     axis.set_ydata(y_data)
-    return axis
+    return axis,
 
 
 def run_application():
@@ -172,8 +173,9 @@ def run_application():
     animation = FuncAnimation(figure,
                               func=func,
                               fargs=(national_data, axis),
-                              frames=len(national_data.index.tolist()) - 1,
-                              interval=1)
+                              frames=len(national_data.index.tolist()),
+                              interval=25,
+                              blit=True)
     # Show the plot figure
     plt.show()
 
