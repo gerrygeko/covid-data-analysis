@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from matplotlib.animation import FuncAnimation
+import numpy as np
 
 """ Column names for National Data
 ['data' 'stato' 'ricoverati_con_sintomi' 'terapia_intensiva'
@@ -11,6 +13,17 @@ import matplotlib.dates as mdates
 
 url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/" \
                         "dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
+
+x_data = []#
+y_data = []#
+
+def animation_frame(list_x, list_y, line):
+	x_data.append(list_x)
+	y_data.append(list_y)
+
+	line.set_xdata(x_data)
+	line.set_ydata(y_data)
+	return line,
 
 def load_csv(url):
     data_loaded = pd.read_csv(url)
@@ -38,8 +51,18 @@ def create_time_plot_total_numbers(df, axis):
 
 def create_time_plot_relative_numbers(df, axis):
     df_formatted = pd.to_datetime(df['data'])
-    axis.plot(df_formatted, df['nuovi_positivi'], label='Nuovi Positivi')
+    line, = axis.plot(df_formatted, df['nuovi_positivi'], label='Nuovi Positivi')#
     axis.plot(df_formatted, df['dimessi_giornalieri'], label='Dimessi Giornalieri')
+
+    list_nuovi_positivi = df['nuovi_positivi'].values.tolist()
+    print(list_nuovi_positivi)
+    list_df_formatted = mdates.date2num(df_formatted).tolist()
+    list_df_formatted_float = []
+    for num in list_df_formatted:
+        list_df_formatted_float.append(float(num))
+    print(list_df_formatted_float)
+
+    animation_frame(list_df_formatted_float, list_nuovi_positivi, line)
 
     set_labels_and_title_for_axis(axis, y_name='N° of People')
 
@@ -112,6 +135,7 @@ def configure_mainplot_with_subplots():
     # Set position of the window in the screen
     manager = plt.get_current_fig_manager()
     manager.window.wm_geometry('+250+40')
+    #FuncAnimation(figure, func=animation_frame, frames=np.arange(0, 10, 0.1), interval=10)
     return figure, axis
 
 
