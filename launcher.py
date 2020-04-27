@@ -146,6 +146,7 @@ def run_application():
     create_time_plot_relative_numbers(national_data, axis_3)
     create_bar_graph_latest_number(national_data, axis_2)
     create_bar_graph_latest_number(national_data, axis_4)
+    # Show the plot figure
     plt.show()
 
 
