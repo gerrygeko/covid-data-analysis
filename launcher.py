@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.animation import FuncAnimation
-import numpy as np
+
 
 """ Column names for National Data
 ['data' 'stato' 'ricoverati_con_sintomi' 'terapia_intensiva'
@@ -16,8 +16,10 @@ import numpy as np
 url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/" \
                         "dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
 
-x_data = []
-y_data = []
+FRAME_INTERVAL = 25
+
+x_animation_data = []
+y_animation_data = []
 
 
 def load_csv(url):
@@ -153,10 +155,10 @@ def init(axis):
 
 def func(i, national_data, axis):
     value_x = datetime.datetime.strptime(national_data.iloc[i]['data'], '%Y-%m-%dT%H:%M:%S')
-    x_data.append(mdates.date2num(value_x))
-    y_data.append(national_data.iloc[i]['nuovi_positivi'])
-    axis.set_xdata(x_data)
-    axis.set_ydata(y_data)
+    x_animation_data.append(mdates.date2num(value_x))
+    y_animation_data.append(national_data.iloc[i]['nuovi_positivi'])
+    axis.set_xdata(x_animation_data)
+    axis.set_ydata(y_animation_data)
     return axis,
 
 
@@ -171,7 +173,7 @@ def run_application():
     create_bar_graph_latest_number(national_data, axis_2)
     create_bar_graph_latest_number(national_data, axis_4)
     animation = FuncAnimation(figure, func=func, fargs=(national_data, axis), frames=len(national_data.index.tolist()),
-                              interval=25, blit=True, repeat=False)
+                              interval=FRAME_INTERVAL, blit=True, repeat=False)
     # Show the plot figure
     plt.show()
 
