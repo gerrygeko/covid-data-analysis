@@ -1,3 +1,5 @@
+import datetime
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -14,20 +16,14 @@ import numpy as np
 url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/" \
                         "dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
 
-x_data = []#
-y_data = []#
+x_data = []
+y_data = []
 
-def animation_frame(list_x, list_y, line):
-	x_data.append(list_x)
-	y_data.append(list_y)
-
-	line.set_xdata(x_data)
-	line.set_ydata(y_data)
-	return line,
 
 def load_csv(url):
     data_loaded = pd.read_csv(url)
     return data_loaded
+
 
 def create_time_plot_total_numbers(df, axis):
     df_formatted = pd.to_datetime(df['data'])
@@ -49,20 +45,10 @@ def create_time_plot_total_numbers(df, axis):
     axis.legend()
 
 
-def create_time_plot_relative_numbers(df, axis):
+def create_time_plot_relative_numbers(df, axis, figure):
     df_formatted = pd.to_datetime(df['data'])
-    line, = axis.plot(df_formatted, df['nuovi_positivi'], label='Nuovi Positivi')#
+    line, = axis.plot([], [], label='Nuovi Positivi')
     axis.plot(df_formatted, df['dimessi_giornalieri'], label='Dimessi Giornalieri')
-
-    list_nuovi_positivi = df['nuovi_positivi'].values.tolist()
-    print(list_nuovi_positivi)
-    list_df_formatted = mdates.date2num(df_formatted).tolist()
-    list_df_formatted_float = []
-    for num in list_df_formatted:
-        list_df_formatted_float.append(float(num))
-    print(list_df_formatted_float)
-
-    animation_frame(list_df_formatted_float, list_nuovi_positivi, line)
 
     set_labels_and_title_for_axis(axis, y_name='N° of People')
 
@@ -77,6 +63,8 @@ def create_time_plot_relative_numbers(df, axis):
     axis.grid(which='minor', linestyle=':', linewidth='0.5', color='grey')
     axis.grid(True)
     axis.legend()
+
+    return line
 
 
 def create_bar_graph_latest_number(df, axis):
@@ -134,7 +122,6 @@ def configure_mainplot_with_subplots():
     # Set position of the window in the screen
     manager = plt.get_current_fig_manager()
     manager.window.wm_geometry('+250+40')
-    #FuncAnimation(figure, func=animation_frame, frames=np.arange(0, 10, 0.1), interval=10)
     return figure, axis
 
 
@@ -160,15 +147,34 @@ def calculate_and_add_daily_variance_of_tamponi(national_data):
     national_data['tamponi_giornalieri'] = list_tamponi_giornalieri
 
 
+def init(axis):
+    axis.set_data([], [])
+
+
+def func(i, national_data, axis):
+    # print(national_data.iloc[i]['data'].date)
+    value_x = datetime.datetime.strptime(national_data.iloc[i]['data'], '%Y-%m-%dT%H:%M:%S')
+    print(value_x)
+    x = mdates.date2num(value_x)
+    print(x)
+    y = national_data.iloc[i]['nuovi_positivi']
+    axis.set_data(x, y)
+    return axis
+
+
 def run_application():
     national_data = load_csv(url_csv_national_data)
     calculate_and_add_daily_variance_of_dimessi(national_data)
     calculate_and_add_daily_variance_of_tamponi(national_data)
     figure, ((axis_1, axis_2), (axis_3, axis_4)) = configure_mainplot_with_subplots()
+
     create_time_plot_total_numbers(national_data, axis_1)
-    create_time_plot_relative_numbers(national_data, axis_3)
+    axis = create_time_plot_relative_numbers(national_data, axis_3, figure)
     create_bar_graph_latest_number(national_data, axis_2)
     create_bar_graph_latest_number(national_data, axis_4)
+    animation = FuncAnimation(figure, func=func, init_func=init(axis), fargs=(national_data, axis),
+                  frames=100, interval=1000)
+
     # Show the plot figure
     plt.show()
 
