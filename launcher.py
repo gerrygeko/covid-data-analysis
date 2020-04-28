@@ -1,10 +1,10 @@
 import datetime
+from collections import defaultdict
 
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.animation import FuncAnimation
-
 
 """ Column names for National Data
 ['data' 'stato' 'ricoverati_con_sintomi' 'terapia_intensiva'
@@ -18,8 +18,8 @@ url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/mast
 
 FRAME_INTERVAL = 25
 
-x_animation_data = []
-y_animation_data = []
+x_animation_data = defaultdict(list)
+y_animation_data = defaultdict(list)
 
 
 def load_csv(url):
@@ -82,10 +82,10 @@ def auto_label_bars(rects, axis):
     for rect in rects:
         height = rect.get_height()
         axis.annotate('{}'.format(height),
-                    xy=(rect.get_x() + rect.get_width() / 2, height),
-                    xytext=(0, -2),  # -2 points vertical offset
-                    textcoords="offset points",
-                    ha='center', va='bottom')
+                      xy=(rect.get_x() + rect.get_width() / 2, height),
+                      xytext=(0, -2),  # -2 points vertical offset
+                      textcoords="offset points",
+                      ha='center', va='bottom')
 
 
 def set_labels_and_title_for_axis(axis, x_name=None, y_name=None, title=None):
@@ -130,12 +130,14 @@ def calculate_and_add_daily_variance_of_tamponi(national_data):
     national_data['tamponi_giornalieri'] = list_tamponi_giornalieri
 
 
-def init(axis):
+def animation_init(axis):
     axis.set_data([], [])
     return axis,
 
 
-def func(i, national_data, line_tuple):
+# TODO: Read this page to make animation for more lines:
+# https://stackoverflow.com/questions/23049762/matplotlib-multiple-animate-multiple-lines
+def animation_func(i, national_data, line_tuple):
     """
     :param i: Index of the frame for which the animation is iterating
     :param national_data: DataFrame that contain all the data
@@ -145,10 +147,10 @@ def func(i, national_data, line_tuple):
     line = line_tuple[0]
     field = line_tuple[1]
     value_x = datetime.datetime.strptime(national_data.iloc[i]['data'], '%Y-%m-%dT%H:%M:%S')
-    x_animation_data.append(mdates.date2num(value_x))
-    y_animation_data.append(national_data.iloc[i][field])
-    line.set_xdata(x_animation_data)
-    line.set_ydata(y_animation_data)
+    x_animation_data[field].append(mdates.date2num(value_x))
+    y_animation_data[field].append(national_data.iloc[i][field])
+    line.set_xdata(x_animation_data[field])
+    line.set_ydata(y_animation_data[field])
     return line,
 
 
@@ -162,16 +164,15 @@ def run_application():
                                            [('deceduti', 'Decessi'), ('dimessi_guariti', 'Dimessi Guariti')])
     lines_list_bottom_left = create_time_plot(national_data, axis_bottom_left,
                                               [('nuovi_positivi', 'Nuovi Positivi'),
-                                              ('dimessi_giornalieri', 'Dimessi Giornalieri')])
-    print(lines_list_bottom_left)
+                                               ('dimessi_giornalieri', 'Dimessi Giornalieri')])
     create_bar_graph_latest_number(national_data, axis_top_right)
     create_bar_graph_latest_number(national_data, axis_bottom_right)
-    animation = FuncAnimation(figure, func=func, fargs=(national_data, lines_list_bottom_left[0]),
+    animation = FuncAnimation(figure, func=animation_func, fargs=(national_data, lines_list_bottom_left[0]),
                               frames=len(national_data.index.tolist()),
                               interval=FRAME_INTERVAL, blit=True, repeat=False)
-    # animation = FuncAnimation(figure, func=func, fargs=(national_data, lines_list_bottom_left[1]),
-    #                           frames=len(national_data.index.tolist()),
-    #                           interval=FRAME_INTERVAL, blit=True, repeat=False)
+    animation = FuncAnimation(figure, func=animation_func, fargs=(national_data, lines_list_top_left[1]),
+                              frames=len(national_data.index.tolist()),
+                              interval=FRAME_INTERVAL, blit=True, repeat=False)
 
     # Show the plot figure
     plt.show()
