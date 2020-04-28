@@ -27,33 +27,15 @@ def load_csv(url):
     return data_loaded
 
 
-def create_time_plot_total_numbers(df, axis):
+def create_time_plot(df, axis, field_and_label_tuple_list: list):
     df_formatted = pd.to_datetime(df['data'])
-    axis.plot(df_formatted, df['deceduti'], label='Deceduti')
-    axis.plot(df_formatted, df['dimessi_guariti'], label='Dimessi/Guariti')
-
+    lines_list = []
+    for field, label in field_and_label_tuple_list:
+        line, = axis.plot(df_formatted, df[field], label=label)
+        lines_list.append((line, field))
     set_labels_and_title_for_axis(axis, y_name='N° of People')
-
     axis.minorticks_on()
-    axis.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
-    axis.xaxis.set_major_locator(mdates.DayLocator(interval=7))
-    axis.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b'))
 
-    # Customize the major grid
-    axis.grid(which='major', linestyle='-', linewidth='0.5', color='black')
-    # Customize the minor grid
-    axis.grid(which='minor', linestyle=':', linewidth='0.5', color='grey')
-    axis.grid(True)
-    axis.legend()
-
-
-def create_time_plot_relative_numbers(df, axis, figure):
-    df_formatted = pd.to_datetime(df['data'])
-    line, = axis.plot(df_formatted, df['nuovi_positivi'], label='Nuovi Positivi')
-    axis.plot(df_formatted, df['dimessi_giornalieri'], label='Dimessi Giornalieri')
-    set_labels_and_title_for_axis(axis, y_name='N° of People')
-
-    axis.minorticks_on()
     # Set intervals and format on the x axis
     axis.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
     axis.xaxis.set_major_locator(mdates.DayLocator(interval=7))
@@ -65,7 +47,7 @@ def create_time_plot_relative_numbers(df, axis, figure):
     axis.grid(True)
     axis.legend()
 
-    return line
+    return lines_list
 
 
 def create_bar_graph_latest_number(df, axis):
@@ -78,8 +60,8 @@ def create_bar_graph_latest_number(df, axis):
     rects1 = axis.bar(date2num + 0.2, df_last_days['nuovi_positivi'], width, color='b', label='Positive Tests')
     rects2 = axis.bar(date2num + 0.4, df_last_days['tamponi_giornalieri'], width, color='r', label='Tests per day')
 
-    autolabel_bars(rects1, axis)
-    autolabel_bars(rects2, axis)
+    auto_label_bars(rects1, axis)
+    auto_label_bars(rects2, axis)
 
     set_labels_and_title_for_axis(axis, y_name='N° of People')
 
@@ -95,7 +77,7 @@ def create_bar_graph_latest_number(df, axis):
     axis.legend(loc=2, prop={'size': 9})
 
 
-def autolabel_bars(rects, axis):
+def auto_label_bars(rects, axis):
     """Attach a text label above each bar in *rects*, displaying its height."""
     for rect in rects:
         height = rect.get_height()
@@ -153,27 +135,44 @@ def init(axis):
     return axis,
 
 
-def func(i, national_data, axis):
+def func(i, national_data, line_tuple):
+    """
+    :param i: Index of the frame for which the animation is iterating
+    :param national_data: DataFrame that contain all the data
+    :param line_tuple: Tuple that contain the Line2D and the name of the field in the DataFrame associated to the line
+    :return: Line2D printed so far
+    """
+    line = line_tuple[0]
+    field = line_tuple[1]
     value_x = datetime.datetime.strptime(national_data.iloc[i]['data'], '%Y-%m-%dT%H:%M:%S')
     x_animation_data.append(mdates.date2num(value_x))
-    y_animation_data.append(national_data.iloc[i]['nuovi_positivi'])
-    axis.set_xdata(x_animation_data)
-    axis.set_ydata(y_animation_data)
-    return axis,
+    y_animation_data.append(national_data.iloc[i][field])
+    line.set_xdata(x_animation_data)
+    line.set_ydata(y_animation_data)
+    return line,
 
 
 def run_application():
     national_data = load_csv(url_csv_national_data)
     calculate_and_add_daily_variance_of_dimessi(national_data)
     calculate_and_add_daily_variance_of_tamponi(national_data)
-    figure, ((axis_1, axis_2), (axis_3, axis_4)) = configure_mainplot_with_subplots()
+    figure, ((axis_top_left, axis_top_right), (axis_bottom_left, axis_bottom_right)) = configure_mainplot_with_subplots()
 
-    create_time_plot_total_numbers(national_data, axis_1)
-    axis = create_time_plot_relative_numbers(national_data, axis_3, figure)
-    create_bar_graph_latest_number(national_data, axis_2)
-    create_bar_graph_latest_number(national_data, axis_4)
-    animation = FuncAnimation(figure, func=func, fargs=(national_data, axis), frames=len(national_data.index.tolist()),
+    lines_list_top_left = create_time_plot(national_data, axis_top_left,
+                                           [('deceduti', 'Decessi'), ('dimessi_guariti', 'Dimessi Guariti')])
+    lines_list_bottom_left = create_time_plot(national_data, axis_bottom_left,
+                                              [('nuovi_positivi', 'Nuovi Positivi'),
+                                              ('dimessi_giornalieri', 'Dimessi Giornalieri')])
+    print(lines_list_bottom_left)
+    create_bar_graph_latest_number(national_data, axis_top_right)
+    create_bar_graph_latest_number(national_data, axis_bottom_right)
+    animation = FuncAnimation(figure, func=func, fargs=(national_data, lines_list_bottom_left[0]),
+                              frames=len(national_data.index.tolist()),
                               interval=FRAME_INTERVAL, blit=True, repeat=False)
+    # animation = FuncAnimation(figure, func=func, fargs=(national_data, lines_list_bottom_left[1]),
+    #                           frames=len(national_data.index.tolist()),
+    #                           interval=FRAME_INTERVAL, blit=True, repeat=False)
+
     # Show the plot figure
     plt.show()
 
