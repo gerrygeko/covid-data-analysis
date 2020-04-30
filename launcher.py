@@ -1,10 +1,6 @@
-import datetime
-from collections import defaultdict
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from matplotlib.animation import FuncAnimation
 
 """ Column names for National Data
 ['data' 'stato' 'ricoverati_con_sintomi' 'terapia_intensiva'
@@ -15,11 +11,6 @@ from matplotlib.animation import FuncAnimation
 
 url_csv_national_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/" \
                         "dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
-
-FRAME_INTERVAL = 25
-
-x_animation_data = defaultdict(list)
-y_animation_data = defaultdict(list)
 
 
 def load_csv(url):
@@ -131,36 +122,11 @@ def calculate_and_add_daily_variance_of_tamponi(national_data):
     national_data['tamponi_giornalieri'] = list_tamponi_giornalieri
 
 
-def animation_init(axis):
-    axis.set_data([], [])
-    return axis,
-
-
-# TODO: Read this page to make animation for more lines:
-# https://stackoverflow.com/questions/23049762/matplotlib-multiple-animate-multiple-lines
-def animation_func(i, national_data, line_tuple):
-    """
-    :param i: Index of the frame for which the animation is iterating
-    :param national_data: DataFrame that contain all the data
-    :param line_tuple: Tuple that contain the Line2D and the name of the field in the DataFrame associated to the line
-    :return: Line2D printed so far
-    """
-    line = line_tuple[0]
-    field = line_tuple[1]
-    value_x = datetime.datetime.strptime(national_data.iloc[i]['data'], '%Y-%m-%dT%H:%M:%S')
-    x_animation_data[field].append(mdates.date2num(value_x))
-    y_animation_data[field].append(national_data.iloc[i][field])
-    line.set_xdata(x_animation_data[field])
-    line.set_ydata(y_animation_data[field])
-    return line,
-
-
 def run_application():
     national_data = load_csv(url_csv_national_data)
     calculate_and_add_daily_variance_of_dimessi(national_data)
     calculate_and_add_daily_variance_of_tamponi(national_data)
     figure, ((axis_top_left, axis_top_right), (axis_bottom_left, axis_bottom_right)) = configure_mainplot_with_subplots()
-
     lines_list_top_left = create_time_plot(national_data, axis_top_left,
                                            [('deceduti', 'Decessi'), ('dimessi_guariti', 'Dimessi Guariti')])
     lines_list_bottom_left = create_time_plot(national_data, axis_bottom_left,
@@ -168,12 +134,6 @@ def run_application():
                                                ('dimessi_giornalieri', 'Dimessi Giornalieri')])
     create_bar_graph_latest_number(national_data, axis_top_right)
     create_bar_graph_latest_number(national_data, axis_bottom_right)
-    animation = FuncAnimation(figure, func=animation_func, fargs=(national_data, lines_list_bottom_left[0]),
-                              frames=len(national_data.index.tolist()),
-                              interval=FRAME_INTERVAL, blit=True, repeat=False)
-    animation = FuncAnimation(figure, func=animation_func, fargs=(national_data, lines_list_top_left[1]),
-                              frames=len(national_data.index.tolist()),
-                              interval=FRAME_INTERVAL, blit=True, repeat=False)
 
     # Show the plot figure
     plt.show()
