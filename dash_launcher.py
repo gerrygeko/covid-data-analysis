@@ -105,24 +105,24 @@ def update_graph(selected_dropdown_value):
         trace1.append(go.Scatter(x=df_sub[df_sub['denominazione_regione'] == region].index,           #https://plotly.com/python/line-charts/#line-plot-with-goscatter
                                  y=df_sub[df_sub['denominazione_regione'] == region]['nuovi_positivi'],
                                  mode='lines+markers',
-                                 opacity=0.7,
+                                 opacity=1,
                                  name=region,
                                  textposition='bottom center'))
-        traces = [trace1]
-        data = [val for sublist in traces for val in sublist]
-        figure = {'data': data,
-                  'layout': go.Layout(
-                      colorway=["#5E0DAC", '#FF4F00', '#375CB1', '#FF7400', '#FFF400', '#FF0056'],
-                      template='plotly_dark',
-                      paper_bgcolor='rgba(224, 224, 224, 0)',
-                      plot_bgcolor='rgba(224, 224, 224, 0)',
-                      margin={'b': 15},
-                      hovermode='x',
-                      autosize=True,
-                      title={'text': 'New Positive', 'font': {'color': 'white'}, 'x': 0.5},
-                      xaxis={'range': [df_sub.index.min(), df_sub.index.max()]},
-                  ),
-                  }
+    traces = [trace1]
+    data = [val for sublist in traces for val in sublist]
+    figure = {'data': data,
+              'layout': go.Layout(
+                  colorway=["#5E0DAC", '#FF4F00', '#375CB1', '#FF7400', '#FFF400', '#FF0056'],
+                  template='plotly_dark',
+                  paper_bgcolor='rgba(224, 224, 224, 0)',
+                  plot_bgcolor='rgba(224, 224, 224, 0)',
+                  margin={'b': 15},
+                  hovermode='x',
+                  autosize=True,
+                  title={'text': 'New Positive', 'font': {'color': 'white'}, 'x': 0.5},
+                  xaxis={'range': [df_sub.index.min(), df_sub.index.max()]},
+              ),
+              }
     return figure
 
 
