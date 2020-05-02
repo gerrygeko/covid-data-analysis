@@ -446,7 +446,7 @@ a {
   text-decoration: none;
 }
 .bg-grey{
-  background-color: #31302F;
+  background-color: #31302F; /*#d8d7d6*/
 }
 .text-padding{
   padding: 5px;
