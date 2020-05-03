@@ -1,3 +1,4 @@
+import copy
 import pandas as pd
 import dash
 import dash_html_components as html
@@ -66,7 +67,7 @@ def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_i
                                  textposition='bottom center')
             scatter_list.append(scatter)
 
-    figure = create_figure(data_frame, scatter_list, title, y_axis_type)
+    figure = create_figure(scatter_list, title, y_axis_type)
     return figure
 
 
@@ -86,25 +87,16 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
                                  textposition='bottom center')
             scatter_list.append(scatter)
 
-    figure = create_figure(data_frame, scatter_list, title, y_axis_type)
+    figure = create_figure(scatter_list, title, y_axis_type)
     return figure
 
 
-def create_figure(data_frame, data, title, y_axis_type):
-    figure = {'data': data,
-              'layout': go.Layout(
-                  colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
-                  template='plotly_dark',
-                  paper_bgcolor='rgba(0, 0, 0, 0)',
-                  plot_bgcolor='rgba(0, 0, 0, 0)',
-                  margin={'b': 15},
-                  hovermode='x',
-                  autosize=True,
-                  title={'text': title, 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [data_frame.index.min(), data_frame.index.max()]},
-                  yaxis_type=y_axis_type
-              ),
-              }
+# TODO: re-implement logic for logarithm scale
+def create_figure(data, title, y_axis_type):
+    layout_figure = copy.deepcopy(layout)
+
+    layout_figure['title'] = title
+    figure = dict(data=data, layout=layout_figure)
     return figure
 
 
