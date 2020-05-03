@@ -23,6 +23,23 @@ national_data_mapping = [('totale_casi', 'Total cases'),
                          ('ricoverati_con_sintomi', 'Hospitalized patients'),
                          ('terapia_intensiva', 'ICU patients')]
 
+layout = dict(
+    autosize=True,
+    automargin=True,
+    margin=dict(l=30, r=30, b=20, t=40),
+    hovermode="closest",
+    plot_bgcolor="#F9F9F9",
+    paper_bgcolor="#F9F9F9",
+    legend=dict(font=dict(size=10), orientation="h"),
+    title="Satellite Overview",
+    mapbox=dict(
+        # accesstoken=mapbox_access_token,
+        style="light",
+        center=dict(lon=-78.05, lat=42.54),
+        zoom=7,
+    ),
+)
+
 
 def get_options(list_value):
     dict_list = []
@@ -122,6 +139,201 @@ def update_graph_log(selected_dropdown_value):
     return figure
 
 
+def app_oil_layout():
+    app.layout = html.Div(
+        [# START OF SUPREME INCAPSULATION ############################################
+            dcc.Store(id="aggregate_data"),
+            # empty Div to trigger javascript file for graph resizing
+            html.Div(id="output-clientside"),
+            html.Div(# START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
+                [
+                    html.Div( # START OF LOGO
+                        [
+                            html.Img(
+                                src=app.get_asset_url("dash-logo.png"),
+                                id="plotly-image",
+                                style={
+                                    "height": "60px",
+                                    "width": "auto",
+                                    "margin-bottom": "25px",
+                                },
+                            )
+                        ],
+                        className="one-third column",
+                    ), # END OF LOGO
+                    html.Div( # START OF HEADING
+                        [
+                            html.Div(
+                                [
+                                    html.H3(
+                                        "Italian Covid-19",
+                                        style={"margin-bottom": "0px"},
+                                    ),
+                                    html.H5(
+                                        "by Gellex (Geko + Killex) - Visualising time series with Plotly - Dash",
+                                        style={"margin-top": "0px"}
+                                    ),
+                                ]
+                            )
+                        ],
+                        className="one-half column",
+                        id="title",
+                    ), # END OF HEADING
+                    html.Div( #START OF BUTTON
+                        [
+                            html.A(
+                                html.Button("Learn More", id="learn-more-button"),
+                                href="https://plot.ly/dash/pricing/",
+                            )
+                        ],
+                        className="one-third column",
+                        id="button",
+                    ), #END OF BUTTON
+                ],
+                id="header",
+                className="row flex-display",
+                style={"margin-bottom": "25px"},
+            ),# END OF 1ST INCAPSULATION -END OF HEADING############################################
+
+            html.Div(# START OF 2ND INCAPSULATION  ############################################
+                [
+                    html.Div( # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                        [
+                            html.P(
+                                "Filter by construction date (or select range in histogram):",
+                                className="control_label",
+                            ),
+                            dcc.RangeSlider(
+                                id="year_slider",
+                                min=1960,
+                                max=2017,
+                                value=[1990, 2010],
+                                className="dcc_control",
+                            ),
+                            html.P("Filter by well status:", className="control_label"),
+                            dcc.RadioItems(
+                                id="well_status_selector",
+                                options=[
+                                    {"label": "All ", "value": "all"},
+                                    {"label": "Active only ", "value": "active"},
+                                    {"label": "Customize ", "value": "custom"},
+                                ],
+                                value="active",
+                                labelStyle={"display": "inline-block"},
+                                className="dcc_control",
+                            ),
+                            dcc.Dropdown(id='regionselector',
+                                         options=get_options(
+                                             df_regional_data['denominazione_regione'].unique()),
+                                         multi=True,
+                                         value=[
+                                             df_regional_data['denominazione_regione'].sort_values()[
+                                                 0]],
+                                         # style={'backgroundColor': '#1E1E1E'},
+                                         className='dcc_control'
+                                         ),
+                            dcc.Checklist(
+                                id="lock_selector",
+                                options=[{"label": "Lock camera", "value": "locked"}],
+                                className="dcc_control",
+                                value=[],
+                            ),
+                            html.P("Filter by well type:", className="control_label"),
+                            dcc.RadioItems(
+                                id="well_type_selector",
+                                options=[
+                                    {"label": "All ", "value": "all"},
+                                    {"label": "Productive only ", "value": "productive"},
+                                    {"label": "Customize ", "value": "custom"},
+                                ],
+                                value="productive",
+                                labelStyle={"display": "inline-block"},
+                                className="dcc_control",
+                            ),
+                            dcc.Dropdown(
+                                id="well_types",
+                                #options=well_type_options,
+                                multi=True,
+                                #value=list(WELL_TYPES.keys()),
+                                className="dcc_control",
+                            ),
+                        ],
+                        className="pretty_container four columns",
+                        id="cross-filter-options",
+                    ),# END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+
+                    html.Div( # START OF 2ND BLOCK
+                        [
+                            html.Div( # START OF CARDS #
+                                [
+                                    html.Div(
+                                        [html.H6(id="well_text"), html.P("No. of Wells")],
+                                        id="wells",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="gasText"), html.P("Gas")],
+                                        id="gas",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="oilText"), html.P("Oil")],
+                                        id="oil",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="waterText"), html.P("Water")],
+                                        id="water",
+                                        className="mini_container",
+                                    ),
+                                ],
+                                id="info-container",
+                                className="row container-display",
+                            ), # END OF CARDS #
+                            html.Div( # START OF THE GRAPH UNDER THE CARDS#
+                                [dcc.Graph(id='regional_timeseries_linear')],
+                                id="countGraphContainer",
+                                className="pretty_container",
+                            ),# END OF THE GRAPH #
+                        ],
+                        id="right-column",
+                        className="eight columns",
+                    ),# END OF 2ND BLOCK
+                ],
+            className = "row flex-display",
+            ), # END OF 2ND INCAPSULATION  ############################################
+            html.Div( # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                [
+                    html.Div(
+                        [dcc.Graph(id="main_graph")],
+                        className="pretty_container seven columns",
+                    ),
+                    html.Div(
+                        [dcc.Graph(id="individual_graph")],
+                        className="pretty_container five columns",
+                    ),
+                ],
+                className="row flex-display",
+            ),# END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+            html.Div(# START OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+                [
+                    html.Div(
+                        [dcc.Graph(id="pie_graph")],
+                        className="pretty_container seven columns",
+                    ),
+                    html.Div(
+                        [dcc.Graph(id="aggregate_graph")],
+                        className="pretty_container five columns",
+                    ),
+                ],
+                className="row flex-display",
+            ),# END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+        ],# END OF SUPEREME INCAPSULATION ############################################
+
+        id="mainContainer",
+        style={"display": "flex", "flex-direction": "column"},
+    )
+
 def app_layout():
     # Define the web app
     app.layout = html.Div(
@@ -198,5 +410,6 @@ def app_layout():
 if __name__ == '__main__':
     # Initialise the app
     app.config.suppress_callback_exceptions = True
-    app_layout()
+    # app_layout()
+    app_oil_layout()
     app.run_server(debug=True)  # debug=True active a button in the bottom right corner of the web page
