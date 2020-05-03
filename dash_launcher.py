@@ -32,13 +32,18 @@ def get_options(list_value):
     return dict_list
 
 
-def create_figure_plot(data_frame, x_axis_data, y_axis_data_mapping, y_is_log=False):
+def create_figure_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_is_log=False):
     y_axis_type = "log" if y_is_log else "linear"
     scatter_list = []
-    for y_data_name, label in y_axis_data_mapping:
-        scatter = go.Scatter(x=x_axis_data, y=data_frame[y_data_name], mode='lines+markers', opacity=0.7,
-                             name=label, textposition='bottom center')
+    # Draw empty figures if an empty list is passed
+    if len(y_axis_data_mapping) == 0:
+        scatter = go.Scatter(x=x_axis_data, y=[], mode='lines+markers', opacity=0.7, textposition='bottom center')
         scatter_list.append(scatter)
+    else:
+        for y_data_name, label in y_axis_data_mapping:
+            scatter = go.Scatter(x=x_axis_data, y=data_frame[y_data_name], mode='lines+markers', opacity=0.7,
+                                 name=label, textposition='bottom center')
+            scatter_list.append(scatter)
 
     figure = {'data': scatter_list,
               'layout': go.Layout(
@@ -49,30 +54,42 @@ def create_figure_plot(data_frame, x_axis_data, y_axis_data_mapping, y_is_log=Fa
                   margin={'b': 15},
                   hovermode='x',
                   autosize=True,
-                  title={'text': 'Linear Scale', 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [x_axis_data.values.min(), x_axis_data.values.max()]},
+                  title={'text': title, 'font': {'color': 'white'}, 'x': 0.5},
+                  xaxis={'range': [data_frame.index.min(), data_frame.index.max()]},
                   yaxis_type=y_axis_type
               ),
               }
     return figure
 
 
-def create_empty_figure_region_plot():
-    df_sub = df_national_data
-    time_set = list(set(df_sub['denominazione_regione'].index.to_series().values))
-    scatter = go.Scatter(x=time_set, y=[], mode='lines', opacity=0.7, name="No selection", textposition='bottom center')
+def create_figure_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region, y_is_log=False):
+    y_axis_type = "log" if y_is_log else "linear"
+    scatter_list = []
+    # Draw empty figures if an empty list is passed
+    if len(y_axis_data_mapping_region) == 0:
+        scatter = go.Scatter(x=x_axis_data, y=[], mode='lines+markers', opacity=0.7, textposition='bottom center')
+        scatter_list.append(scatter)
+    else:
+        for field, region in y_axis_data_mapping_region:
+            scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['denominazione_regione'] == region][field],
+                                 mode='lines+markers',
+                                 opacity=0.7,
+                                 name=region,
+                                 textposition='bottom center')
+            scatter_list.append(scatter)
 
-    figure = {'data': [scatter],
+    figure = {'data': scatter_list,
               'layout': go.Layout(
-                  colorway=["#5E0DAC", '#FF4F00', '#375CB1', '#FF7400', '#FFF400', '#FF0056'],
+                  colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
                   template='plotly_dark',
-                  paper_bgcolor='rgba(224, 224, 224, 0)',
-                  plot_bgcolor='rgba(224, 224, 224, 0)',
+                  paper_bgcolor='rgba(0, 0, 0, 0)',
+                  plot_bgcolor='rgba(0, 0, 0, 0)',
                   margin={'b': 15},
                   hovermode='x',
                   autosize=True,
-                  title={'text': 'New Positive', 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [df_sub.index.min(), df_sub.index.max()]},
+                  title={'text': title, 'font': {'color': 'white'}, 'x': 0.5},
+                  xaxis={'range': [data_frame.index.min(), data_frame.index.max()]},
+                  yaxis_type=y_axis_type
               ),
               }
     return figure
@@ -81,75 +98,31 @@ def create_empty_figure_region_plot():
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('regionselector', 'value')])
 def update_graph(selected_dropdown_value):
-    regions_list = []
     df_sub = df_regional_data
-
+    regions_list_mapping = []
     # if no region selected, create empty figure
     if len(selected_dropdown_value) == 0:
-        figure = create_empty_figure_region_plot()
+        figure = create_figure_plot(df_sub, 'Linear region data', df_sub.index, [])
         return figure
-
     for region in selected_dropdown_value:
-        regions_list.append(go.Scatter(x=df_sub[df_sub['denominazione_regione'] == region].index,
-                                 # https://plotly.com/python/line-charts/#line-plot-with-goscatter
-                                 y=df_sub[df_sub['denominazione_regione'] == region]['nuovi_positivi'],
-                                 mode='lines+markers',
-                                 opacity=1,
-                                 name=region,
-                                 textposition='bottom center'))
-
-    figure = {'data': regions_list,
-              'layout': go.Layout(
-                  colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
-                  # ["#5E0DAC", '#FF4F00', '#375CB1', '#FF7400', '#FFF400', '#FF0056'],
-                  template='plotly_dark',
-                  paper_bgcolor='rgba(224, 224, 224, 0)',
-                  plot_bgcolor='rgba(224, 224, 224, 0)',
-                  margin={'b': 15},
-                  hovermode='x',
-                  autosize=True,
-                  title={'text': 'New Positives (linear scale)', 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [df_sub.index.min(), df_sub.index.max()]},
-              ),
-              }
+        regions_list_mapping.append(('nuovi_positivi', region))
+    x_axis_data = df_sub.index.drop_duplicates()
+    figure = create_figure_plot_by_region(df_sub, 'Linear region data', x_axis_data, regions_list_mapping)
     return figure
 
 
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_log', 'figure'), [Input('regionselector', 'value')])
 def update_graph_log(selected_dropdown_value):
-    trace1 = []
     df_sub = df_regional_data
-
+    regions_list_mapping = []
     if len(selected_dropdown_value) == 0:
-        figure = create_empty_figure_region_plot()
+        figure = create_figure_plot(df_sub, 'Logarithm region data', df_sub.index, [])
         return figure
-
     for region in selected_dropdown_value:
-        trace1.append(go.Scatter(x=df_sub[df_sub['denominazione_regione'] == region].index,
-                                 # https://plotly.com/python/line-charts/#line-plot-with-goscatter
-                                 y=df_sub[df_sub['denominazione_regione'] == region]['totale_positivi'],
-                                 mode='lines',
-                                 opacity=1,
-                                 name=region,
-                                 textposition='bottom center'))
-    traces = [trace1]
-    data = [val for sublist in traces for val in sublist]
-    figure = {'data': data,
-              'layout': go.Layout(
-                  colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
-                  # ["#5E0DAC", '#FF4F00', '#375CB1', '#FF7400', '#FFF400', '#FF0056'],
-                  template='plotly_dark',
-                  paper_bgcolor='rgba(224, 224, 224, 0)',
-                  plot_bgcolor='rgba(224, 224, 224, 0)',
-                  margin={'b': 15},
-                  hovermode='x',
-                  autosize=True,
-                  title={'text': 'Total Positives (log scale)', 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [df_sub.index.min(), df_sub.index.max()]},
-                  yaxis_type="log"
-              ),
-              }
+        regions_list_mapping.append(('totale_positivi', region))
+    x_axis_data = df_sub.index.drop_duplicates()
+    figure = create_figure_plot_by_region(df_sub, 'Logarithm region data', x_axis_data, regions_list_mapping, y_is_log=True)
     return figure
 
 
@@ -199,12 +172,14 @@ def app_layout():
                                               ]),
                                               dcc.Tab(label='National Area', children=[
                                                   dcc.Graph(figure=create_figure_plot(df_national_data,
+                                                                                      'Linear national data',
                                                                                       df_national_data.index,
                                                                                       national_data_mapping,
                                                                                       y_is_log=False),
                                                             config={'displayModeBar': False},
                                                             animate=True),
                                                   dcc.Graph(figure=create_figure_plot(df_national_data,
+                                                                                      'Logarithm national data ',
                                                                                       df_national_data.index,
                                                                                       national_data_mapping,
                                                                                       y_is_log=True),
