@@ -15,8 +15,13 @@ def load_csv(url):
     return data_loaded
 
 
-df_national_data = load_csv(url_csv_regional_data)
-df_regional_data = load_csv(url_csv_italy_data)
+df_regional_data = load_csv(url_csv_regional_data)
+df_national_data = load_csv(url_csv_italy_data)
+
+national_data_mapping = [('totale_casi', 'Total cases'),
+                         ('totale_positivi', 'Currently positive'),
+                         ('ricoverati_con_sintomi', 'Hospitalized patients'),
+                         ('terapia_intensiva', 'ICU patients')]
 
 
 def get_options(list_value):
@@ -27,24 +32,15 @@ def get_options(list_value):
     return dict_list
 
 
-def create_figure_plot(y_is_log=False):
+def create_figure_plot(data_frame, x_axis_data, y_axis_data_mapping, y_is_log=False):
     y_axis_type = "log" if y_is_log else "linear"
-    df_sub = df_regional_data
-    time_set = df_sub.index
-    tot_cases = df_sub['totale_casi']
-    tot_positive = df_sub['totale_positivi']
-    symptomatic_patients = df_sub['ricoverati_con_sintomi']
-    intensive_care = df_sub['terapia_intensiva']
-    scatter1 = go.Scatter(x=time_set, y=tot_cases, mode='lines+markers', opacity=0.7,
-                          name="Total cases", textposition='bottom center')
-    scatter3 = go.Scatter(x=time_set, y=symptomatic_patients, mode='lines+markers', opacity=0.7,
-                          name="Symptomatics patients", textposition='bottom center')
-    scatter2 = go.Scatter(x=time_set, y=tot_positive, mode='lines+markers', opacity=0.7,
-                          name="Currently positive", textposition='bottom center')
-    scatter4 = go.Scatter(x=time_set, y=intensive_care, mode='lines+markers', opacity=0.7,
-                          name="Intensive care", textposition='bottom center')
+    scatter_list = []
+    for y_data_name, label in y_axis_data_mapping:
+        scatter = go.Scatter(x=x_axis_data, y=data_frame[y_data_name], mode='lines+markers', opacity=0.7,
+                             name=label, textposition='bottom center')
+        scatter_list.append(scatter)
 
-    figure = {'data': [scatter1, scatter2, scatter3, scatter4],
+    figure = {'data': scatter_list,
               'layout': go.Layout(
                   colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
                   template='plotly_dark',
@@ -54,7 +50,7 @@ def create_figure_plot(y_is_log=False):
                   hovermode='x',
                   autosize=True,
                   title={'text': 'Linear Scale', 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [df_sub.index.min(), df_sub.index.max()]},
+                  xaxis={'range': [x_axis_data.values.min(), x_axis_data.values.max()]},
                   yaxis_type=y_axis_type
               ),
               }
@@ -86,7 +82,7 @@ def create_empty_figure_region_plot():
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('regionselector', 'value')])
 def update_graph(selected_dropdown_value):
     regions_list = []
-    df_sub = df_national_data
+    df_sub = df_regional_data
 
     # if no region selected, create empty figure
     if len(selected_dropdown_value) == 0:
@@ -123,7 +119,7 @@ def update_graph(selected_dropdown_value):
 @app.callback(Output('regional_timeseries_log', 'figure'), [Input('regionselector', 'value')])
 def update_graph_log(selected_dropdown_value):
     trace1 = []
-    df_sub = df_national_data
+    df_sub = df_regional_data
 
     if len(selected_dropdown_value) == 0:
         figure = create_empty_figure_region_plot()
@@ -174,10 +170,10 @@ def app_layout():
                                           children=[
                                               dcc.Dropdown(id='regionselector',
                                                            options=get_options(
-                                                               df_national_data['denominazione_regione'].unique()),
+                                                               df_regional_data['denominazione_regione'].unique()),
                                                            multi=True,
                                                            value=[
-                                                               df_national_data['denominazione_regione'].sort_values()[
+                                                               df_regional_data['denominazione_regione'].sort_values()[
                                                                    0]],
                                                            style={'backgroundColor': '#1E1E1E'},
                                                            className='regionselector'
@@ -202,10 +198,16 @@ def app_layout():
 
                                               ]),
                                               dcc.Tab(label='National Area', children=[
-                                                  dcc.Graph(figure=create_figure_plot(y_is_log=False),
+                                                  dcc.Graph(figure=create_figure_plot(df_national_data,
+                                                                                      df_national_data.index,
+                                                                                      national_data_mapping,
+                                                                                      y_is_log=False),
                                                             config={'displayModeBar': False},
                                                             animate=True),
-                                                  dcc.Graph(figure=create_figure_plot(y_is_log=True),
+                                                  dcc.Graph(figure=create_figure_plot(df_national_data,
+                                                                                      df_national_data.index,
+                                                                                      national_data_mapping,
+                                                                                      y_is_log=True),
                                                             config={'displayModeBar': False},
                                                             animate=True)
                                               ])
