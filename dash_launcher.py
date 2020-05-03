@@ -32,7 +32,7 @@ def get_options(list_value):
     return dict_list
 
 
-def create_figure_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_is_log=False):
+def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_is_log=False):
     y_axis_type = "log" if y_is_log else "linear"
     scatter_list = []
     # Draw empty figures if an empty list is passed
@@ -41,28 +41,19 @@ def create_figure_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_is
         scatter_list.append(scatter)
     else:
         for y_data_name, label in y_axis_data_mapping:
-            scatter = go.Scatter(x=x_axis_data, y=data_frame[y_data_name], mode='lines+markers', opacity=0.7,
-                                 name=label, textposition='bottom center')
+            scatter = go.Scatter(x=x_axis_data,
+                                 y=data_frame[y_data_name],
+                                 mode='lines+markers',
+                                 opacity=0.7,
+                                 name=label,
+                                 textposition='bottom center')
             scatter_list.append(scatter)
 
-    figure = {'data': scatter_list,
-              'layout': go.Layout(
-                  colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
-                  template='plotly_dark',
-                  paper_bgcolor='rgba(0, 0, 0, 0)',
-                  plot_bgcolor='rgba(0, 0, 0, 0)',
-                  margin={'b': 15},
-                  hovermode='x',
-                  autosize=True,
-                  title={'text': title, 'font': {'color': 'white'}, 'x': 0.5},
-                  xaxis={'range': [data_frame.index.min(), data_frame.index.max()]},
-                  yaxis_type=y_axis_type
-              ),
-              }
+    figure = create_figure(data_frame, scatter_list, title, y_axis_type)
     return figure
 
 
-def create_figure_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region, y_is_log=False):
+def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region, y_is_log=False):
     y_axis_type = "log" if y_is_log else "linear"
     scatter_list = []
     # Draw empty figures if an empty list is passed
@@ -78,7 +69,12 @@ def create_figure_plot_by_region(data_frame, title, x_axis_data, y_axis_data_map
                                  textposition='bottom center')
             scatter_list.append(scatter)
 
-    figure = {'data': scatter_list,
+    figure = create_figure(data_frame, scatter_list, title, y_axis_type)
+    return figure
+
+
+def create_figure(data_frame, data, title, y_axis_type):
+    figure = {'data': data,
               'layout': go.Layout(
                   colorway=["#ffff00", '#ff0000', '#adff2f', '#f0ffff', '#00bfff', '#ffa500'],
                   template='plotly_dark',
@@ -102,12 +98,12 @@ def update_graph(selected_dropdown_value):
     regions_list_mapping = []
     # if no region selected, create empty figure
     if len(selected_dropdown_value) == 0:
-        figure = create_figure_plot(df_sub, 'Linear region data', df_sub.index, [])
+        figure = create_scatter_plot(df_sub, 'Linear region data', df_sub.index, [])
         return figure
     for region in selected_dropdown_value:
         regions_list_mapping.append(('nuovi_positivi', region))
     x_axis_data = df_sub.index.drop_duplicates()
-    figure = create_figure_plot_by_region(df_sub, 'Linear region data', x_axis_data, regions_list_mapping)
+    figure = create_scatter_plot_by_region(df_sub, 'Linear region data', x_axis_data, regions_list_mapping)
     return figure
 
 
@@ -117,12 +113,12 @@ def update_graph_log(selected_dropdown_value):
     df_sub = df_regional_data
     regions_list_mapping = []
     if len(selected_dropdown_value) == 0:
-        figure = create_figure_plot(df_sub, 'Logarithm region data', df_sub.index, [])
+        figure = create_scatter_plot(df_sub, 'Logarithm region data', df_sub.index, [])
         return figure
     for region in selected_dropdown_value:
         regions_list_mapping.append(('totale_positivi', region))
     x_axis_data = df_sub.index.drop_duplicates()
-    figure = create_figure_plot_by_region(df_sub, 'Logarithm region data', x_axis_data, regions_list_mapping, y_is_log=True)
+    figure = create_scatter_plot_by_region(df_sub, 'Logarithm region data', x_axis_data, regions_list_mapping, y_is_log=True)
     return figure
 
 
@@ -171,18 +167,18 @@ def app_layout():
 
                                               ]),
                                               dcc.Tab(label='National Area', children=[
-                                                  dcc.Graph(figure=create_figure_plot(df_national_data,
+                                                  dcc.Graph(figure=create_scatter_plot(df_national_data,
                                                                                       'Linear national data',
-                                                                                      df_national_data.index,
-                                                                                      national_data_mapping,
-                                                                                      y_is_log=False),
+                                                                                       df_national_data.index,
+                                                                                       national_data_mapping,
+                                                                                       y_is_log=False),
                                                             config={'displayModeBar': False},
                                                             animate=True),
-                                                  dcc.Graph(figure=create_figure_plot(df_national_data,
+                                                  dcc.Graph(figure=create_scatter_plot(df_national_data,
                                                                                       'Logarithm national data ',
-                                                                                      df_national_data.index,
-                                                                                      national_data_mapping,
-                                                                                      y_is_log=True),
+                                                                                       df_national_data.index,
+                                                                                       national_data_mapping,
+                                                                                       y_is_log=True),
                                                             config={'displayModeBar': False},
                                                             animate=True)
                                               ])
