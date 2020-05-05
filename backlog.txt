@@ -1,0 +1,6 @@
+MIGLIORIE
+-Inserimento del changelog e MAJOR.MINOR.PATCH
+-Responsività del Logo
+
+SVILUPPI
+-Cercare fonti e compatibilità per feed RSS notizie Protezione Civile
