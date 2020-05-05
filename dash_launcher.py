@@ -4,7 +4,9 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import plotly.graph_objects as go
+
 from dash.dependencies import Input, Output
+from constants import DATA_DICT
 
 app = dash.Dash(__name__)
 url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
@@ -46,6 +48,14 @@ def get_options(list_value):
     dict_list = []
     for i in list_value:
         dict_list.append({'label': i, 'value': i})
+
+    return dict_list
+
+
+def get_options_from_dict(data_dict):
+    dict_list = []
+    for data in data_dict:
+        dict_list.append({'label': str(data_dict[data]), 'value': str(data)})
 
     return dict_list
 
@@ -101,18 +111,19 @@ def create_figure(data, title, y_axis_type):
 
 
 # Callback for timeseries/region
-@app.callback(Output('regional_timeseries_linear', 'figure'), [Input('regionselector', 'value')])
-def update_graph(selected_dropdown_value):
+@app.callback(Output('regional_timeseries_linear', 'figure'), [Input('regionselector', 'value'),
+                                                               Input('data_type_selector', 'value')])
+def update_graph(selected_dropdown_value, data_type):
     df_sub = df_regional_data
     regions_list_mapping = []
     # if no region selected, create empty figure
-    if len(selected_dropdown_value) == 0:
-        figure = create_scatter_plot(df_sub, 'Linear region data', df_sub.index, [])
+    if len(selected_dropdown_value) == 0 or data_type is None:
+        figure = create_scatter_plot(df_sub, data_type, df_sub.index, [])
         return figure
     for region in selected_dropdown_value:
-        regions_list_mapping.append(('nuovi_positivi', region))
+        regions_list_mapping.append((data_type, region))
     x_axis_data = df_sub.index.drop_duplicates()
-    figure = create_scatter_plot_by_region(df_sub, 'Linear region data', x_axis_data, regions_list_mapping)
+    figure = create_scatter_plot_by_region(df_sub, DATA_DICT[data_type], x_axis_data, regions_list_mapping)
     return figure
 
 
@@ -192,7 +203,7 @@ def app_oil_layout():
                     html.Div( # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                         [
                             html.P(
-                                "Filter by construction date (or select range in histogram):",
+                                "Filter by date (or select range in histogram):",
                                 className="control_label",
                             ),
                             dcc.RangeSlider(
@@ -202,52 +213,20 @@ def app_oil_layout():
                                 value=[1990, 2010],
                                 className="dcc_control",
                             ),
-                            html.P("Filter by well status:", className="control_label"),
-                            dcc.RadioItems(
-                                id="well_status_selector",
-                                options=[
-                                    {"label": "All ", "value": "all"},
-                                    {"label": "Active only ", "value": "active"},
-                                    {"label": "Customize ", "value": "custom"},
-                                ],
-                                value="active",
-                                labelStyle={"display": "inline-block"},
-                                className="dcc_control",
-                            ),
+                            html.P("Select Region:", className="control_label"),
                             dcc.Dropdown(id='regionselector',
-                                         options=get_options(
-                                             df_regional_data['denominazione_regione'].unique()),
+                                         options=get_options(df_regional_data['denominazione_regione'].unique()),
                                          multi=True,
-                                         value=[
-                                             df_regional_data['denominazione_regione'].sort_values()[
-                                                 0]],
-                                         # style={'backgroundColor': '#1E1E1E'},
+                                         value=[df_regional_data['denominazione_regione'].sort_values()[0]],
                                          className='dcc_control'
                                          ),
-                            dcc.Checklist(
-                                id="lock_selector",
-                                options=[{"label": "Lock camera", "value": "locked"}],
-                                className="dcc_control",
-                                value=[],
-                            ),
-                            html.P("Filter by well type:", className="control_label"),
-                            dcc.RadioItems(
-                                id="well_type_selector",
-                                options=[
-                                    {"label": "All ", "value": "all"},
-                                    {"label": "Productive only ", "value": "productive"},
-                                    {"label": "Customize ", "value": "custom"},
-                                ],
-                                value="productive",
-                                labelStyle={"display": "inline-block"},
-                                className="dcc_control",
-                            ),
+                            html.P("Select data to show:", className="control_label"),
                             dcc.Dropdown(
-                                id="well_types",
-                                #options=well_type_options,
-                                multi=True,
-                                #value=list(WELL_TYPES.keys()),
-                                className="dcc_control",
+                                id='data_type_selector',
+                                options=get_options_from_dict(DATA_DICT),
+                                multi=False,
+                                value='ricoverati_con_sintomi',
+                                className='dcc_control'
                             ),
                         ],
                         className="pretty_container four columns",
