@@ -94,6 +94,7 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
                                  mode='lines+markers',
                                  opacity=0.7,
                                  name=region,
+                                 line=dict(shape="spline", smoothing=1, width=1),
                                  textposition='bottom center')
             scatter_list.append(scatter)
 
@@ -138,33 +139,34 @@ def update_graph_log(selected_dropdown_value):
     for region in selected_dropdown_value:
         regions_list_mapping.append(('totale_positivi', region))
     x_axis_data = df_sub.index.drop_duplicates()
-    figure = create_scatter_plot_by_region(df_sub, 'Logarithm region data', x_axis_data, regions_list_mapping, y_is_log=True)
+    figure = create_scatter_plot_by_region(df_sub, 'Logarithm region data', x_axis_data, regions_list_mapping,
+                                           y_is_log=True)
     return figure
 
 
 def app_oil_layout():
     app.layout = html.Div(
-        [# START OF SUPREME INCAPSULATION ############################################
+        [  # START OF SUPREME INCAPSULATION ############################################
             dcc.Store(id="aggregate_data"),
             # empty Div to trigger javascript file for graph resizing
             html.Div(id="output-clientside"),
-            html.Div(# START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
+            html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
                 [
-                    html.Div( # START OF LOGO
+                    html.Div(  # START OF LOGO
                         [
                             html.Img(
                                 src=app.get_asset_url("dash-logo.png"),
                                 id="plotly-image",
                                 style={
-                                    "height": "60px",
+                                    "height": "180px",
                                     "width": "auto",
-                                    "margin-bottom": "25px",
+                                    "margin-bottom": "15px",
                                 },
                             )
                         ],
                         className="one-third column",
-                    ), # END OF LOGO
-                    html.Div( # START OF HEADING
+                    ),  # END OF LOGO
+                    html.Div(  # START OF HEADING
                         [
                             html.Div(
                                 [
@@ -181,8 +183,8 @@ def app_oil_layout():
                         ],
                         className="one-half column",
                         id="title",
-                    ), # END OF HEADING
-                    html.Div( #START OF BUTTON
+                    ),  # END OF HEADING
+                    html.Div(  # START OF BUTTON
                         [
                             html.A(
                                 html.Button("Learn More", id="learn-more-button"),
@@ -191,51 +193,90 @@ def app_oil_layout():
                         ],
                         className="one-third column",
                         id="button",
-                    ), #END OF BUTTON
+                    ),  # END OF BUTTON
                 ],
                 id="header",
                 className="row flex-display",
                 style={"margin-bottom": "25px"},
-            ),# END OF 1ST INCAPSULATION -END OF HEADING############################################
+            ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
 
-            html.Div(# START OF 2ND INCAPSULATION  ############################################
+            html.Div(  # START OF 2ND INCAPSULATION  ############################################
                 [
-                    html.Div( # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                    html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                         [
-                            html.P(
-                                "Filter by date (or select range in histogram):",
-                                className="control_label",
-                            ),
-                            dcc.RangeSlider(
-                                id="year_slider",
-                                min=1960,
-                                max=2017,
-                                value=[1990, 2010],
-                                className="dcc_control",
-                            ),
-                            html.P("Select Region:", className="control_label"),
-                            dcc.Dropdown(id='regionselector',
-                                         options=get_options(df_regional_data['denominazione_regione'].unique()),
-                                         multi=True,
-                                         value=[df_regional_data['denominazione_regione'].sort_values()[0]],
-                                         className='dcc_control'
-                                         ),
-                            html.P("Select data to show:", className="control_label"),
-                            dcc.Dropdown(
-                                id='data_type_selector',
-                                options=get_options_from_dict(DATA_DICT),
-                                multi=False,
-                                value='ricoverati_con_sintomi',
-                                className='dcc_control'
-                            ),
+
+                            dcc.Tabs([  # START OF TABS COMPONENT CREATOR
+                                dcc.Tab(label='Tab one', children=[  # START FIRST TAB
+
+                                    html.P(
+                                        "Filter by date (or select range in histogram):",
+                                        className="control_label",
+                                    ),
+                                    dcc.RangeSlider(
+                                        id="year_slider_tab_1",
+                                        min=1960,
+                                        max=2017,
+                                        value=[1990, 2010],
+                                        className="dcc_control",
+                                    ),
+                                    html.P("Select Region:", className="control_label"),
+                                    dcc.Dropdown(id='regionselector',
+                                                 options=get_options(
+                                                     df_regional_data['denominazione_regione'].unique()),
+                                                 multi=True,
+                                                 value=[df_regional_data['denominazione_regione'].sort_values()[0]],
+                                                 className='dcc_control'
+                                                 ),
+                                    html.P("Select data to show:", className="control_label"),
+                                    dcc.Dropdown(
+                                        id='data_type_selector',
+                                        options=get_options_from_dict(DATA_DICT),
+                                        multi=False,
+                                        value='ricoverati_con_sintomi',
+                                        className='dcc_control'
+                                    ),
+
+                                ]),  # END OF FIRST TAB
+                                dcc.Tab(label='Tab two', children=[  # START OF SECOND TAB
+                                    html.P(
+                                        "Filter by date (or select range in histogram):",
+                                        className="control_label",
+                                    ),
+                                    dcc.RangeSlider(
+                                        id="year_slider_tab_2",
+                                        min=1960,
+                                        max=2017,
+                                        value=[1990, 2010],
+                                        className="dcc_control",
+                                    ),
+                                    html.P("Select Region:", className="control_label"),
+                                    dcc.Dropdown(id='regionselector_tab_2',
+                                                 options=get_options(
+                                                     df_regional_data['denominazione_regione'].unique()),
+                                                 multi=False,
+                                                 value=[df_regional_data['denominazione_regione'].sort_values()[0]],
+                                                 className='dcc_control'
+                                                 ),
+                                    html.P("Select data to show:", className="control_label"),
+                                    dcc.Dropdown(
+                                        id='data_type_selector_tab_2',
+                                        options=get_options_from_dict(DATA_DICT),
+                                        multi=True,
+                                        value='ricoverati_con_sintomi',
+                                        className='dcc_control'
+                                    ),
+                                ]),  # END OF SECOND TAB
+
+                            ])  # END OF TABS COMPONENT CREATOR
+
                         ],
                         className="pretty_container four columns",
                         id="cross-filter-options",
-                    ),# END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                    ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
 
-                    html.Div( # START OF 2ND BLOCK
+                    html.Div(  # START OF 2ND BLOCK
                         [
-                            html.Div( # START OF CARDS #
+                            html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
                                         [html.H6(id="well_text"), html.P("No. of Wells")],
@@ -260,20 +301,20 @@ def app_oil_layout():
                                 ],
                                 id="info-container",
                                 className="row container-display",
-                            ), # END OF CARDS #
-                            html.Div( # START OF THE GRAPH UNDER THE CARDS#
+                            ),  # END OF CARDS #
+                            html.Div(  # START OF THE GRAPH UNDER THE CARDS#
                                 [dcc.Graph(id='regional_timeseries_linear')],
                                 id="countGraphContainer",
                                 className="pretty_container",
-                            ),# END OF THE GRAPH #
+                            ),  # END OF THE GRAPH #
                         ],
                         id="right-column",
                         className="eight columns",
-                    ),# END OF 2ND BLOCK
+                    ),  # END OF 2ND BLOCK
                 ],
-            className = "row flex-display",
-            ), # END OF 2ND INCAPSULATION  ############################################
-            html.Div( # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                className="row flex-display",
+            ),  # END OF 2ND INCAPSULATION  ############################################
+            html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                 [
                     html.Div(
                         [dcc.Graph(id="main_graph")],
@@ -285,8 +326,8 @@ def app_oil_layout():
                     ),
                 ],
                 className="row flex-display",
-            ),# END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
-            html.Div(# START OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+            ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+            html.Div(  # START OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
                 [
                     html.Div(
                         [dcc.Graph(id="pie_graph")],
@@ -298,12 +339,13 @@ def app_oil_layout():
                     ),
                 ],
                 className="row flex-display",
-            ),# END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
-        ],# END OF SUPEREME INCAPSULATION ############################################
+            ),  # END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+        ],  # END OF SUPEREME INCAPSULATION ############################################
 
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
     )
+
 
 def app_layout():
     # Define the web app
@@ -351,14 +393,14 @@ def app_layout():
                                               ]),
                                               dcc.Tab(label='National Area', children=[
                                                   dcc.Graph(figure=create_scatter_plot(df_national_data,
-                                                                                      'Linear national data',
+                                                                                       'Linear national data',
                                                                                        df_national_data.index,
                                                                                        national_data_mapping,
                                                                                        y_is_log=False),
                                                             config={'displayModeBar': False},
                                                             animate=True),
                                                   dcc.Graph(figure=create_scatter_plot(df_national_data,
-                                                                                      'Logarithm national data ',
+                                                                                       'Logarithm national data ',
                                                                                        df_national_data.index,
                                                                                        national_data_mapping,
                                                                                        y_is_log=True),
