@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 
 from dash.dependencies import Input, Output
 from constants import DATA_DICT
+from numpy import string_
 
 app = dash.Dash(__name__)
 url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
@@ -137,6 +138,46 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
     return figure
 
 
+
+# Callback for timeseries/region
+@app.callback([Output('well_text', 'children'),
+               Output('gasText', 'children'),
+               Output('oilText', 'children'),
+               Output('waterText', 'children')],
+              [Input('dropdown_region_list_selected', 'value')])
+def update_cards_text(selected_dropdown_value):
+    # if no region selected, create empty figure
+    if len(selected_dropdown_value) == 0:
+        return 0, 0, 0, 0
+    string_updated_1 = 0
+    string_updated_2 = 0
+    string_updated_3 = 0
+    string_updated_4 = 0
+    for region in selected_dropdown_value:
+        df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region]
+        string_updated_1 += int(df_sub['totale_positivi'].iloc[-1])
+        string_updated_2 += int(df_sub['totale_casi'].iloc[-1])
+        string_updated_3 += int(df_sub['dimessi_guariti'].iloc[-1])
+        string_updated_4 += int(df_sub['deceduti'].iloc[-1])
+
+    return string_updated_1, string_updated_2, string_updated_3, string_updated_4
+
+# Callback for timeseries/region
+@app.callback(Output('dynamic_field', 'children'),
+              [Input('dropdown_region_list_selected', 'value'),
+               Input('dropdown_data_selected', 'value')])
+def update_dynamic_card(selected_dropdown_region_list, selected_dropdown_data):
+    # if no region selected, create empty figure
+    if len(selected_dropdown_region_list) == 0:
+        return 0
+    string_dynamic_updated = 0
+    for region in selected_dropdown_region_list:
+        df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region]
+        string_dynamic_updated += int(df_sub[selected_dropdown_data].iloc[-1])
+
+    return string_dynamic_updated
+
+
 def app_oil_layout():
     app.layout = html.Div(
         [  # START OF SUPREME INCAPSULATION ############################################
@@ -227,6 +268,11 @@ def app_oil_layout():
                                         value='ricoverati_con_sintomi',
                                         className='dcc_control'
                                     ),
+                                    html.Div(
+                                        [html.H6(id="dynamic_field"), html.P("Totale Casi")],
+                                        id="dynamic_card",
+                                        className="mini_container",
+                                    ),
 
                                 ]),  # END OF FIRST TAB
                                 dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
@@ -270,22 +316,22 @@ def app_oil_layout():
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
-                                        [html.H6(id="well_text"), html.P("No. of Wells")],
+                                        [html.H6(id="well_text"), html.P("Totale Positivi")],
                                         id="wells",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="gasText"), html.P("Gas")],
+                                        [html.H6(id="gasText"), html.P("Totale Casi")],
                                         id="gas",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="oilText"), html.P("Oil")],
+                                        [html.H6(id="oilText"), html.P("Dimessi/Guariti")],
                                         id="oil",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="waterText"), html.P("Water")],
+                                        [html.H6(id="waterText"), html.P("Deceduti")],
                                         id="water",
                                         className="mini_container",
                                     ),
