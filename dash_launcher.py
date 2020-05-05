@@ -84,20 +84,14 @@ def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_i
 def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region, y_is_log=False):
     y_axis_type = "log" if y_is_log else "linear"
     scatter_list = []
-    # Draw empty figures if an empty list is passed
-    if len(y_axis_data_mapping_region) == 0:
-        scatter = go.Scatter(x=x_axis_data, y=[], mode='lines+markers', opacity=0.7, textposition='bottom center')
+    for field, region in y_axis_data_mapping_region:
+        scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['denominazione_regione'] == region][field],
+                             mode='lines+markers',
+                             opacity=0.7,
+                             name=region,
+                             # line=dict(shape="spline", smoothing=1, width=1),
+                             textposition='bottom center')
         scatter_list.append(scatter)
-    else:
-        for field, region in y_axis_data_mapping_region:
-            scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['denominazione_regione'] == region][field],
-                                 mode='lines+markers',
-                                 opacity=0.7,
-                                 name=region,
-                                 line=dict(shape="spline", smoothing=1, width=1),
-                                 textposition='bottom center')
-            scatter_list.append(scatter)
-
     figure = create_figure(scatter_list, title, y_axis_type)
     return figure
 
@@ -112,35 +106,34 @@ def create_figure(data, title, y_axis_type):
 
 
 # Callback for timeseries/region
-@app.callback(Output('regional_timeseries_linear', 'figure'), [Input('regionselector', 'value'),
-                                                               Input('data_type_selector', 'value')])
-def update_graph(selected_dropdown_value, data_type):
-    df_sub = df_regional_data
-    regions_list_mapping = []
-    # if no region selected, create empty figure
-    if len(selected_dropdown_value) == 0 or data_type is None:
-        figure = create_scatter_plot(df_sub, data_type, df_sub.index, [])
-        return figure
-    for region in selected_dropdown_value:
-        regions_list_mapping.append((data_type, region))
-    x_axis_data = df_sub.index.drop_duplicates()
-    figure = create_scatter_plot_by_region(df_sub, DATA_DICT[data_type], x_axis_data, regions_list_mapping)
-    return figure
-
-
-# Callback for timeseries/region
-@app.callback(Output('regional_timeseries_log', 'figure'), [Input('regionselector', 'value')])
-def update_graph_log(selected_dropdown_value):
-    df_sub = df_regional_data
-    regions_list_mapping = []
-    if len(selected_dropdown_value) == 0:
-        figure = create_scatter_plot(df_sub, 'Logarithm region data', df_sub.index, [])
-        return figure
-    for region in selected_dropdown_value:
-        regions_list_mapping.append(('totale_positivi', region))
-    x_axis_data = df_sub.index.drop_duplicates()
-    figure = create_scatter_plot_by_region(df_sub, 'Logarithm region data', x_axis_data, regions_list_mapping,
-                                           y_is_log=True)
+@app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
+                                                               Input('dropdown_data_selected', 'value'),
+                                                               Input('dropdown_data_list_selected', 'value'),
+                                                               Input('dropdown_region_selected', 'value'),
+                                                               Input('tabs', 'value')])
+def update_graph(region_list, data_selected, data_list, region_selected, tab_selected):
+    if tab_selected == 'tab_region':
+        regions_list_mapping = []
+        # if no region selected, create empty figure
+        if len(region_list) == 0 or data_selected is None:
+            figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
+            return figure
+        for region in region_list:
+            regions_list_mapping.append((data_selected, region))
+        x_axis_data = df_regional_data.index.drop_duplicates()
+        figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
+                                               x_axis_data, regions_list_mapping)
+    elif tab_selected == 'tab_data':
+        data_list_mapping = []
+        # if no region selected, create empty figure
+        if len(data_list) == 0 or region_selected is None:
+            figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
+            return figure
+        df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+        for data in data_list:
+            data_list_mapping.append((data, DATA_DICT[data]))
+        x_axis_data = df_sub.index
+        figure = create_scatter_plot(df_sub, region_selected, x_axis_data, data_list_mapping)
     return figure
 
 
@@ -205,9 +198,8 @@ def app_oil_layout():
                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                         [
 
-                            dcc.Tabs([  # START OF TABS COMPONENT CREATOR
-                                dcc.Tab(label='Tab one', children=[  # START FIRST TAB
-
+                            dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
+                                dcc.Tab(label='Compare Regions', value='tab_region', children=[  # START FIRST TAB
                                     html.P(
                                         "Filter by date (or select range in histogram):",
                                         className="control_label",
@@ -219,8 +211,8 @@ def app_oil_layout():
                                         value=[1990, 2010],
                                         className="dcc_control",
                                     ),
-                                    html.P("Select Region:", className="control_label"),
-                                    dcc.Dropdown(id='regionselector',
+                                    html.P("Multi-Select Regions:", className="control_label"),
+                                    dcc.Dropdown(id='dropdown_region_list_selected',
                                                  options=get_options(
                                                      df_regional_data['denominazione_regione'].unique()),
                                                  multi=True,
@@ -229,7 +221,7 @@ def app_oil_layout():
                                                  ),
                                     html.P("Select data to show:", className="control_label"),
                                     dcc.Dropdown(
-                                        id='data_type_selector',
+                                        id='dropdown_data_selected',
                                         options=get_options_from_dict(DATA_DICT),
                                         multi=False,
                                         value='ricoverati_con_sintomi',
@@ -237,7 +229,7 @@ def app_oil_layout():
                                     ),
 
                                 ]),  # END OF FIRST TAB
-                                dcc.Tab(label='Tab two', children=[  # START OF SECOND TAB
+                                dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
                                     html.P(
                                         "Filter by date (or select range in histogram):",
                                         className="control_label",
@@ -249,20 +241,19 @@ def app_oil_layout():
                                         value=[1990, 2010],
                                         className="dcc_control",
                                     ),
-                                    html.P("Select Region:", className="control_label"),
-                                    dcc.Dropdown(id='regionselector_tab_2',
-                                                 options=get_options(
-                                                     df_regional_data['denominazione_regione'].unique()),
-                                                 multi=False,
-                                                 value=[df_regional_data['denominazione_regione'].sort_values()[0]],
+                                    html.P("Multi-Select Data:", className="control_label"),
+                                    dcc.Dropdown(id='dropdown_data_list_selected',
+                                                 options=get_options_from_dict(DATA_DICT),
+                                                 multi=True,
+                                                 value=['ricoverati_con_sintomi'],
                                                  className='dcc_control'
                                                  ),
-                                    html.P("Select data to show:", className="control_label"),
+                                    html.P("Select region to show:", className="control_label"),
                                     dcc.Dropdown(
-                                        id='data_type_selector_tab_2',
-                                        options=get_options_from_dict(DATA_DICT),
-                                        multi=True,
-                                        value='ricoverati_con_sintomi',
+                                        id='dropdown_region_selected',
+                                        options=get_options(df_regional_data['denominazione_regione'].unique()),
+                                        multi=False,
+                                        value=df_regional_data['denominazione_regione'].sort_values()[0],
                                         className='dcc_control'
                                     ),
                                 ]),  # END OF SECOND TAB
