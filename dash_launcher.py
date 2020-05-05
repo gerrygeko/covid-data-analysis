@@ -162,23 +162,8 @@ def update_cards_text(selected_dropdown_value):
 
     return string_updated_1, string_updated_2, string_updated_3, string_updated_4
 
-# Callback for timeseries/region
-@app.callback(Output('dynamic_field', 'children'),
-              [Input('dropdown_region_list_selected', 'value'),
-               Input('dropdown_data_selected', 'value')])
-def update_dynamic_card(selected_dropdown_region_list, selected_dropdown_data):
-    # if no region selected, create empty figure
-    if len(selected_dropdown_region_list) == 0:
-        return 0
-    string_dynamic_updated = 0
-    for region in selected_dropdown_region_list:
-        df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region]
-        string_dynamic_updated += int(df_sub[selected_dropdown_data].iloc[-1])
 
-    return string_dynamic_updated
-
-
-def app_oil_layout():
+def app_layout():
     app.layout = html.Div(
         [  # START OF SUPREME INCAPSULATION ############################################
             dcc.Store(id="aggregate_data"),
@@ -384,82 +369,8 @@ def app_oil_layout():
     )
 
 
-def app_layout():
-    # Define the web app
-    app.layout = html.Div(
-        children=[
-            html.Div(className='row',
-                     children=[
-                         html.Div(className='four columns div-user-controls',
-                                  children=[
-                                      html.H2('COVID-19:ITALY'),
-                                      html.P('by Gellex (Geko + Killex)'),
-                                      html.P('Visualising time series with Plotly - Dash.'),
-                                      html.P('Select one or more regions from the dropdown:'),
-                                      html.Div(
-                                          className='div-for-dropdown',
-                                          children=[
-                                              dcc.Dropdown(id='regionselector',
-                                                           options=get_options(
-                                                               df_regional_data['denominazione_regione'].unique()),
-                                                           multi=True,
-                                                           value=[
-                                                               df_regional_data['denominazione_regione'].sort_values()[
-                                                                   0]],
-                                                           style={'backgroundColor': '#1E1E1E'},
-                                                           className='regionselector'
-                                                           ),
-                                          ],
-
-                                          style={'color': '#1E1E1E'})
-                                  ]
-                                  ),
-
-                         html.Div(className='eight columns div-for-charts bg-grey',
-                                  children=[
-                                      html.Div([
-                                          dcc.Tabs([
-                                              dcc.Tab(label='Regional Area', children=[
-                                                  dcc.Graph(id='regional_timeseries_linear',
-                                                            config={'displayModeBar': False},
-                                                            animate=True),
-                                                  dcc.Graph(id='regional_timeseries_log',
-                                                            config={'displayModeBar': False},
-                                                            animate=True)
-
-                                              ]),
-                                              dcc.Tab(label='National Area', children=[
-                                                  dcc.Graph(figure=create_scatter_plot(df_national_data,
-                                                                                       'Linear national data',
-                                                                                       df_national_data.index,
-                                                                                       national_data_mapping,
-                                                                                       y_is_log=False),
-                                                            config={'displayModeBar': False},
-                                                            animate=True),
-                                                  dcc.Graph(figure=create_scatter_plot(df_national_data,
-                                                                                       'Logarithm national data ',
-                                                                                       df_national_data.index,
-                                                                                       national_data_mapping,
-                                                                                       y_is_log=True),
-                                                            config={'displayModeBar': False},
-                                                            animate=True)
-                                              ])
-                                          ], colors={
-                                              "border": "grey",
-                                              "primary": "gold",
-                                              "background": "grey"
-                                          })
-                                      ])
-                                  ])
-                     ])
-        ]
-
-    )
-
-
 if __name__ == '__main__':
     # Initialise the app
     app.config.suppress_callback_exceptions = True
-    # app_layout()
-    app_oil_layout()
+    app_layout()
     app.run_server(debug=True)  # debug=True active a button in the bottom right corner of the web page

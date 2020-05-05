@@ -5,3 +5,4 @@ MIGLIORIE
 
 SVILUPPI
 -Cercare fonti e compatibilità per feed RSS notizie Protezione Civile
+-Grafico a torta per regioni selezionate
