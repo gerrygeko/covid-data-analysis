@@ -242,7 +242,7 @@ def app_layout():
                                                  options=get_options(
                                                      df_regional_data['denominazione_regione'].unique()),
                                                  multi=True,
-                                                 value=[df_regional_data['denominazione_regione'].sort_values()[0]],
+                                                 value=['Abruzzo', 'Campania'],
                                                  className='dcc_control'
                                                  ),
                                     html.P("Select data to show:", className="control_label"),
