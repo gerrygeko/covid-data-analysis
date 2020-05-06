@@ -572,16 +572,16 @@ there.
   .container-display {
     display: flex;
   }
-  #wells,
-  #gas,
-  #oil {
+  #total_positive,
+  #total_cases,
+  #totale_recovered {
     margin-right: 10px;
   }
 
-  #wells {
+  #total_positive {
     margin-left: 0px;
   }
-  #water {
+  #total_deaths {
     margin-right: 0px;
   }
   .mini_container {

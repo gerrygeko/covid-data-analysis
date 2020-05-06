@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 
 from dash.dependencies import Input, Output
 from constants import DATA_DICT
+from datetime import datetime
 from numpy import string_
 
 app = dash.Dash(__name__)
@@ -138,29 +139,21 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
     return figure
 
 
-
 # Callback for timeseries/region
-@app.callback([Output('well_text', 'children'),
-               Output('gasText', 'children'),
-               Output('oilText', 'children'),
-               Output('waterText', 'children')],
+@app.callback([Output('total_positive_text', 'children'),
+               Output('total_cases_text', 'children'),
+               Output('total_recovered_text', 'children'),
+               Output('total_deaths_text', 'children'),
+               Output('subHeader', 'children')],
               [Input('dropdown_region_list_selected', 'value')])
 def update_cards_text(selected_dropdown_value):
-    # if no region selected, create empty figure
-    if len(selected_dropdown_value) == 0:
-        return 0, 0, 0, 0
-    string_updated_1 = 0
-    string_updated_2 = 0
-    string_updated_3 = 0
-    string_updated_4 = 0
-    for region in selected_dropdown_value:
-        df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region]
-        string_updated_1 += int(df_sub['totale_positivi'].iloc[-1])
-        string_updated_2 += int(df_sub['totale_casi'].iloc[-1])
-        string_updated_3 += int(df_sub['dimessi_guariti'].iloc[-1])
-        string_updated_4 += int(df_sub['deceduti'].iloc[-1])
-
-    return string_updated_1, string_updated_2, string_updated_3, string_updated_4
+    df_sub = df_national_data
+    string_updated_1 = (df_sub['totale_positivi'].iloc[-1])
+    string_updated_2 = (df_sub['totale_casi'].iloc[-1])
+    string_updated_3 = (df_sub['dimessi_guariti'].iloc[-1])
+    string_updated_4 = (df_sub['deceduti'].iloc[-1])
+    string_header_last_update= (df_sub.tail(1).index.item()).strftime('Dati Aggiornati al: %d/%m/%Y')
+    return string_updated_1, string_updated_2, string_updated_3, string_updated_4, string_header_last_update
 
 
 def app_layout():
@@ -190,12 +183,13 @@ def app_layout():
                             html.Div(
                                 [
                                     html.H3(
-                                        "Italian Covid-19",
+                                        "Covid-19 Italia by Gellex",
                                         style={"margin-bottom": "0px"},
                                     ),
                                     html.H5(
                                         "by Gellex (Geko + Killex) - Visualising time series with Plotly - Dash",
-                                        style={"margin-top": "0px"}
+                                        style={"margin-top": "0px"},
+                                        id="subHeader"
                                     ),
                                 ]
                             )
@@ -253,12 +247,6 @@ def app_layout():
                                         value='ricoverati_con_sintomi',
                                         className='dcc_control'
                                     ),
-                                    html.Div(
-                                        [html.H6(id="dynamic_field"), html.P("Totale Casi")],
-                                        id="dynamic_card",
-                                        className="mini_container",
-                                    ),
-
                                 ]),  # END OF FIRST TAB
                                 dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
                                     html.P(
@@ -301,23 +289,23 @@ def app_layout():
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
-                                        [html.H6(id="well_text"), html.P("Totale Positivi")],
-                                        id="wells",
+                                        [html.H6(id="total_positive_text"), html.P("Attualmente Positivi Italia")],
+                                        id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="gasText"), html.P("Totale Casi")],
-                                        id="gas",
+                                        [html.H6(id="total_cases_text"), html.P("Totale Casi Italia")],
+                                        id="total_cases",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="oilText"), html.P("Dimessi/Guariti")],
-                                        id="oil",
+                                        [html.H6(id="total_recovered_text"), html.P("Dimessi/Guariti Italia")],
+                                        id="total_recovered",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="waterText"), html.P("Deceduti")],
-                                        id="water",
+                                        [html.H6(id="total_deaths_text"), html.P("Decessi Italia")],
+                                        id="total_deaths",
                                         className="mini_container",
                                     ),
                                 ],

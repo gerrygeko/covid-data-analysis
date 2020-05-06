@@ -107,11 +107,11 @@ body {
   flex-direction: column;
 }
 
-#wells {
+#total_positive {
   flex: 1;
 }
 
-#gas {
+#total_cases {
   flex: 1;
 }
 
@@ -119,11 +119,11 @@ body {
   align-items: center;
 }
 
-#oil {
+#total_recovered {
   flex: 1;
 }
 
-#water {
+#total_deaths {
   flex: 1;
 }
 
