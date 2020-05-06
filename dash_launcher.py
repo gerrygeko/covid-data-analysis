@@ -7,8 +7,7 @@ import plotly.graph_objects as go
 
 from dash.dependencies import Input, Output
 from constants import DATA_DICT
-from datetime import datetime
-from numpy import string_
+
 
 app = dash.Dash(__name__)
 url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
@@ -139,21 +138,13 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
     return figure
 
 
-# Callback for timeseries/region
-@app.callback([Output('total_positive_text', 'children'),
-               Output('total_cases_text', 'children'),
-               Output('total_recovered_text', 'children'),
-               Output('total_deaths_text', 'children'),
-               Output('subHeader', 'children')],
-              [Input('dropdown_region_list_selected', 'value')])
-def update_cards_text(selected_dropdown_value):
-    df_sub = df_national_data
-    string_updated_1 = (df_sub['totale_positivi'].iloc[-1])
-    string_updated_2 = (df_sub['totale_casi'].iloc[-1])
-    string_updated_3 = (df_sub['dimessi_guariti'].iloc[-1])
-    string_updated_4 = (df_sub['deceduti'].iloc[-1])
-    string_header_last_update= (df_sub.tail(1).index.item()).strftime('Dati Aggiornati al: %d/%m/%Y')
-    return string_updated_1, string_updated_2, string_updated_3, string_updated_4, string_header_last_update
+def update_cards_text(field):
+    if field == 'data':
+        string_header_last_update = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
+        return string_header_last_update
+    else:
+        card_value = df_national_data[field].iloc[-1]
+        return card_value
 
 
 def app_layout():
@@ -186,11 +177,7 @@ def app_layout():
                                         "Covid-19 Italia by Gellex",
                                         style={"margin-bottom": "0px"},
                                     ),
-                                    html.H5(
-                                        "by Gellex (Geko + Killex) - Visualising time series with Plotly - Dash",
-                                        style={"margin-top": "0px"},
-                                        id="subHeader"
-                                    ),
+                                    html.H5(id="subHeader", children=update_cards_text('data'), style={"margin-top": "0px"}),
                                 ]
                             )
                         ],
@@ -289,22 +276,22 @@ def app_layout():
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
-                                        [html.H6(id="total_positive_text"), html.P("Attualmente Positivi Italia")],
+                                        [html.H6(id="total_positive_text", children=update_cards_text('totale_positivi')), html.P("Attualmente Positivi Italia")],
                                         id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_cases_text"), html.P("Totale Casi Italia")],
+                                        [html.H6(id="total_cases_text", children=update_cards_text('totale_casi')), html.P("Totale Casi Italia")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_recovered_text"), html.P("Dimessi/Guariti Italia")],
+                                        [html.H6(id="total_recovered_text", children=update_cards_text('dimessi_guariti')), html.P("Dimessi/Guariti Italia")],
                                         id="total_recovered",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_deaths_text"), html.P("Decessi Italia")],
+                                        [html.H6(id="total_deaths_text", children=update_cards_text('deceduti')), html.P("Decessi Italia")],
                                         id="total_deaths",
                                         className="mini_container",
                                     ),
