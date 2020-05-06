@@ -138,6 +138,25 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
     return figure
 
 
+@app.callback(Output('pie_graph', 'figure'), [Input('dropdown_region_list_selected', 'value'),
+                                              Input('dropdown_data_selected', 'value')])
+def update_pie_graph(region_list, data_selected):
+    layout_pie = copy.deepcopy(layout)
+    value_list = []
+    for region in region_list:
+        value = df_regional_data[df_regional_data['denominazione_regione'] == region][data_selected][-1]
+        value_list.append(value)
+    data = [go.Pie(labels=[region for region in region_list],
+                   values=value_list,
+                   hoverinfo='text+value+percent',
+                   textinfo='label+percent',
+                   hole=0.5)]
+    date = df_regional_data.index[-1].strftime('%d/%m/%Y')
+    layout_pie['title'] = "Regional graph for {} at {}".format(DATA_DICT[data_selected], date)
+    figure = dict(data=data, layout=layout_pie)
+    return figure
+
+
 def update_cards_text(field):
     if field == 'data':
         string_header_last_update = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
@@ -234,6 +253,7 @@ def app_layout():
                                         value='ricoverati_con_sintomi',
                                         className='dcc_control'
                                     ),
+                                    dcc.Graph(id="pie_graph")
                                 ]),  # END OF FIRST TAB
                                 dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
                                     html.P(
@@ -327,7 +347,7 @@ def app_layout():
             html.Div(  # START OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
                 [
                     html.Div(
-                        [dcc.Graph(id="pie_graph")],
+                        [dcc.Graph(id="pie_graph_2")],
                         className="pretty_container seven columns",
                     ),
                     html.Div(
