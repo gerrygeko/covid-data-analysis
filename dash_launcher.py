@@ -143,6 +143,15 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
 def update_pie_graph(region_list, data_selected):
     layout_pie = copy.deepcopy(layout)
     value_list = []
+    if len(region_list) == 0 or data_selected is None:
+        data = [go.Pie(labels=[],
+                       values=value_list,
+                       hoverinfo='text+value+percent',
+                       textinfo='label+percent',
+                       hole=0.5)]
+        layout_pie['title'] = ""
+        figure = dict(data=data, layout=layout_pie)
+        return figure
     for region in region_list:
         value = df_regional_data[df_regional_data['denominazione_regione'] == region][data_selected][-1]
         value_list.append(value)
