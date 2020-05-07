@@ -4,6 +4,8 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import plotly.graph_objects as go
+import requests
+import datetime
 
 from dash.dependencies import Input, Output
 from constants import DATA_DICT
@@ -11,7 +13,16 @@ from constants import DATA_DICT
 app = dash.Dash(__name__)
 url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
+# API Requests for news
+news_requests = requests.get("http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
 
+# TODO: implement this lines in a func#
+## DATA FOR DF NEWS
+json_data = news_requests.json()["articles"]
+df = pd.DataFrame(json_data)
+df = pd.DataFrame(df[["title", "url"]])
+max_rows=10
+######################
 
 def load_csv(url):
     data_loaded = pd.read_csv(url, index_col=[0], parse_dates=['data'])
@@ -177,6 +188,16 @@ def update_cards_text(field):
             return card_value, " ( +", variation_previous_day, " )"
         else:
             return card_value, " ( ", variation_previous_day, " )"
+
+# Callback to update news
+# TODO: implement THE CALLBACK news
+@app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
+def update_news():
+    return True
+    # json_data = news_requests.json()["articles"]
+    # df = pd.DataFrame(json_data)
+    # df = pd.DataFrame(df[["title", "url"]])
+    # max_rows = 10
 
 
 def app_layout():
@@ -400,7 +421,38 @@ def app_layout():
                     ),
                 ],
                 className="row flex-display",
-            ),  # END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+            ),# END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+            html.Div( #5TH INCAPS
+                children=[
+                    html.P(className="p-news", children="Health News Italia"),
+                    html.P(
+                        className="p-news float-right",
+                        children="Last update : "
+                                 + datetime.datetime.now().strftime("%H:%M:%S"),
+                    ),
+                    html.Table( #START TABLE NEWS
+                        className="table-news",
+                        children=[
+                            html.Tr(
+                                children=[
+                                    html.Td(
+                                        children=[
+                                            html.A(
+                                                className="td-link",
+                                                children=df.iloc[i]["title"],
+                                                href=df.iloc[i]["url"],
+                                                target="_blank",
+                                            )
+                                        ]
+                                    )
+                                ]
+                            )
+                            for i in range(min(len(df), max_rows))
+                        ],
+                    ), #END TABLE NEWS
+                ]
+            )
+            # END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
         ],  # END OF SUPEREME INCAPSULATION ############################################
 
         id="mainContainer",
