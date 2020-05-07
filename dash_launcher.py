@@ -13,16 +13,9 @@ from constants import DATA_DICT
 app = dash.Dash(__name__)
 url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
-# API Requests for news
-news_requests = requests.get("http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
+news_requests = requests.get(
+    "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
 
-# TODO: implement this lines in a func#
-## DATA FOR DF NEWS
-json_data = news_requests.json()["articles"]
-df = pd.DataFrame(json_data)
-df = pd.DataFrame(df[["title", "url"]])
-max_rows=10
-######################
 
 def load_csv(url):
     data_loaded = pd.read_csv(url, index_col=[0], parse_dates=['data'])
@@ -182,28 +175,61 @@ def update_cards_text(field):
         return string_header_last_update
     else:
         card_value = df_national_data[field].iloc[-1]
-        card_value_previous_day= df_national_data[field].iloc[-2]
+        card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0:
             return card_value, " ( +", variation_previous_day, " )"
         else:
             return card_value, " ( ", variation_previous_day, " )"
 
-# Callback to update news
-# TODO: implement THE CALLBACK news
+def create_news():
+    json_data = news_requests.json()["articles"]
+    df_news = pd.DataFrame(json_data)
+    df_news = pd.DataFrame(df_news[["title", "url"]])
+    max_rows = 10
+    return html.Div(
+        children=[
+            html.P(className="p-news", children="Health News Italia"),
+            html.P(
+                className="p-news float-right",
+                children="Last update : "
+                + datetime.datetime.now().strftime("%H:%M:%S"),
+            ),
+            html.Table(
+                className="table-news",
+                children=[
+                    html.Tr(
+                        children=[
+                            html.Td(
+                                children=[
+                                    html.A(
+                                        className="td-link",
+                                        children=df_news.iloc[i]["title"],
+                                        href=df_news.iloc[i]["url"],
+                                        target="_blank",
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                    for i in range(min(len(df_news), max_rows))
+                ],
+            ),
+        ]
+    )
+
+
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
-def update_news():
-    return True
-    # json_data = news_requests.json()["articles"]
-    # df = pd.DataFrame(json_data)
-    # df = pd.DataFrame(df[["title", "url"]])
-    # max_rows = 10
+def update_news(input):
+    return create_news()
 
 
 def app_layout():
     app.layout = html.Div(
         [  # START OF SUPREME INCAPSULATION ############################################
             dcc.Store(id="aggregate_data"),
+            # Interval component for updating news list
+            dcc.Interval(id="i_news", interval=1 * 60000, n_intervals=0),
             # empty Div to trigger javascript file for graph resizing
             html.Div(id="output-clientside"),
             html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
@@ -270,7 +296,7 @@ def app_layout():
                             )
                         ],
                         className="one-third column",
-                        #id="button",
+                        # id="button",
                     ),  # END OF BUTTON
                 ],
                 id="header",
@@ -421,40 +447,22 @@ def app_layout():
                     ),
                 ],
                 className="row flex-display",
-            ),# END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
-            html.Div( #5TH INCAPS
-                children=[
-                    html.P(className="p-news", children="Health News Italia"),
-                    html.P(
-                        className="p-news float-right",
-                        children="Last update : "
-                                 + datetime.datetime.now().strftime("%H:%M:%S"),
+            ),  # END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
+            html.Div(  # START 5TH INCAPS
+                [
+                    html.Div( # START OF NEWS FEEDER
+                        children=[html.Div(id="news", children=create_news())],
+                        className="pretty_container five columns",
+                    ),#END OF NEWS FEEDER
+                    html.Div(
+                        [dcc.Graph(id="pie_graph_3")],
+                        className="pretty_container seven columns",
                     ),
-                    html.Table( #START TABLE NEWS
-                        className="table-news",
-                        children=[
-                            html.Tr(
-                                children=[
-                                    html.Td(
-                                        children=[
-                                            html.A(
-                                                className="td-link",
-                                                children=df.iloc[i]["title"],
-                                                href=df.iloc[i]["url"],
-                                                target="_blank",
-                                            )
-                                        ]
-                                    )
-                                ]
-                            )
-                            for i in range(min(len(df), max_rows))
-                        ],
-                    ), #END TABLE NEWS
-                ]
-            )
-            # END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
-        ],  # END OF SUPEREME INCAPSULATION ############################################
+                ],
+                className="row flex-display",
+            ),  # END OF 5TH INCAPSULATION
 
+        ],  # END OF SUPEREME INCAPSULATION ############################################
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
     )
