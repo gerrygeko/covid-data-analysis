@@ -171,7 +171,12 @@ def update_cards_text(field):
         return string_header_last_update
     else:
         card_value = df_national_data[field].iloc[-1]
-        return card_value
+        card_value_previous_day= df_national_data[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        if variation_previous_day > 0:
+            return card_value, " ( +", variation_previous_day, " )"
+        else:
+            return card_value, " ( ", variation_previous_day, " )"
 
 
 def app_layout():
