@@ -8,7 +8,6 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 from constants import DATA_DICT
 
-
 app = dash.Dash(__name__)
 url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
@@ -205,7 +204,8 @@ def app_layout():
                                         "Covid-19 Italia by Gellex",
                                         style={"margin-bottom": "0px"},
                                     ),
-                                    html.H5(id="subHeader", children=update_cards_text('data'), style={"margin-top": "0px"}),
+                                    html.H5(id="subHeader", children=update_cards_text('data'),
+                                            style={"margin-top": "0px"}),
                                 ]
                             )
                         ],
@@ -214,13 +214,37 @@ def app_layout():
                     ),  # END OF HEADING
                     html.Div(  # START OF BUTTON
                         [
-                            html.A(
-                                html.Button("Learn More", id="learn-more-button"),
-                                href="https://plot.ly/dash/pricing/",
+                            html.Div(
+                                [
+                                    html.A(
+                                        html.Img(
+                                            src=app.get_asset_url("protezione-civile.png"),
+                                            id="protezione-civile-image",
+                                            style={
+                                                "height": "48px",
+                                                "width": "auto",
+                                                "margin-bottom": "10px",
+                                            },
+                                        ),
+                                        href="https://github.com/pcm-dpc",
+                                    ),
+                                    html.A(
+                                        html.Img(
+                                            src=app.get_asset_url("github.svg"),
+                                            id="github-image",
+                                            style={
+                                                "height": "48px",
+                                                "width": "auto",
+                                                "margin-bottom": "10px",
+                                            },
+                                        ),
+                                        href="https://github.com/gerrygeko/covid-data-analysis",
+                                    )
+                                ]
                             )
                         ],
                         className="one-third column",
-                        id="button",
+                        #id="button",
                     ),  # END OF BUTTON
                 ],
                 id="header",
@@ -305,22 +329,28 @@ def app_layout():
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
-                                        [html.H6(id="total_positive_text", children=update_cards_text('totale_positivi')), html.P("Attualmente Positivi Italia")],
+                                        [html.H6(id="total_positive_text",
+                                                 children=update_cards_text('totale_positivi')),
+                                         html.P("Attualmente Positivi Italia")],
                                         id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_cases_text", children=update_cards_text('totale_casi')), html.P("Totale Casi Italia")],
+                                        [html.H6(id="total_cases_text", children=update_cards_text('totale_casi')),
+                                         html.P("Totale Casi Italia")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_recovered_text", children=update_cards_text('dimessi_guariti')), html.P("Dimessi/Guariti Italia")],
+                                        [html.H6(id="total_recovered_text",
+                                                 children=update_cards_text('dimessi_guariti')),
+                                         html.P("Dimessi/Guariti Italia")],
                                         id="total_recovered",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_deaths_text", children=update_cards_text('deceduti')), html.P("Decessi Italia")],
+                                        [html.H6(id="total_deaths_text", children=update_cards_text('deceduti')),
+                                         html.P("Decessi Italia")],
                                         id="total_deaths",
                                         className="mini_container",
                                     ),

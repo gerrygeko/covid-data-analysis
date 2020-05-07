@@ -1,12 +1,15 @@
 MIGLIORIE
 -Inserimento del changelog e MAJOR.MINOR.PATCH
 -Intruduzione del contatore di visite
--Logo e iperlink a github
-- iperlink ai dati Protezione Civile
+-rappresentazione dati in negativo nel pie chart
+-Inserimento nelle card, delle variazioni dei dati rispetto al giorno precedente, con colorazione in base alla positività o negatività
+
 
 SVILUPPI
 -Cercare fonti e compatibilità per feed RSS notizie Protezione Civile
 -Grafico a torta per regioni selezionate
 
 SOLVED
-Responsività del Logo
+-Responsività del Logo
+-Logo e iperlink a github
+- iperlink ai dati Protezione Civile
