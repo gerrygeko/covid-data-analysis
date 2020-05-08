@@ -1,4 +1,6 @@
 import copy
+import csv
+
 import pandas as pd
 import dash
 import dash_html_components as html
@@ -26,6 +28,15 @@ news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
 
 
+def load_csv_from_file(path):
+    reader = csv.reader(open(path, 'r'))
+    d = {}
+    for row in reader:
+        k, v = row
+        d[k] = v
+    return d
+
+
 def load_csv(url):
     data_loaded = pd.read_csv(url, index_col=[0], parse_dates=['data'])
     return data_loaded
@@ -37,9 +48,11 @@ def load_geojson(url):
     return json
 
 
-df_regional_data = load_csv(url_csv_regional_data)
-df_national_data = load_csv(url_csv_italy_data)
-geojson_province = load_geojson(url_geojson_regions)
+region_population = load_csv_from_file('assets/region_population.csv')
+df_regional_data = None
+df_national_data = None
+geojson_province = None
+df_pressure_regional = None
 
 layout = dict(
     autosize=True,
@@ -190,6 +203,7 @@ def update_map_graph(data_selected):
                                   featureidkey="properties.reg_istat_code_num",
                                   color=data_selected,
                                   color_continuous_scale="Reds",
+                                  hover_name='denominazione_regione',
                                   range_color=(df[data_selected].min(), df[data_selected].max()),
                                   mapbox_style="carto-positron",
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
@@ -222,7 +236,7 @@ def create_news():
     max_rows = 10
     return html.Div(
         children=[
-            html.P(className="p-news", children="Health News Italia"),
+            html.H5(className="p-news", children="Health News Italia"),
             html.P(
                 className="p-news float-right",
                 children="Last update : "
@@ -255,6 +269,45 @@ def create_news():
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
 def update_news(input):
     return create_news()
+
+
+def load_region_pressure_data_frame():
+    df_sb = pd.read_csv(url_csv_regional_data,
+                        index_col=['codice_regione', 'denominazione_regione', 'data'],
+                        parse_dates=['data'])
+    df_sb = df_sb.tail(21)
+    property_list = ['ricoverati_con_sintomi', 'terapia_intensiva',
+                'totale_ospedalizzati', 'isolamento_domiciliare',
+                'totale_positivi', 'variazione_totale_positivi',
+                'nuovi_positivi', 'dimessi_guariti',
+                'deceduti', 'totale_casi',
+                'tamponi', 'casi_testati']
+    # DataFrame filtered by columns
+    df_sb = pd.DataFrame(df_sb,
+                         columns=property_list)
+    df_sb['population'] = list(region_population.values())
+    df_sb = df_sb.set_index(keys='population',
+                    append=True)
+    for i, row in df_sb.iterrows():
+        population = i[3]
+        for property in property_list:
+            value = row[property]
+            pressure_value = (float(value)/float(population))*100000
+            # print(value)
+            # print(pressure_value)
+            df_sb.at[i, property + '_pressure'] = round(pressure_value, 2)
+        # transform_to_pressure_data(population, row)
+    df_sb = df_sb.drop(columns=property_list)
+    print(df_sb['totale_casi_pressure'])
+    return df_sb
+
+
+def load_data():
+    global df_regional_data, df_national_data, geojson_province, df_pressure_regional
+    df_regional_data = load_csv(url_csv_regional_data)
+    df_national_data = load_csv(url_csv_italy_data)
+    geojson_province = load_geojson(url_geojson_regions)
+    df_pressure_regional = load_region_pressure_data_frame()
 
 
 def app_layout():
@@ -504,5 +557,6 @@ def app_layout():
 if __name__ == '__main__':
     # Initialise the app
     app.config.suppress_callback_exceptions = True
+    load_data()
     app_layout()
     app.run_server(debug=True)  # debug=True active a button in the bottom right corner of the web page
