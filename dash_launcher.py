@@ -4,15 +4,24 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import plotly.graph_objects as go
+import plotly.express as px
+import json as js
 import requests
 import datetime
 
 from dash.dependencies import Input, Output
 from constants import DATA_DICT
+from urllib.request import urlopen
 
 app = dash.Dash(__name__)
-url_csv_regional_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
-url_csv_italy_data = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
+url_csv_regional_data = \
+    "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
+url_csv_italy_data = \
+    "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
+    "/dpc-covid19-ita-andamento-nazionale.csv"
+url_geojson_regions = \
+    "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
+# API Requests for news
 news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
 
@@ -22,13 +31,15 @@ def load_csv(url):
     return data_loaded
 
 
+def load_geojson(url):
+    with urlopen(url) as response:
+        json = js.load(response)
+    return json
+
+
 df_regional_data = load_csv(url_csv_regional_data)
 df_national_data = load_csv(url_csv_italy_data)
-
-national_data_mapping = [('totale_casi', 'Total cases'),
-                         ('totale_positivi', 'Currently positive'),
-                         ('ricoverati_con_sintomi', 'Hospitalized patients'),
-                         ('terapia_intensiva', 'ICU patients')]
+geojson_province = load_geojson(url_geojson_regions)
 
 layout = dict(
     autosize=True,
@@ -88,6 +99,7 @@ def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_i
 def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region, y_is_log=False):
     y_axis_type = "log" if y_is_log else "linear"
     scatter_list = []
+    y_axis_data_mapping_region.sort(key=lambda tup: tup[1])
     for field, region in y_axis_data_mapping_region:
         scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['denominazione_regione'] == region][field],
                              mode='lines+markers',
@@ -155,17 +167,37 @@ def update_pie_graph(region_list, data_selected):
         layout_pie['title'] = ""
         figure = dict(data=data, layout=layout_pie)
         return figure
+    region_list.sort()
     for region in region_list:
         value = df_regional_data[df_regional_data['denominazione_regione'] == region][data_selected][-1]
         value_list.append(value)
-    data = [go.Pie(labels=[region for region in region_list],
+    data = [go.Pie(labels=region_list,
                    values=value_list,
                    hoverinfo='text+value+percent',
                    textinfo='label+percent',
                    hole=0.5)]
     date = df_regional_data.index[-1].strftime('%d/%m/%Y')
-    layout_pie['title'] = "Regional graph for {} at {}".format(DATA_DICT[data_selected], date)
+    layout_pie['title'] = "{} at {}".format(DATA_DICT[data_selected], date)
     figure = dict(data=data, layout=layout_pie)
+    return figure
+
+
+@app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
+def update_map_graph(data_selected):
+    df = df_regional_data.tail(21)
+
+    figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
+                                  featureidkey="properties.reg_istat_code_num",
+                                  color=data_selected,
+                                  color_continuous_scale="Reds",
+                                  range_color=(df[data_selected].min(), df[data_selected].max()),
+                                  mapbox_style="carto-positron",
+                                  zoom=4, center={"lat": 42.0902, "lon": 11.7129},
+                                  opacity=0.5,
+                                  labels={data_selected: DATA_DICT[data_selected]}
+                                  )
+
+    figure.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
     return figure
 
 
@@ -181,6 +213,7 @@ def update_cards_text(field):
             return card_value, " ( +", variation_previous_day, " )"
         else:
             return card_value, " ( ", variation_previous_day, " )"
+
 
 def create_news():
     json_data = news_requests.json()["articles"]
@@ -229,7 +262,7 @@ def app_layout():
         [  # START OF SUPREME INCAPSULATION ############################################
             dcc.Store(id="aggregate_data"),
             # Interval component for updating news list
-            dcc.Interval(id="i_news", interval=1 * 60000, n_intervals=0),
+            dcc.Interval(id="i_news", interval=60 * 1000, n_intervals=0),
             # empty Div to trigger javascript file for graph resizing
             html.Div(id="output-clientside"),
             html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
@@ -425,7 +458,7 @@ def app_layout():
             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                 [
                     html.Div(
-                        [dcc.Graph(id="main_graph")],
+                        [dcc.Graph(id="map_graph")],
                         className="pretty_container seven columns",
                     ),
                     html.Div(

@@ -3,3 +3,4 @@ requests
 matplotlib
 dash
 plotly
+urllib3
