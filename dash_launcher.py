@@ -15,6 +15,8 @@ from dash.dependencies import Input, Output
 from constants import DATA_DICT
 from urllib.request import urlopen
 
+INHABITANT_RATE = 100000
+
 app = dash.Dash(__name__)
 url_csv_regional_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
@@ -52,7 +54,7 @@ region_population = load_csv_from_file('assets/region_population.csv')
 df_regional_data = None
 df_national_data = None
 geojson_province = None
-df_pressure_regional = None
+df_rate_regional = None
 
 layout = dict(
     autosize=True,
@@ -271,34 +273,25 @@ def update_news(input):
     return create_news()
 
 
-def load_region_pressure_data_frame():
+def load_region_rate_data_frame():
     df_sb = pd.read_csv(url_csv_regional_data,
-                        index_col=['codice_regione', 'denominazione_regione', 'data'],
+                        index_col=['denominazione_regione'],
                         parse_dates=['data'])
     df_sb = df_sb.tail(21)
-    property_list = ['ricoverati_con_sintomi', 'terapia_intensiva',
+    field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                 'totale_ospedalizzati', 'isolamento_domiciliare',
                 'totale_positivi', 'variazione_totale_positivi',
                 'nuovi_positivi', 'dimessi_guariti',
                 'deceduti', 'totale_casi',
                 'tamponi', 'casi_testati']
-    # DataFrame filtered by columns
-    df_sb = pd.DataFrame(df_sb,
-                         columns=property_list)
     df_sb['population'] = list(region_population.values())
-    df_sb = df_sb.set_index(keys='population',
-                    append=True)
     for i, row in df_sb.iterrows():
-        population = i[3]
-        for property in property_list:
-            value = row[property]
-            pressure_value = (float(value)/float(population))*100000
-            # print(value)
-            # print(pressure_value)
-            df_sb.at[i, property + '_pressure'] = round(pressure_value, 2)
-        # transform_to_pressure_data(population, row)
-    df_sb = df_sb.drop(columns=property_list)
-    print(df_sb['totale_casi_pressure'])
+        population = row['population']
+        for field in field_list_to_rate:
+            value = row[field]
+            pressure_value = (float(value)/float(population)) * INHABITANT_RATE
+            df_sb.at[i, field + '_rate'] = round(pressure_value, 2)
+    df_sb = df_sb.drop(columns=field_list_to_rate)
     return df_sb
 
 
@@ -307,7 +300,7 @@ def load_data():
     df_regional_data = load_csv(url_csv_regional_data)
     df_national_data = load_csv(url_csv_italy_data)
     geojson_province = load_geojson(url_geojson_regions)
-    df_pressure_regional = load_region_pressure_data_frame()
+    df_rate_regional = load_region_rate_data_frame()
 
 
 def app_layout():
