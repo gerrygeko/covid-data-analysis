@@ -213,7 +213,17 @@ def update_map_graph(data_selected):
                                   labels={data_selected: DATA_DICT[data_selected]}
                                   )
 
-    figure.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+    figure.update_layout(
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        annotations=[dict(
+            x=0.0,
+            y=0.0,
+            xref='paper',
+            yref='paper',
+            text='*incidenza dello studio selezionato per regione (ogni 100.000 abitanti)',
+            showarrow=False
+        )]
+    )
     return figure
 
 
@@ -321,7 +331,7 @@ def app_layout():
                                 style={
                                     "height": "180px",
                                     "width": "auto",
-                                    "margin-bottom": "15px",
+                                    "margin-bottom": "0px",
                                 },
                             )
                         ],
@@ -343,7 +353,7 @@ def app_layout():
                         className="one-half column",
                         id="title",
                     ),  # END OF HEADING
-                    html.Div(  # START OF BUTTON
+                    html.Div(  # START OF GITHUB LOGOS
                         [
                             html.Div(
                                 [
@@ -376,7 +386,7 @@ def app_layout():
                         ],
                         className="one-third column",
                         id="button",
-                    ),  # END OF BUTTON
+                    ),  # END OF GITHUB LOGOS
                 ],
                 id="header",
                 className="row flex-display",
