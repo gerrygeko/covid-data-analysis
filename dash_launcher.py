@@ -200,7 +200,7 @@ def update_pie_graph(region_list, data_selected):
 @app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
-
+    date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
                                   color=data_selected,
@@ -220,7 +220,7 @@ def update_map_graph(data_selected):
             y=0.0,
             xref='paper',
             yref='paper',
-            text='*incidenza dello studio selezionato per regione (ogni 100.000 abitanti)',
+            text='*Incidenza di {} per regione (ogni 100.000 abitanti) al {}'.format(DATA_DICT[data_selected], date_string),
             showarrow=False
         )]
     )
@@ -331,7 +331,6 @@ def app_layout():
                                 style={
                                     "height": "180px",
                                     "width": "auto",
-                                    "margin-bottom": "0px",
                                 },
                             )
                         ],
@@ -343,10 +342,8 @@ def app_layout():
                                 [
                                     html.H3(
                                         "Covid-19 Italia by Gellex",
-                                        style={"margin-bottom": "0px"},
                                     ),
-                                    html.H5(id="subHeader", children=update_cards_text('data'),
-                                            style={"margin-top": "0px"}),
+                                    html.H5(id="subHeader", children=update_cards_text('data'))
                                 ]
                             )
                         ],
