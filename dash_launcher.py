@@ -197,9 +197,9 @@ def update_pie_graph(region_list, data_selected):
     return figure
 
 
-@app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
+@app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_map_graph(data_selected):
-    df = df_regional_data.tail(21)
+    df = df_rate_regional.tail(21)
 
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
@@ -274,9 +274,7 @@ def update_news(input):
 
 
 def load_region_rate_data_frame():
-    df_sb = pd.read_csv(url_csv_regional_data,
-                        index_col=['denominazione_regione'],
-                        parse_dates=['data'])
+    df_sb = pd.read_csv(url_csv_regional_data, parse_dates=['data'])
     df_sb = df_sb.tail(21)
     field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                 'totale_ospedalizzati', 'isolamento_domiciliare',
@@ -285,18 +283,20 @@ def load_region_rate_data_frame():
                 'deceduti', 'totale_casi',
                 'tamponi', 'casi_testati']
     df_sb['population'] = list(region_population.values())
+    # Convert field to float
+    for field in field_list_to_rate:
+        df_sb[field] = pd.to_numeric(df_sb[field], downcast='float')
     for i, row in df_sb.iterrows():
         population = row['population']
         for field in field_list_to_rate:
             value = row[field]
             pressure_value = (float(value)/float(population)) * INHABITANT_RATE
-            df_sb.at[i, field + '_rate'] = round(pressure_value, 2)
-    df_sb = df_sb.drop(columns=field_list_to_rate)
+            df_sb.at[i, field] = round(pressure_value, 2)
     return df_sb
 
 
 def load_data():
-    global df_regional_data, df_national_data, geojson_province, df_pressure_regional
+    global df_regional_data, df_national_data, geojson_province, df_rate_regional
     df_regional_data = load_csv(url_csv_regional_data)
     df_national_data = load_csv(url_csv_italy_data)
     geojson_province = load_geojson(url_geojson_regions)
@@ -393,13 +393,6 @@ def app_layout():
                                     html.P(
                                         "Filter by date (or select range in histogram):",
                                         className="control_label",
-                                    ),
-                                    dcc.RangeSlider(
-                                        id="year_slider_tab_1",
-                                        min=1960,
-                                        max=2017,
-                                        value=[1990, 2010],
-                                        className="dcc_control",
                                     ),
                                     html.P("Multi-Select Regions:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_region_list_selected',
@@ -504,7 +497,12 @@ def app_layout():
             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                 [
                     html.Div(
-                        [dcc.Graph(id="map_graph")],
+                        [dcc.Dropdown(id='dropdown_data_rate_selected',
+                                      options=get_options_from_dict(DATA_DICT),
+                                      multi=False,
+                                      value='ricoverati_con_sintomi',
+                                      className='dcc_control'),
+                         dcc.Graph(id="map_graph")],
                         className="pretty_container seven columns",
                     ),
                     html.Div(
