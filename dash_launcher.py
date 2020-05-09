@@ -375,12 +375,12 @@ def app_layout():
                             )
                         ],
                         className="one-third column",
-                        # id="button",
+                        id="button",
                     ),  # END OF BUTTON
                 ],
                 id="header",
                 className="row flex-display",
-                style={"margin-bottom": "25px"},
+                style={"margin-bottom": "0px", "margin-top": "0px"},
             ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
 
             html.Div(  # START OF 2ND INCAPSULATION  ############################################
