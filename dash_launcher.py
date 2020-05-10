@@ -33,13 +33,6 @@ url_geojson_regions = \
 news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
 
-# Create callbacks
-app.clientside_callback(
-    ClientsideFunction(namespace="clientside", function_name="resize"),
-    Output("output-clientside", "children"),
-    [Input("regional_timeseries_linear", "figure")],
-)
-
 
 def load_csv_from_file(path):
     reader = csv.reader(open(path, 'r'))
@@ -338,6 +331,12 @@ def load_data():
     geojson_province = load_geojson(url_geojson_regions)
     df_rate_regional = load_region_rate_data_frame()
 
+# Create callbacks
+app.clientside_callback(
+    ClientsideFunction(namespace="clientside", function_name="resize"),
+    Output("output-clientside", "children"),
+    [Input("regional_timeseries_linear", "figure")],
+)
 
 def app_layout():
     app.layout = html.Div(

@@ -3,6 +3,7 @@ MIGLIORIE
 -Intruduzione del contatore di visite
 -rappresentazione dati in negativo nel pie chart
 -Inserimento nelle card, delle variazioni dei dati rispetto al giorno precedente, con colorazione in base alla positività o negatività
+-Rimuovere la data come index del DF
 
 
 SVILUPPI
