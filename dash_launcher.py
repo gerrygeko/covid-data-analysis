@@ -17,7 +17,11 @@ from urllib.request import urlopen
 
 INHABITANT_RATE = 100000
 
-app = dash.Dash(__name__)
+app = dash.Dash(
+    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
+)
+server = app.server
+
 url_csv_regional_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = \
@@ -135,7 +139,7 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
 
 
 # TODO: re-implement logic for logarithm scale
-def create_figure(data, title, y_axis_type):
+def create_figure(data, title):
     layout_figure = copy.deepcopy(layout)
 
     layout_figure['title'] = title
@@ -239,7 +243,7 @@ def update_map_graph(data_selected):
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
     df_sub = df_rate_regional
-    df_sorted = df_sub.sort_values(by=[data_selected], ascending=False)
+    df_sorted = df_sub.sort_values(by=[data_selected])
     df_sorted = df_sorted.head(10)
     region_list = df_sorted['denominazione_regione'].values.tolist()
     value_list = df_sorted[data_selected].values.tolist()
