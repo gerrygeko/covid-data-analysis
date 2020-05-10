@@ -11,7 +11,7 @@ import json as js
 import requests
 import datetime
 
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, ClientsideFunction
 from constants import DATA_DICT
 from urllib.request import urlopen
 
@@ -28,6 +28,13 @@ url_geojson_regions = \
 # API Requests for news
 news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
+
+# Create callbacks
+app.clientside_callback(
+    ClientsideFunction(namespace="clientside", function_name="resize"),
+    Output("output-clientside", "children"),
+    [Input("regional_timeseries_linear", "figure")],
+)
 
 
 def load_csv_from_file(path):
@@ -193,6 +200,7 @@ def update_pie_graph(region_list, data_selected):
                    hole=0.5)]
     date = df_regional_data.index[-1].strftime('%d/%m/%Y')
     layout_pie['title'] = "{} at {}".format(DATA_DICT[data_selected], date)
+    layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
     figure = dict(data=data, layout=layout_pie)
     return figure
 
@@ -224,6 +232,22 @@ def update_map_graph(data_selected):
             showarrow=False
         )]
     )
+    return figure
+
+
+@app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
+def update_bar_graph(data_selected):
+    layout_bar = copy.deepcopy(layout)
+    df_sub = df_rate_regional
+    df_sorted = df_sub.sort_values(by=[data_selected], ascending=False)
+    df_sorted = df_sorted.head(10)
+    region_list = df_sorted['denominazione_regione'].values.tolist()
+    value_list = df_sorted[data_selected].values.tolist()
+    data = [go.Bar(x=value_list,
+                   y=region_list,
+                   orientation='h')]
+    layout_bar['title'] = 'Region scores'
+    figure = dict(data=data, layout=layout_bar)
     return figure
 
 
@@ -397,10 +421,6 @@ def app_layout():
 
                             dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
                                 dcc.Tab(label='Compare Regions', value='tab_region', children=[  # START FIRST TAB
-                                    html.P(
-                                        "Filter by date (or select range in histogram):",
-                                        className="control_label",
-                                    ),
                                     html.P("Multi-Select Regions:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_region_list_selected',
                                                  options=get_options(
@@ -420,17 +440,6 @@ def app_layout():
                                     dcc.Graph(id="pie_graph")
                                 ]),  # END OF FIRST TAB
                                 dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
-                                    html.P(
-                                        "Filter by date (or select range in histogram):",
-                                        className="control_label",
-                                    ),
-                                    dcc.RangeSlider(
-                                        id="year_slider_tab_2",
-                                        min=1960,
-                                        max=2017,
-                                        value=[1990, 2010],
-                                        className="dcc_control",
-                                    ),
                                     html.P("Multi-Select Data:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_data_list_selected',
                                                  options=get_options_from_dict(DATA_DICT),
@@ -513,38 +522,21 @@ def app_layout():
                         className="pretty_container seven columns",
                     ),
                     html.Div(
-                        [dcc.Graph(id="individual_graph")],
+                        [dcc.Graph(id="bar_graph")],
                         className="pretty_container five columns",
                     ),
                 ],
                 className="row flex-display",
             ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
-            html.Div(  # START OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
-                [
-                    html.Div(
-                        [dcc.Graph(id="pie_graph_2")],
-                        className="pretty_container seven columns",
-                    ),
-                    html.Div(
-                        [dcc.Graph(id="aggregate_graph")],
-                        className="pretty_container five columns",
-                    ),
-                ],
-                className="row flex-display",
-            ),  # END OF 4TH INCAPSULATION THAT INCLUDE 2 GRAPH component
-            html.Div(  # START 5TH INCAPS
+            html.Div(  # START 4TH INCAPS
                 [
                     html.Div( # START OF NEWS FEEDER
                         children=[html.Div(id="news", children=create_news())],
                         className="pretty_container five columns",
                     ),#END OF NEWS FEEDER
-                    html.Div(
-                        [dcc.Graph(id="pie_graph_3")],
-                        className="pretty_container seven columns",
-                    ),
                 ],
                 className="row flex-display",
-            ),  # END OF 5TH INCAPSULATION
+            ),  # END OF 4TH INCAPSULATION
 
         ],  # END OF SUPEREME INCAPSULATION ############################################
         id="mainContainer",
