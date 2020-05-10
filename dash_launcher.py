@@ -101,8 +101,7 @@ def get_options_from_dict(data_dict):
     return dict_list
 
 
-def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_is_log=False):
-    y_axis_type = "log" if y_is_log else "linear"
+def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping):
     scatter_list = []
     # Draw empty figures if an empty list is passed
     if len(y_axis_data_mapping) == 0:
@@ -118,12 +117,11 @@ def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping, y_i
                                  textposition='bottom center')
             scatter_list.append(scatter)
 
-    figure = create_figure(scatter_list, title, y_axis_type)
+    figure = create_figure(scatter_list, title)
     return figure
 
 
-def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region, y_is_log=False):
-    y_axis_type = "log" if y_is_log else "linear"
+def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_mapping_region):
     scatter_list = []
     y_axis_data_mapping_region.sort(key=lambda tup: tup[1])
     for field, region in y_axis_data_mapping_region:
@@ -134,7 +132,7 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
                              # line=dict(shape="spline", smoothing=1, width=1),
                              textposition='bottom center')
         scatter_list.append(scatter)
-    figure = create_figure(scatter_list, title, y_axis_type)
+    figure = create_figure(scatter_list, title)
     return figure
 
 
@@ -425,7 +423,7 @@ def app_layout():
 
                             dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
                                 dcc.Tab(label='Compare Regions', value='tab_region', children=[  # START FIRST TAB
-                                    html.P("Multi-Select Regions:", className="control_label"),
+                                    html.P("Select one or more regions to compare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_region_list_selected',
                                                  options=get_options(
                                                      df_regional_data['denominazione_regione'].unique()),
@@ -444,7 +442,7 @@ def app_layout():
                                     dcc.Graph(id="pie_graph")
                                 ]),  # END OF FIRST TAB
                                 dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
-                                    html.P("Multi-Select Data:", className="control_label"),
+                                    html.P("Select one ore more data to compare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_data_list_selected',
                                                  options=get_options_from_dict(DATA_DICT),
                                                  multi=True,
