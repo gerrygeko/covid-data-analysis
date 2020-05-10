@@ -264,7 +264,7 @@ def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
     df_news = pd.DataFrame(df_news[["title", "url"]])
-    max_rows = 10
+    max_rows = 6
     return html.Div(
         children=[
             html.H5(className="p-news", children="Health News Italia"),
