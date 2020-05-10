@@ -331,12 +331,6 @@ def load_data():
     geojson_province = load_geojson(url_geojson_regions)
     df_rate_regional = load_region_rate_data_frame()
 
-# Create callbacks
-app.clientside_callback(
-    ClientsideFunction(namespace="clientside", function_name="resize"),
-    Output("output-clientside", "children"),
-    [Input("regional_timeseries_linear", "figure")],
-)
 
 def app_layout():
     app.layout = html.Div(
@@ -547,7 +541,13 @@ def app_layout():
 
 if __name__ == '__main__':
     # Initialise the app
-    app.config.suppress_callback_exceptions = True
     load_data()
+    app.config.suppress_callback_exceptions = True
+    # Create callbacks
+    app.clientside_callback(
+        ClientsideFunction(namespace="clientside", function_name="resize"),
+        Output("output-clientside", "children"),
+        [Input("regional_timeseries_linear", "figure")],
+    )
     app_layout()
     app.run_server(debug=True)  # debug=True active a button in the bottom right corner of the web page
