@@ -12,3 +12,18 @@ DATA_DICT = dict(
     tamponi='Tamponi',
     casi_testati='Casi Testati'
 )
+
+DATA_DICT_HIDDEN_LABEL= dict(
+    ricoverati_con_sintomi='',
+    terapia_intensiva='',
+    totale_ospedalizzati='',
+    isolamento_domiciliare='',
+    totale_positivi='',
+    variazione_totale_positivi='',
+    nuovi_positivi='',
+    dimessi_guariti='',
+    deceduti='',
+    totale_casi='',
+    tamponi='',
+    casi_testati=''
+)

@@ -13,7 +13,7 @@ import requests
 import schedule
 
 from dash.dependencies import Input, Output, ClientsideFunction
-from constants import DATA_DICT
+from constants import DATA_DICT, DATA_DICT_HIDDEN_LABEL
 from urllib.request import urlopen
 from datetime import datetime
 
@@ -213,8 +213,8 @@ def update_map_graph(data_selected):
                                   mapbox_style="carto-positron",
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
-                                  labels={data_selected: DATA_DICT[data_selected]}
-                                  )
+                                  labels={data_selected: DATA_DICT_HIDDEN_LABEL[data_selected]},
+                                                                    )
 
     figure.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
@@ -233,7 +233,7 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = dict(
-        title='Incidenza Regionale',
+        title='N° di {} (ogni 100.000 abitanti per regione)'.format(DATA_DICT[data_selected]),
         autosize=True,
         automargin=True,
         margin=dict(l=10, r=10, b=20, t=40),
@@ -248,7 +248,7 @@ def update_bar_graph(data_selected):
     )
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
-    df_sorted = df_sorted.head(10)
+    df_sorted = df_sorted.tail(10)
     region_list = df_sorted['denominazione_regione'].values.tolist()
     value_list = df_sorted[data_selected].values.tolist()
     data = [go.Bar(x=value_list,
