@@ -33,7 +33,7 @@ url_geojson_regions = \
     "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
 # API Requests for news
 news_requests = requests.get(
-    "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
+    "http://newsapi.org/v2/top-headlines?country=it&category=science&apiKey=b20640c581554761baab24317b8331e7")
 
 field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                           'totale_ospedalizzati', 'isolamento_domiciliare',
@@ -283,14 +283,14 @@ def update_cards_text(field):
 def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
-    df_news = pd.DataFrame(df_news[["title", "url"]])
+    df_news = pd.DataFrame(df_news[["urlToImage","title", "url"]])
     max_rows = 6
     return html.Div(
         children=[
-            html.H5(className="p-news", children="Health News Italia"),
+            html.H5(className="p-news", children="Italia News Scienza"),
             html.P(
                 className="p-news float-right",
-                children="Last update: "
+                children="Ultimo Aggiornamento: "
                 + datetime.now().strftime("%H:%M:%S"),
             ),
             html.Table(
@@ -300,11 +300,19 @@ def create_news():
                         children=[
                             html.Td(
                                 children=[
+                                    html.Img(
+                                        src=df_news.iloc[i]["urlToImage"],
+                                        style={
+                                            "height": "40px",
+                                            "width": "60px",
+                                            "float": "left",
+                                            "border-radius": "8px"
+                                        }),
                                     html.A(
                                         className="td-link",
                                         children=df_news.iloc[i]["title"],
                                         href=df_news.iloc[i]["url"],
-                                        target="_blank",
+                                        target="_blank"
                                     )
                                 ]
                             )
@@ -376,7 +384,7 @@ def app_layout():
                             html.Div(
                                 [
                                     html.H3(
-                                        "Covid-19 Italia by Gellex",
+                                        "Coronavirus (SARS-CoV-2) Italia",
                                     ),
                                     html.H5(id="subHeader", children=update_cards_text('data'))
                                 ]
@@ -417,7 +425,7 @@ def app_layout():
                             )
                         ],
                         className="one-third column",
-                        id="button",
+                        id="logos",
                     ),  # END OF GITHUB LOGOS
                 ],
                 id="header",
@@ -431,8 +439,8 @@ def app_layout():
                         [
 
                             dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
-                                dcc.Tab(label='Compare Regions', value='tab_region', children=[  # START FIRST TAB
-                                    html.P("Select one or more regions to compare:", className="control_label"),
+                                dcc.Tab(label='Confronta Regioni', value='tab_region', children=[  # START FIRST TAB
+                                    html.P("Seleziona una o più regioni italiane da confrontare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_region_list_selected',
                                                  options=get_options(
                                                      df_regional_data['denominazione_regione'].unique()),
@@ -440,7 +448,7 @@ def app_layout():
                                                  value=['Abruzzo', 'Campania'],
                                                  className='dcc_control'
                                                  ),
-                                    html.P("Select data to show:", className="control_label"),
+                                    html.P("Seleziona il dato da studiare:", className="control_label"),
                                     dcc.Dropdown(
                                         id='dropdown_data_selected',
                                         options=get_options_from_list(field_list_complete),
@@ -450,15 +458,15 @@ def app_layout():
                                     ),
                                     dcc.Graph(id="pie_graph")
                                 ]),  # END OF FIRST TAB
-                                dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
-                                    html.P("Select one ore more data to compare:", className="control_label"),
+                                dcc.Tab(label='Confronta Dati', value='tab_data', children=[  # START OF SECOND TAB
+                                    html.P("Seleziona uno o piu' dati da comparare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_data_list_selected',
                                                  options=get_options_from_list(field_list_complete),
                                                  multi=True,
                                                  value=['ricoverati_con_sintomi'],
                                                  className='dcc_control'
                                                  ),
-                                    html.P("Select region to show:", className="control_label"),
+                                    html.P("Select la regiona italiana da studiare:", className="control_label"),
                                     dcc.Dropdown(
                                         id='dropdown_region_selected',
                                         options=get_options(df_regional_data['denominazione_regione'].unique()),
@@ -548,7 +556,6 @@ def app_layout():
                 ],
                 className="row flex-display",
             ),  # END OF 4TH INCAPSULATION
-
         ],  # END OF SUPEREME INCAPSULATION ############################################
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
