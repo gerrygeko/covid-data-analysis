@@ -232,22 +232,10 @@ def update_map_graph(data_selected):
 
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
-    layout_bar = dict(
-        title='{}(ogni 100.000 abitanti per regione)'.format(DATA_DICT[data_selected]),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        autosize=True,
-        automargin=True,
-        margin=dict(l=5, r=5, b=20, t=40),
-        hovermode="closest",
-        yaxis=dict(
-            zeroline=False,
-            showline=False,
-            showgrid=False,
-            autorange="reversed",
-            showticklabels=False
-        ),
-    )
+    layout_bar = copy.deepcopy(layout)
+    layout_bar['title'] = '{}(ogni 100.000 abitanti per regione)'.format(DATA_DICT[data_selected])
+    layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False,
+                               autorange="reversed", showticklabels=False)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
     region_list = df_sorted['denominazione_regione'].values.tolist()
@@ -325,7 +313,7 @@ def load_region_rate_data_frame():
     df_sb = df_sb.tail(21)
     field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                           'totale_ospedalizzati', 'isolamento_domiciliare',
-                          'totale_positivi', 'variazione_totale_positivi',
+                          'totale_positivi',
                           'nuovi_positivi', 'dimessi_guariti',
                           'deceduti', 'totale_casi',
                           'tamponi', 'casi_testati']
