@@ -14,7 +14,7 @@ The data is offered by [Department of Protezione Civile](http://www.protezioneci
 
 ## Technology adopted
 - Programming language adopted for the whole project is [Python](https://www.python.org/)
-- The framework used to build a web-based analytic application is [Plotly - Dash](https://plotly.com/dash/)
+- The framework used to build this web-based analytic application is [Plotly - Dash](https://plotly.com/dash/)
 
 ## Contact Us
 - Email: lamorte.gerardo@gmail.com

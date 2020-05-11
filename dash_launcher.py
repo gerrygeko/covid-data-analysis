@@ -1,5 +1,6 @@
 import copy
 import csv
+import time
 
 import pandas as pd
 import dash
@@ -9,11 +10,12 @@ import plotly.graph_objects as go
 import plotly.express as px
 import json as js
 import requests
-import datetime
+import schedule
 
 from dash.dependencies import Input, Output, ClientsideFunction
 from constants import DATA_DICT
 from urllib.request import urlopen
+from datetime import datetime
 
 INHABITANT_RATE = 100000
 
@@ -68,28 +70,11 @@ layout = dict(
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
     legend=dict(font=dict(size=10), orientation="h"),
-    #title="Satellite Overview",
     mapbox=dict(
-        # accesstoken=mapbox_access_token,
         style="light",
         center=dict(lon=-78.05, lat=42.54),
         zoom=7,
     ),
-)
-
-layout_bar = dict(
-    title='Incidenza Regionale',
-    autosize=True,
-    automargin=True,
-    margin=dict(l=10, r=10, b=20, t=40),
-    hovermode="closest",
-    yaxis=dict(
-        zeroline=False,
-        showline=False,
-        showgrid=False,
-        autorange="reversed",
-        showticklabels=False
-    )
 )
 
 
@@ -238,8 +223,7 @@ def update_map_graph(data_selected):
             y=0.0,
             xref='paper',
             yref='paper',
-            text='*Incidenza di {} per regione (ogni 100.000 abitanti) al {}'.format(DATA_DICT[data_selected],
-                                                                                     date_string),
+            text='*Incidenza di {} per regione (ogni 100.000 abitanti) al {}'.format(DATA_DICT[data_selected], date_string),
             showarrow=False
         )]
     )
@@ -248,7 +232,20 @@ def update_map_graph(data_selected):
 
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
-    layout = copy.deepcopy(layout_bar)
+    layout_bar = dict(
+        title='Incidenza Regionale',
+        autosize=True,
+        automargin=True,
+        margin=dict(l=10, r=10, b=20, t=40),
+        hovermode="closest",
+        yaxis=dict(
+            zeroline=False,
+            showline=False,
+            showgrid=False,
+            autorange="reversed",
+            showticklabels=False
+        )
+    )
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
     df_sorted = df_sorted.head(10)
@@ -262,9 +259,7 @@ def update_bar_graph(data_selected):
                    orientation='h'
                    )
             ]
-
-    # layout_bar = [go.Layout(title='Region scores')]
-    figure = dict(data=data, layout=layout)
+    figure = dict(data=data, layout=layout_bar)
     return figure
 
 
@@ -292,8 +287,8 @@ def create_news():
             html.H5(className="p-news", children="Health News Italia"),
             html.P(
                 className="p-news float-right",
-                children="Last update : "
-                         + datetime.datetime.now().strftime("%H:%M:%S"),
+                children="Last update: "
+                + datetime.now().strftime("%H:%M:%S"),
             ),
             html.Table(
                 className="table-news",
@@ -347,11 +342,13 @@ def load_region_rate_data_frame():
 
 
 def load_data():
+    print('--- Start loading data at {}'.format(datetime.now()))
     global df_regional_data, df_national_data, geojson_province, df_rate_regional
     df_regional_data = load_csv(url_csv_regional_data)
     df_national_data = load_csv(url_csv_italy_data)
     geojson_province = load_geojson(url_geojson_regions)
     df_rate_regional = load_region_rate_data_frame()
+    print('--- loading data completed')
 
 
 def app_layout():
@@ -573,3 +570,11 @@ if __name__ == '__main__':
     )
     app_layout()
     app.run_server(debug=True)  # debug=True active a button in the bottom right corner of the web page
+
+
+# schedule.every(1).minutes.do(load_data())
+#
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
