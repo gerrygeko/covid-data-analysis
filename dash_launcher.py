@@ -234,10 +234,10 @@ def update_map_graph(data_selected):
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
         annotations=[dict(
             x=0.0,
-            y=0.0,
+            y=0.01,
             xref='paper',
             yref='paper',
-            text='*Incidenza di {} per regione (ogni 100.000 abitanti) al {}'.format(DATA_DICT[data_selected], date_string),
+            text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(DATA_DICT[data_selected], date_string),
             showarrow=False
         )]
     )
@@ -247,7 +247,7 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{} (ogni 100.000 abitanti per regione)'.format(DATA_DICT[data_selected])
+    layout_bar['title'] = '{}<br>(ogni 100K abitanti)'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False,
                                autorange="reversed", showticklabels=False)
     df_sub = df_rate_regional
