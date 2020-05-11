@@ -68,13 +68,28 @@ layout = dict(
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
     legend=dict(font=dict(size=10), orientation="h"),
-    title="Satellite Overview",
+    #title="Satellite Overview",
     mapbox=dict(
         # accesstoken=mapbox_access_token,
         style="light",
         center=dict(lon=-78.05, lat=42.54),
         zoom=7,
     ),
+)
+
+layout_bar = dict(
+    title='Incidenza Regionale',
+    autosize=True,
+    automargin=True,
+    margin=dict(l=10, r=10, b=20, t=40),
+    hovermode="closest",
+    yaxis=dict(
+        zeroline=False,
+        showline=False,
+        showgrid=False,
+        autorange="reversed",
+        showticklabels=False
+    )
 )
 
 
@@ -223,7 +238,8 @@ def update_map_graph(data_selected):
             y=0.0,
             xref='paper',
             yref='paper',
-            text='*Incidenza di {} per regione (ogni 100.000 abitanti) al {}'.format(DATA_DICT[data_selected], date_string),
+            text='*Incidenza di {} per regione (ogni 100.000 abitanti) al {}'.format(DATA_DICT[data_selected],
+                                                                                     date_string),
             showarrow=False
         )]
     )
@@ -232,7 +248,7 @@ def update_map_graph(data_selected):
 
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
-    layout_bar = copy.deepcopy(layout)
+    layout = copy.deepcopy(layout_bar)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
     df_sorted = df_sorted.head(10)
@@ -240,9 +256,15 @@ def update_bar_graph(data_selected):
     value_list = df_sorted[data_selected].values.tolist()
     data = [go.Bar(x=value_list,
                    y=region_list,
-                   orientation='h')]
-    layout_bar['title'] = 'Region scores'
-    figure = dict(data=data, layout=layout_bar)
+                   text=region_list,
+                   textposition='auto',
+                   insidetextanchor="start",
+                   orientation='h'
+                   )
+            ]
+
+    # layout_bar = [go.Layout(title='Region scores')]
+    figure = dict(data=data, layout=layout)
     return figure
 
 
@@ -271,7 +293,7 @@ def create_news():
             html.P(
                 className="p-news float-right",
                 children="Last update : "
-                + datetime.datetime.now().strftime("%H:%M:%S"),
+                         + datetime.datetime.now().strftime("%H:%M:%S"),
             ),
             html.Table(
                 className="table-news",
@@ -306,11 +328,11 @@ def load_region_rate_data_frame():
     df_sb = pd.read_csv(url_csv_regional_data, parse_dates=['data'])
     df_sb = df_sb.tail(21)
     field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
-                'totale_ospedalizzati', 'isolamento_domiciliare',
-                'totale_positivi', 'variazione_totale_positivi',
-                'nuovi_positivi', 'dimessi_guariti',
-                'deceduti', 'totale_casi',
-                'tamponi', 'casi_testati']
+                          'totale_ospedalizzati', 'isolamento_domiciliare',
+                          'totale_positivi', 'variazione_totale_positivi',
+                          'nuovi_positivi', 'dimessi_guariti',
+                          'deceduti', 'totale_casi',
+                          'tamponi', 'casi_testati']
     df_sb['population'] = list(region_population.values())
     # Convert field to float
     for field in field_list_to_rate:
@@ -319,7 +341,7 @@ def load_region_rate_data_frame():
         population = row['population']
         for field in field_list_to_rate:
             value = row[field]
-            pressure_value = (float(value)/float(population)) * INHABITANT_RATE
+            pressure_value = (float(value) / float(population)) * INHABITANT_RATE
             df_sb.at[i, field] = round(pressure_value, 2)
     return df_sb
 
@@ -525,10 +547,10 @@ def app_layout():
             ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
             html.Div(  # START 4TH INCAPS
                 [
-                    html.Div( # START OF NEWS FEEDER
+                    html.Div(  # START OF NEWS FEEDER
                         children=[html.Div(id="news", children=create_news())],
                         className="pretty_container five columns",
-                    ),#END OF NEWS FEEDER
+                    ),  # END OF NEWS FEEDER
                 ],
                 className="row flex-display",
             ),  # END OF 4TH INCAPSULATION
