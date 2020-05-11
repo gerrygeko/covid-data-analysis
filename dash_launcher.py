@@ -35,6 +35,20 @@ url_geojson_regions = \
 news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=health&apiKey=b20640c581554761baab24317b8331e7")
 
+field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
+                          'totale_ospedalizzati', 'isolamento_domiciliare',
+                          'totale_positivi', 'variazione_totale_positivi',
+                          'nuovi_positivi', 'dimessi_guariti',
+                          'deceduti', 'totale_casi',
+                          'tamponi', 'casi_testati']
+
+field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
+                          'totale_ospedalizzati', 'isolamento_domiciliare',
+                          'totale_positivi', ''
+                          'nuovi_positivi', 'dimessi_guariti',
+                          'deceduti', 'totale_casi',
+                          'tamponi', 'casi_testati']
+
 
 def load_csv_from_file(path):
     reader = csv.reader(open(path, 'r'))
@@ -86,10 +100,10 @@ def get_options(list_value):
     return dict_list
 
 
-def get_options_from_dict(data_dict):
+def get_options_from_list(field_list):
     dict_list = []
-    for data in data_dict:
-        dict_list.append({'label': str(data_dict[data]), 'value': str(data)})
+    for data in field_list:
+        dict_list.append({'label': str(DATA_DICT[data]), 'value': str(data)})
 
     return dict_list
 
@@ -233,7 +247,7 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{}(ogni 100.000 abitanti per regione)'.format(DATA_DICT[data_selected])
+    layout_bar['title'] = '{} (ogni 100.000 abitanti per regione)'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False,
                                autorange="reversed", showticklabels=False)
     df_sub = df_rate_regional
@@ -311,12 +325,6 @@ def update_news(input):
 def load_region_rate_data_frame():
     df_sb = pd.read_csv(url_csv_regional_data, parse_dates=['data'])
     df_sb = df_sb.tail(21)
-    field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
-                          'totale_ospedalizzati', 'isolamento_domiciliare',
-                          'totale_positivi',
-                          'nuovi_positivi', 'dimessi_guariti',
-                          'deceduti', 'totale_casi',
-                          'tamponi', 'casi_testati']
     df_sb['population'] = list(region_population.values())
     # Convert field to float
     for field in field_list_to_rate:
@@ -435,7 +443,7 @@ def app_layout():
                                     html.P("Select data to show:", className="control_label"),
                                     dcc.Dropdown(
                                         id='dropdown_data_selected',
-                                        options=get_options_from_dict(DATA_DICT),
+                                        options=get_options_from_list(field_list_complete),
                                         multi=False,
                                         value='ricoverati_con_sintomi',
                                         className='dcc_control'
@@ -445,7 +453,7 @@ def app_layout():
                                 dcc.Tab(label='Compare Data', value='tab_data', children=[  # START OF SECOND TAB
                                     html.P("Select one ore more data to compare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_data_list_selected',
-                                                 options=get_options_from_dict(DATA_DICT),
+                                                 options=get_options_from_list(field_list_complete),
                                                  multi=True,
                                                  value=['ricoverati_con_sintomi'],
                                                  className='dcc_control'
@@ -517,7 +525,7 @@ def app_layout():
                 [
                     html.Div(
                         [dcc.Dropdown(id='dropdown_data_rate_selected',
-                                      options=get_options_from_dict(DATA_DICT),
+                                      options=get_options_from_list(field_list_to_rate),
                                       multi=False,
                                       value='ricoverati_con_sintomi',
                                       className='dcc_control'),
