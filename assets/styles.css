@@ -75,6 +75,11 @@ body {
   position: relative;
 }
 
+#bar_graph {
+  flex: 5;
+  position: relative;
+}
+
 #header {
   align-items: center;
 }
