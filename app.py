@@ -590,18 +590,19 @@ def initialize_thread():
     t.start()
 
 
+initialize_thread()
+load_interactive_data()
+app.config.suppress_callback_exceptions = True
+# Create callbacks
+app.clientside_callback(
+    ClientsideFunction(namespace="clientside", function_name="resize"),
+    Output("output-clientside", "children"),
+    [Input("regional_timeseries_linear", "figure")],
+)
+app_layout()
+
+
 if __name__ == '__main__':
-    # Initialise the app
-    initialize_thread()
-    load_interactive_data()
-    app.config.suppress_callback_exceptions = True
-    # Create callbacks
-    app.clientside_callback(
-        ClientsideFunction(namespace="clientside", function_name="resize"),
-        Output("output-clientside", "children"),
-        [Input("regional_timeseries_linear", "figure")],
-    )
-    app_layout()
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
 
 
