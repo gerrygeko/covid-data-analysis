@@ -312,16 +312,19 @@ def create_news():
                                         style={
                                             "height": "40px",
                                             "width": "60px",
-                                            "float": "left",
+                                            "float": "center",
                                             "border-radius": "8px"
-                                        }),
+                                        })
+                                ]
+                            ),
+                            html.Td(
+                                children=[
                                     html.A(
                                         className="td-link",
                                         children=df_news.iloc[i]["title"],
                                         href=df_news.iloc[i]["url"],
                                         target="_blank"
-                                    )
-                                ]
+                                    )]
                             )
                         ]
                     )
