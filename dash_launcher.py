@@ -232,7 +232,7 @@ def update_map_graph(data_selected):
                                   mapbox_style="carto-positron",
                                   zoom=4.5, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
-                                  labels={data_selected: DATA_DICT_HIDDEN_LABEL[data_selected]},
+                                  labels={data_selected: ''},
                                  )
 
     figure.update_layout(
