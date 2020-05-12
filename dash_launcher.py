@@ -147,7 +147,6 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
     return figure
 
 
-# TODO: re-implement logic for logarithm scale
 def create_figure(data, title):
     layout_figure = copy.deepcopy(layout)
 
@@ -185,6 +184,7 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
             data_list_mapping.append((data, DATA_DICT[data]))
         x_axis_data = df_sub.index
         figure = create_scatter_plot(df_sub, region_selected, x_axis_data, data_list_mapping)
+    log.info('Updating main graph')
     return figure
 
 
@@ -215,6 +215,7 @@ def update_pie_graph(region_list, data_selected):
     layout_pie['title'] = "{} at {}".format(DATA_DICT[data_selected], date)
     layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
     figure = dict(data=data, layout=layout_pie)
+    log.info('Updating pie graph')
     return figure
 
 
@@ -245,6 +246,7 @@ def update_map_graph(data_selected):
             showarrow=False
         )]
     )
+    log.info('Updating map graph')
     return figure
 
 
@@ -267,6 +269,7 @@ def update_bar_graph(data_selected):
                    )
             ]
     figure = dict(data=data, layout=layout_bar)
+    log.info('Updating bar graph')
     return figure
 
 
@@ -351,19 +354,18 @@ def load_region_rate_data_frame():
 
 
 def load_interactive_data():
-    print('--- Start scheduled task to check data updates at {}'.format(datetime.now()))
+    log.info('Start scheduled task to check data updates')
     global df_regional_data, df_national_data, df_rate_regional, region_population, last_update
     df_regional_data = load_csv(url_csv_regional_data)
     df_national_data = load_csv(url_csv_italy_data)
     current_update = df_national_data.index[-1]
     if df_rate_regional is None or current_update != last_update:
-        print('--- Update to data required')
+        log.info('Update to data required')
         df_rate_regional = load_region_rate_data_frame()
         last_update = current_update
-        print(last_update)
     else:
-        print('--- Update is not needed')
-    print('--- Update task completed at {}'.format(datetime.now()))
+        log.info('Update is not needed')
+    log.info('Update task completed')
 
 
 def app_layout():
