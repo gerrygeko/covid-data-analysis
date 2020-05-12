@@ -230,7 +230,7 @@ def update_map_graph(data_selected):
                                   hover_name='denominazione_regione',
                                   range_color=(df[data_selected].min(), df[data_selected].max()),
                                   mapbox_style="carto-positron",
-                                  zoom=4.5, center={"lat": 42.0902, "lon": 11.7129},
+                                  zoom=4, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
                                   labels={data_selected: ''},
                                  )
