@@ -16,10 +16,12 @@ import requests
 import schedule
 from dash.dependencies import Input, Output, ClientsideFunction
 
+import logger
 from constants import DATA_DICT, DATA_DICT_HIDDEN_LABEL
 
 INHABITANT_RATE = 100000
 
+log = logger.get_logger()
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
 )
@@ -581,7 +583,8 @@ def run_schedule():
 
 
 def initialize_thread():
-    print('Starting schedule thread')
+    # print('Starting schedule thread')
+    log.info('Starting schedule thread')
     t = Thread(target=run_schedule)
     t.start()
 
