@@ -2,10 +2,9 @@ NEW FEATURES AND BUG TO SOLVE
 
 - Introduce MAJOR.MINOR.PATCH in the changelog
 - Keep track of number of visit
-- Show negative data correctly in the pie chart
 - Make card text different color based on positivity or negativity of the number
 - Remove date field as index in the DataFrame
-- Reduce amoount of logs in PROD
+- Reduce amount of logs in PROD
 - Scheduler use CET time to not rely on the server time zone
 - Check of new csv data uploaded is based on content and not on last date included in the csv (bug)
 - Language selection
@@ -15,6 +14,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Show negative data correctly in the pie chart
 - Adjust picture portrait in the news section
 - Logo responsive
 - Logo and hyperlink to Github

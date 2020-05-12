@@ -193,13 +193,13 @@ def update_graph(region_list, data_selected, data_list, region_selected, tab_sel
 def update_pie_graph(region_list, data_selected):
     layout_pie = copy.deepcopy(layout)
     value_list = []
-    if len(region_list) == 0 or data_selected is None:
+    if len(region_list) == 0 or data_selected is None or data_selected == 'variazione_totale_positivi':
         data = [go.Pie(labels=[],
                        values=value_list,
                        hoverinfo='text+value+percent',
                        textinfo='label+percent',
                        hole=0.5)]
-        layout_pie['title'] = ""
+        layout_pie['title'] = "Nessun dato selezionato o <br> il dato selezionato non è rappresentabile"
         figure = dict(data=data, layout=layout_pie)
         return figure
     region_list.sort()
@@ -212,7 +212,7 @@ def update_pie_graph(region_list, data_selected):
                    textinfo='label+percent',
                    hole=0.5)]
     date = df_regional_data.index[-1].strftime('%d/%m/%Y')
-    layout_pie['title'] = "{} at {}".format(DATA_DICT[data_selected], date)
+    layout_pie['title'] = "{} al {}".format(DATA_DICT[data_selected], date)
     layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
     figure = dict(data=data, layout=layout_pie)
     log.info('Updating pie graph')
@@ -253,11 +253,12 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{}<br>(ogni 100K abitanti)'.format(DATA_DICT[data_selected])
+    layout_bar['title'] = '{} (ogni 100K abitanti)'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False,
                                autorange="reversed", showticklabels=False)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
+    df_sorted = df_sorted.tail(10)
     region_list = df_sorted['denominazione_regione'].values.tolist()
     value_list = df_sorted[data_selected].values.tolist()
     data = [go.Bar(x=value_list,
@@ -284,7 +285,7 @@ def update_cards_text(field):
         if variation_previous_day > 0:
             return card_value, " (+", variation_previous_day, ")"
         else:
-            return card_value, " <h1 style=\"color:Tomato;\">(", variation_previous_day, ")</h>"
+            return card_value, " (", variation_previous_day, ")"
 
 
 def create_news():
