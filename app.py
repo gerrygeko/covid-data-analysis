@@ -587,7 +587,6 @@ def run_schedule():
 
 
 def initialize_thread():
-    # print('Starting schedule thread')
     log.info('Starting schedule thread')
     t = Thread(target=run_schedule)
     t.start()
