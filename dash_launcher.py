@@ -17,7 +17,7 @@ import schedule
 from dash.dependencies import Input, Output, ClientsideFunction
 
 import logger
-from constants import DATA_DICT, DATA_DICT_HIDDEN_LABEL
+from constants import DATA_DICT
 
 INHABITANT_RATE = 100000
 
