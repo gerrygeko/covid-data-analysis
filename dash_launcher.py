@@ -1,21 +1,22 @@
 import copy
 import csv
-import time
-
-import pandas as pd
-import dash
-import dash_html_components as html
-import dash_core_components as dcc
-import plotly.graph_objects as go
-import plotly.express as px
 import json as js
+import time
+from datetime import datetime
+from threading import Thread
+from urllib.request import urlopen
+
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import requests
 import schedule
-
 from dash.dependencies import Input, Output, ClientsideFunction
+
 from constants import DATA_DICT, DATA_DICT_HIDDEN_LABEL
-from urllib.request import urlopen
-from datetime import datetime
 
 INHABITANT_RATE = 100000
 
@@ -71,9 +72,10 @@ def load_geojson(url):
 
 
 region_population = load_csv_from_file('assets/region_population.csv')
+geojson_province = load_geojson(url_geojson_regions)
+last_update = None
 df_regional_data = None
 df_national_data = None
-geojson_province = None
 df_rate_regional = None
 
 layout = dict(
@@ -346,14 +348,20 @@ def load_region_rate_data_frame():
     return df_sb
 
 
-def load_data():
-    print('--- Start loading data at {}'.format(datetime.now()))
-    global df_regional_data, df_national_data, geojson_province, df_rate_regional
+def load_interactive_data():
+    print('--- Start scheduled task to check data updates at {}'.format(datetime.now()))
+    global df_regional_data, df_national_data, df_rate_regional, region_population, last_update
     df_regional_data = load_csv(url_csv_regional_data)
     df_national_data = load_csv(url_csv_italy_data)
-    geojson_province = load_geojson(url_geojson_regions)
-    df_rate_regional = load_region_rate_data_frame()
-    print('--- loading data completed')
+    current_update = df_national_data.index[-1]
+    if df_rate_regional is None or current_update != last_update:
+        print('--- Update to data required')
+        df_rate_regional = load_region_rate_data_frame()
+        last_update = current_update
+        print(last_update)
+    else:
+        print('--- Update is not needed')
+    print('--- Update task completed at {}'.format(datetime.now()))
 
 
 def app_layout():
@@ -562,9 +570,26 @@ def app_layout():
     )
 
 
+schedule.every(1).hour.do(load_interactive_data)
+schedule.every().day.at("18:05").do(load_interactive_data)
+
+
+def run_schedule():
+    while True:
+        schedule.run_pending()
+        time.sleep(10)
+
+
+def initialize_thread():
+    print('Starting schedule thread')
+    t = Thread(target=run_schedule)
+    t.start()
+
+
 if __name__ == '__main__':
     # Initialise the app
-    load_data()
+    initialize_thread()
+    load_interactive_data()
     app.config.suppress_callback_exceptions = True
     # Create callbacks
     app.clientside_callback(
@@ -573,12 +598,7 @@ if __name__ == '__main__':
         [Input("regional_timeseries_linear", "figure")],
     )
     app_layout()
-    app.run_server(debug=True)  # debug=True active a button in the bottom right corner of the web page
+    app.run_server(debug=False)  # debug=True active a button in the bottom right corner of the web page
 
 
-# schedule.every(1).minutes.do(load_data())
-#
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+
