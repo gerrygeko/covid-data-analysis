@@ -9,7 +9,6 @@ from urllib.request import urlopen
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import flask
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -23,9 +22,8 @@ from constants import DATA_DICT
 INHABITANT_RATE = 100000
 
 log = logger.get_logger()
-server = flask.Flask(__name__)
 app = dash.Dash(
-    __name__, server=server, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
+    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
 )
 server = app.server
 
