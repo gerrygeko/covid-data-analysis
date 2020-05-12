@@ -1,17 +1,20 @@
-MIGLIORIE
--Inserimento del changelog e MAJOR.MINOR.PATCH
--Intruduzione del contatore di visite
--rappresentazione dati in negativo nel pie chart
--Inserimento nelle card, delle variazioni dei dati rispetto al giorno precedente, con colorazione in base alla positività o negatività
--Rimuovere la data come index del DF
+NEW FEATURES AND BUG TO SOLVE
 
+- Introduce MAJOR.MINOR.PATCH in the changelog
+- Keep track of number of visit
+- Show negative data correctly in the pie chart
+- Make card text different color based on positivity or negativity of the number
+- Remove date field as index in the DataFrame
+- Reduce amoount of logs in PROD
+- Adjust picture portrait in the news section
+- Scheduler use CET time to not rely on the server time zone
+- Check of new csv data uploaded is based on content and not on last date included in the csv
+- Language selection
 
-SVILUPPI
--Cercare fonti e compatibilità per feed RSS notizie Protezione Civile
-
+-------------------------------------------------------------------------------------------------
 
 SOLVED
--Responsività del Logo
--Logo e iperlink a github
-- iperlink ai dati Protezione Civile
--Grafico a torta per regioni selezionate
+
+- Logo responsive
+- Logo and hyperlink to Github
+- Hyperlink to Protezione Civile Data
