@@ -282,9 +282,9 @@ def update_cards_text(field):
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0:
-            return card_value, " ( +", variation_previous_day, " )"
+            return card_value, " (+", variation_previous_day, ")"
         else:
-            return card_value, " ( ", variation_previous_day, " )"
+            return card_value, " (", variation_previous_day, ")"
 
 
 def create_news():
@@ -449,7 +449,6 @@ def app_layout():
                 [
                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                         [
-
                             dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
                                 dcc.Tab(label='Confronta Regioni', value='tab_region', children=[  # START FIRST TAB
                                     html.P("Seleziona una o più regioni italiane da confrontare:", className="control_label"),
@@ -457,7 +456,7 @@ def app_layout():
                                                  options=get_options(
                                                      df_regional_data['denominazione_regione'].unique()),
                                                  multi=True,
-                                                 value=['Abruzzo', 'Campania'],
+                                                 value=['Emilia-Romagna', 'Lazio', 'Campania'],
                                                  className='dcc_control'
                                                  ),
                                     html.P("Seleziona il dato da studiare:", className="control_label"),
@@ -497,31 +496,32 @@ def app_layout():
 
                     html.Div(  # START OF 2ND BLOCK
                         [
+                            html.H5(id='card_header', children='Situazione Nazionale', className='title'),
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
                                         [html.H6(id="total_positive_text",
                                                  children=update_cards_text('totale_positivi')),
-                                         html.P("Attualmente Positivi Italia")],
+                                         html.P("Attualmente Positivi")],
                                         id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_cases_text", children=update_cards_text('totale_casi')),
-                                         html.P("Totale Casi Italia")],
+                                         html.P("Tot Casi")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_recovered_text",
                                                  children=update_cards_text('dimessi_guariti')),
-                                         html.P("Dimessi/Guariti Italia")],
+                                         html.P("Guariti")],
                                         id="total_recovered",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_deaths_text", children=update_cards_text('deceduti')),
-                                         html.P("Decessi Italia")],
+                                         html.P("Decessi")],
                                         id="total_deaths",
                                         className="mini_container",
                                     ),
