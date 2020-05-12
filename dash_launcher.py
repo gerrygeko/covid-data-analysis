@@ -23,7 +23,7 @@ INHABITANT_RATE = 100000
 
 log = logger.get_logger()
 app = dash.Dash(
-    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
+    __name__, meta_tags=[{"name": "app", "content": "width=device-width"}]
 )
 server = app.server
 
