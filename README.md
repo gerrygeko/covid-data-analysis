@@ -8,11 +8,14 @@ It gives the possibility to arrange and visualize the data in different ways usi
 ## Data update
 - Data is published every day from the Department at 18:00
 - Data is collected from [Department of Protezione Civile repository](https://github.com/pcm-dpc/COVID-19)
-- Update to this application is expected slightly after
+- Update to this application is expected slightly after, but to keep consistency in case of later updates, 
+every 30 minutes a new attempt for check the presence of new data will be made
 
 ## Technology adopted
 - Programming language adopted for the whole project is [Python](https://www.python.org/)
 - The framework used to build this web-based analytic application is [Plotly - Dash](https://plotly.com/dash/)
+- The web application is running a cloud solution via the application platform [Heroku](https://www.heroku.com/) 
+(PaaS - Platform as a Service)
 
 ## Credits
 - The data is offered by [Department of Protezione Civile](http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus).

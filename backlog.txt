@@ -6,15 +6,16 @@ NEW FEATURES AND BUG TO SOLVE
 - Make card text different color based on positivity or negativity of the number
 - Remove date field as index in the DataFrame
 - Reduce amoount of logs in PROD
-- Adjust picture portrait in the news section
 - Scheduler use CET time to not rely on the server time zone
-- Check of new csv data uploaded is based on content and not on last date included in the csv
+- Check of new csv data uploaded is based on content and not on last date included in the csv (bug)
 - Language selection
+- Adjust information displayed in the hover tooltip in the map graph
 
 -------------------------------------------------------------------------------------------------
 
 SOLVED
 
+- Adjust picture portrait in the news section
 - Logo responsive
 - Logo and hyperlink to Github
 - Hyperlink to Protezione Civile Data

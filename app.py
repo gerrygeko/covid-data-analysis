@@ -284,7 +284,7 @@ def update_cards_text(field):
         if variation_previous_day > 0:
             return card_value, " (+", variation_previous_day, ")"
         else:
-            return card_value, " (", variation_previous_day, ")"
+            return card_value, " <h1 style=\"color:Tomato;\">(", variation_previous_day, ")</h>"
 
 
 def create_news():
@@ -511,7 +511,7 @@ def app_layout():
                                     ),
                                     html.Div(
                                         [html.H6(id="total_cases_text", children=update_cards_text('totale_casi')),
-                                         html.P("Tot Casi")],
+                                         html.P("Totale Casi")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
@@ -577,7 +577,7 @@ def app_layout():
     )
 
 
-schedule.every(1).hour.do(load_interactive_data)
+schedule.every(30).minutes.do(load_interactive_data)
 schedule.every().day.at("18:05").do(load_interactive_data)
 
 
