@@ -454,7 +454,7 @@ def app_layout():
                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                         [
                             dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
-                                dcc.Tab(label='Confronta Regioni', value='tab_region', children=[  # START FIRST TAB
+                                dcc.Tab(label='Confronta Regioni per Dato', value='tab_region', children=[  # START FIRST TAB
                                     html.P("Seleziona una o più regioni italiane da confrontare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_region_list_selected',
                                                  options=get_options(
@@ -473,7 +473,7 @@ def app_layout():
                                     ),
                                     dcc.Graph(id="pie_graph")
                                 ]),  # END OF FIRST TAB
-                                dcc.Tab(label='Confronta Dati', value='tab_data', children=[  # START OF SECOND TAB
+                                dcc.Tab(label='Confronta Dati per Regione', value='tab_data', children=[  # START OF SECOND TAB
                                     html.P("Seleziona uno o piu' dati da comparare:", className="control_label"),
                                     dcc.Dropdown(id='dropdown_data_list_selected',
                                                  options=get_options_from_list(field_list_complete),
@@ -500,7 +500,7 @@ def app_layout():
 
                     html.Div(  # START OF 2ND BLOCK
                         [
-                            html.H5(id='card_header', children='Situazione Nazionale', className='title'),
+                            html.H5(id='card_header', children='Dati Nazionali', className='title'),
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
