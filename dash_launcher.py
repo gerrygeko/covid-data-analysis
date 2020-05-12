@@ -27,6 +27,8 @@ app = dash.Dash(
 )
 server = app.server
 
+print(server)
+
 url_csv_regional_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = \
