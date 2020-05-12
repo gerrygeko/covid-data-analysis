@@ -1,1 +1,5 @@
 complete.log
+.idea/
+Pipfile.lock
+__pycache__/
+venv/
