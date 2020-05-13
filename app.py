@@ -222,17 +222,19 @@ def update_pie_graph(region_list, data_selected):
 @app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
+    print(df.head())
     date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
                                   color=data_selected,
                                   color_continuous_scale="Reds",
                                   hover_name='denominazione_regione',
+                                  hover_data=["population"],
                                   range_color=(df[data_selected].min(), df[data_selected].max()),
                                   mapbox_style="carto-positron",
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
-                                  labels={data_selected: ''},
+                                  labels={data_selected: 'N° Casi'}
                                  )
 
     figure.update_layout(
