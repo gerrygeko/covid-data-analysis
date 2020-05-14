@@ -18,7 +18,7 @@ every 30 minutes a new attempt for check the presence of new data will be made
 (PaaS - Platform as a Service)
 
 ## Credits
-- The data is offered by [Department of Protezione Civile](http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus).
+- The data is offered by [Department of Civil Protection](http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus).
 - The news feed is offered by [News API](https://newsapi.org/).
 - Resident Population data is offered by [I.Stat](http://dati.istat.it/)
 
