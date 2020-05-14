@@ -605,6 +605,7 @@ app.clientside_callback(
     Output("output-clientside", "children"),
     [Input("regional_timeseries_linear", "figure")],
 )
+app.title = "SARS-CoV-2-Gellex"
 app_layout()
 
 
