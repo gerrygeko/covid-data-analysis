@@ -483,7 +483,7 @@ def app_layout():
                                                  value=['ricoverati_con_sintomi'],
                                                  className='dcc_control'
                                                  ),
-                                    html.P("Select la regiona italiana da studiare:", className="control_label"),
+                                    html.P("Seleziona la regione italiana da studiare:", className="control_label"),
                                     dcc.Dropdown(
                                         id='dropdown_region_selected',
                                         options=get_options(df_regional_data['denominazione_regione'].unique()),
