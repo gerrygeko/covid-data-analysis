@@ -9,6 +9,10 @@ NEW FEATURES AND BUG TO SOLVE
 - Check of new csv data uploaded is based on content and not on last date included in the csv (bug)
 - Language selection
 - Adjust information displayed in the hover tooltip in the map graph
+- Match colors between Pie Graph and Line Graph
+- www and http://www point to not secure
+- Don't show hour in the date format in the Line Graph
+- Save logs somewhere and somehow
 
 -------------------------------------------------------------------------------------------------
 
