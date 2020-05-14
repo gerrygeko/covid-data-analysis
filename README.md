@@ -1,6 +1,6 @@
 # covid-data-analysis
 
-[![GitHub commit](https://img.shields.io/github/last-commit/gerrygeko/covid-data-analysis)](https://github.com/gerrygeko/covid-data-analysis)
+[![GitHub commit](https://img.shields.io/github/last-commit/gerrygeko/covid-data-analysis)](https://github.com/gerrygeko/covid-data-analysis)[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 This web application gather and show data for the COVID-19 for the Italian area. 
 It gives the possibility to arrange and visualize the data in different ways using different graphs.
