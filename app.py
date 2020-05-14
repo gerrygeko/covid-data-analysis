@@ -19,6 +19,8 @@ from dash.dependencies import Input, Output, ClientsideFunction
 import logger
 from constants import DATA_DICT
 
+SECONDS = 1000
+
 INHABITANT_RATE = 100000
 
 log = logger.get_logger()
@@ -197,6 +199,7 @@ def update_pie_graph(region_list, data_selected):
         data = [go.Pie(labels=[],
                        values=value_list,
                        hoverinfo='text+value+percent',
+                       sort=False,
                        textinfo='label+percent',
                        hole=0.5)]
         layout_pie['title'] = "Nessun dato selezionato o <br> il dato selezionato non è rappresentabile"
@@ -255,9 +258,8 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{} (ogni 100K abitanti)'.format(DATA_DICT[data_selected])
-    layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False,
-                               autorange="reversed", showticklabels=False)
+    layout_bar['title'] = 'TOP 10 Regioni - {} (ogni 100K abitanti)'.format(DATA_DICT[data_selected])
+    layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
     df_sorted = df_sorted.tail(10)
@@ -276,18 +278,28 @@ def update_bar_graph(data_selected):
     return figure
 
 
-def update_cards_text(field):
-    if field == 'data':
-        string_header_last_update = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
-        return string_header_last_update
-    else:
+@app.callback([Output('total_positive_text', 'children'),
+               Output('total_cases_text', 'children'),
+               Output('total_recovered_text', 'children'),
+               Output('total_deaths_text', 'children'),
+               Output('subHeader', 'children')
+               ], [Input("i_news", "n_intervals")])
+def update_cards_text(n):
+    log.info('update cards')
+    sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
+    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
+    text_values = []
+    for field in field_list:
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0:
-            return card_value, " (+", variation_previous_day, ")"
+            text = '{} (+{})'.format(card_value, variation_previous_day)
+            text_values.append(text)
         else:
-            return card_value, " (", variation_previous_day, ")"
+            text = '{} ({})'.format(card_value, variation_previous_day)
+            text_values.append(text)
+    return (*text_values), sub_header_text
 
 
 def create_news():
@@ -340,6 +352,7 @@ def create_news():
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
 def update_news(input):
+    log.info('update news')
     return create_news()
 
 
@@ -379,7 +392,7 @@ def app_layout():
         [  # START OF SUPREME INCAPSULATION ############################################
             dcc.Store(id="aggregate_data"),
             # Interval component for updating news list
-            dcc.Interval(id="i_news", interval=60 * 1000, n_intervals=0),
+            dcc.Interval(id="i_news", interval=900 * SECONDS, n_intervals=0),
             # empty Div to trigger javascript file for graph resizing
             html.Div(id="output-clientside"),
             html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
@@ -404,7 +417,7 @@ def app_layout():
                                     html.H3(
                                         "Coronavirus (SARS-CoV-2) Italia",
                                     ),
-                                    html.H5(id="subHeader", children=update_cards_text('data'))
+                                    html.H5(id="subHeader", children='')
                                 ]
                             )
                         ],
@@ -506,27 +519,25 @@ def app_layout():
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
-                                        [html.H6(id="total_positive_text",
-                                                 children=update_cards_text('totale_positivi')),
+                                        [html.H6(id="total_positive_text", children=''),
                                          html.P("Attualmente Positivi")],
                                         id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_cases_text", children=update_cards_text('totale_casi')),
+                                        [html.H6(id="total_cases_text", children=''),
                                          html.P("Totale Casi")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_recovered_text",
-                                                 children=update_cards_text('dimessi_guariti')),
+                                        [html.H6(id="total_recovered_text", children=''),
                                          html.P("Guariti")],
                                         id="total_recovered",
                                         className="mini_container",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_deaths_text", children=update_cards_text('deceduti')),
+                                        [html.H6(id="total_deaths_text", children=''),
                                          html.P("Decessi")],
                                         id="total_deaths",
                                         className="mini_container",
