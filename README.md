@@ -4,6 +4,7 @@
 
 This web application gather and show data for the COVID-19 for the Italian area. 
 It gives the possibility to arrange and visualize the data in different ways using different graphs.
+The web application is reachable at the following link [SARS-CoV-2-Gellex](https://www.data-covid.com/)
 
 ## Data update
 - Data is published every day from the Department at 18:00
