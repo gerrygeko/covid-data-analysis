@@ -413,7 +413,7 @@ def create_contacts():
                             ),
                             html.Td(
                                 className='title',
-                                children='ICT Support Specialist & Software developer'
+                                children='ICT Support Specialist & Software Developer'
                             ),
                         ]
                     ),
