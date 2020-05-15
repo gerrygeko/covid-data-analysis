@@ -395,11 +395,11 @@ def create_contacts():
                         className='pretty_container',
                         children=[
                             html.Td(
-                                className='title',
+                                className='title-name',
                                 children='Lamorte Gerardo'
                             ),
                             html.Td(
-                                className='title',
+                                className='title-name',
                                 children='Mastrangelo Nicola'
                             ),
                         ]

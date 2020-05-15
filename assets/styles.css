@@ -120,6 +120,11 @@ body {
   text-align: center;
 }
 
+.title-name {
+  text-align: center;
+  font-weight: bold;
+}
+
 table.center {
     margin-top:auto;
     margin-bottom:auto;
