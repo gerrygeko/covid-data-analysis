@@ -197,11 +197,7 @@ def update_pie_graph(region_list, data_selected):
     value_list = []
     if len(region_list) == 0 or data_selected is None or data_selected == 'variazione_totale_positivi':
         data = [go.Pie(labels=[],
-                       values=value_list,
-                       hoverinfo='text+value+percent',
-                       sort=False,
-                       textinfo='label+percent',
-                       hole=0.5)]
+                       values=value_list)]
         layout_pie['title'] = "Nessun dato selezionato o <br> il dato selezionato non è rappresentabile"
         figure = dict(data=data, layout=layout_pie)
         return figure
@@ -212,6 +208,7 @@ def update_pie_graph(region_list, data_selected):
     data = [go.Pie(labels=region_list,
                    values=value_list,
                    hoverinfo='text+value+percent',
+                   sort=False,
                    textinfo='label+percent',
                    hole=0.5)]
     date = df_regional_data.index[-1].strftime('%d/%m/%Y')
@@ -225,7 +222,6 @@ def update_pie_graph(region_list, data_selected):
 @app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
-    print(df.head())
     date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
@@ -309,9 +305,9 @@ def create_news():
     max_rows = 6
     return html.Div(
         children=[
-            html.H5(className="p-news", children="Italia News Scienza"),
+            html.H5(className="p-news title", children="Italia News Scienza"),
             html.P(
-                className="p-news float-right",
+                className="p-news title",
                 children="Ultimo Aggiornamento: "
                 + datetime.now().strftime("%H:%M:%S"),
             ),
@@ -347,6 +343,29 @@ def create_news():
                 ],
             ),
         ]
+    )
+
+
+def create_contacts():
+    return html.Div(
+        children=[
+                     html.H5(className="p-news title", children="Contattaci"),
+                     html.Table(
+                         className="table-news",
+                         children=[
+                             html.Tr(
+                                 children=[
+                                     html.Td(
+                                         children=[
+                                         ]
+                                     ),
+                                     html.Td(
+                                     )
+                                 ]
+                             )
+                         ],
+                     ),
+                 ]
     )
 
 
@@ -580,8 +599,12 @@ def app_layout():
                 [
                     html.Div(  # START OF NEWS FEEDER
                         children=[html.Div(id="news", children=create_news())],
-                        className="pretty_container five columns",
+                        className="pretty_container six columns",
                     ),  # END OF NEWS FEEDER
+                    html.Div(  # START OF NEWS FEEDER
+                        children=[html.Div(id="contacts", children=create_contacts())],
+                        className="pretty_container six columns",
+                    ),
                 ],
                 className="row flex-display",
             ),  # END OF 4TH INCAPSULATION
