@@ -258,7 +258,7 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = 'TOP 10 Regioni - {} (ogni 100K abitanti)'.format(DATA_DICT[data_selected])
+    layout_bar['title'] = 'TOP 10 Regioni - {} <br> (ogni 100K abitanti)'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
@@ -372,6 +372,13 @@ def create_contacts():
                                         html.Img(
                                             src='data:image/png;base64,{}'.format(encoded_image_gerardo),
                                             id="gerardo-image",
+                                            className='responsive',
+                                            style={
+                                                "height": "150px",
+                                                "width": "150px",
+                                                "float": "center",
+                                                "border-radius": "8px"
+                                            }
                                         ),
                                         href="https://www.linkedin.com/in/gerardo-lamorte-a25928149/",
                                     )
@@ -384,6 +391,13 @@ def create_contacts():
                                         children=html.Img(
                                             src='data:image/png;base64,{}'.format(encoded_image_nicola),
                                             id="nicola-image",
+                                            className='responsive',
+                                            style={
+                                                "height": "150px",
+                                                "width": "150px",
+                                                "float": "center",
+                                                "border-radius": "8px"
+                                            }
                                         ),
                                         href="https://www.linkedin.com/in/nicola-mastrangelo-240810107/",
                                 )
@@ -432,11 +446,11 @@ def create_contacts():
                     html.Tr(
                         className='pretty_container',
                         children=[html.Td(
-                                className='title',
+                                className='title-email',
                                 children='lamorte.gerardo@gmail.com'
                             ),
                             html.Td(
-                                className='title',
+                                className='title-email',
                                 children='mastrangelo.nicola@gmail.com'
                             )]
                     )
