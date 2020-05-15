@@ -350,7 +350,8 @@ def create_news():
     )
 
 
-encoded_image = base64.b64encode(open('assets/gerardo.png', 'rb').read())
+encoded_image_gerardo = base64.b64encode(open('assets/gerardo.png', 'rb').read()).decode('ascii')
+encoded_image_nicola = base64.b64encode(open('assets/nicola.png', 'rb').read()).decode('ascii')
 
 
 def create_contacts():
@@ -363,32 +364,30 @@ def create_contacts():
                     html.Tr(
                         className='pretty_container',
                         children=[
-                            html.Td(children=[
-                                html.A(
-                                    html.Img(
-                                        src='data:image/png;base64,{}'.format(encoded_image),
-                                        id="gerardo-image",
-                                        style={
-                                            "height": "48px",
-                                            "width": "auto",
-                                            "margin-bottom": "10px",
-                                        },
-                                    ),
-                                    href="https://www.linkedin.com/in/gerardo-lamorte-a25928149/",
-                                ),
-                                html.A(
-                                    html.Img(
-                                        src='gerardo.png',
-                                        id="nicola-image",
-                                        style={
-                                            "height": "48px",
-                                            "width": "auto",
-                                            "margin-bottom": "10px",
-                                        },
-                                    ),
-                                    href="https://www.linkedin.com/in/nicola-mastrangelo-240810107/",
-                                )]
-                            )
+                            html.Td(
+                                className='td-style',
+                                children=[
+                                    html.A(
+                                        children=
+                                        html.Img(
+                                            src='data:image/png;base64,{}'.format(encoded_image_gerardo),
+                                            id="gerardo-image",
+                                        ),
+                                        href="https://www.linkedin.com/in/gerardo-lamorte-a25928149/",
+                                    )
+                                ]
+                            ),
+                            html.Td(
+                                className='td-style',
+                                children=[
+                                    html.A(
+                                        children=html.Img(
+                                            src='data:image/png;base64,{}'.format(encoded_image_nicola),
+                                            id="nicola-image",
+                                        ),
+                                        href="https://www.linkedin.com/in/nicola-mastrangelo-240810107/",
+                                )
+                            ])
                         ]
                     ),
                     html.Tr(
