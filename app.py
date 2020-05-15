@@ -15,6 +15,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import schedule
+
 from dash.dependencies import Input, Output, ClientsideFunction
 
 import logger
@@ -26,7 +27,11 @@ INHABITANT_RATE = 100000
 
 log = logger.get_logger()
 app = dash.Dash(
-    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
+    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
+                         {"property": "og:title", "content": "SARS-CoV-2-Gellex"},
+                         {"property": "og:image", "content": "//i.ibb.co/86xLrnK/SARS-Co-V-2-Gellex.jpg"},
+                         {"property": "og:description", "content": "SARS-CoV-2-Gellex"},
+                         {"property": "og:url", "content": "//www.data-covid.com/"}]
 )
 server = app.server
 
