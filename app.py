@@ -1,3 +1,4 @@
+import base64
 import copy
 import csv
 import json as js
@@ -28,6 +29,9 @@ app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
 )
 server = app.server
+
+image_filename = 'assets/gerardo.png' # replace with your own image
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 url_csv_regional_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
@@ -346,26 +350,100 @@ def create_news():
     )
 
 
+encoded_image = base64.b64encode(open('assets/gerardo.png', 'rb').read())
+
+
 def create_contacts():
     return html.Div(
         children=[
-                     html.H5(className="p-news title", children="Contattaci"),
-                     html.Table(
-                         className="table-news",
-                         children=[
-                             html.Tr(
-                                 children=[
-                                     html.Td(
-                                         children=[
-                                         ]
-                                     ),
-                                     html.Td(
-                                     )
-                                 ]
-                             )
-                         ],
-                     ),
-                 ]
+            html.H5(className="p-news title", children="Contattaci"),
+            html.Table(
+                className="center",
+                children=[
+                    html.Tr(
+                        className='pretty_container',
+                        children=[
+                            html.Td(children=[
+                                html.A(
+                                    html.Img(
+                                        src='data:image/png;base64,{}'.format(encoded_image),
+                                        id="gerardo-image",
+                                        style={
+                                            "height": "48px",
+                                            "width": "auto",
+                                            "margin-bottom": "10px",
+                                        },
+                                    ),
+                                    href="https://www.linkedin.com/in/gerardo-lamorte-a25928149/",
+                                ),
+                                html.A(
+                                    html.Img(
+                                        src='gerardo.png',
+                                        id="nicola-image",
+                                        style={
+                                            "height": "48px",
+                                            "width": "auto",
+                                            "margin-bottom": "10px",
+                                        },
+                                    ),
+                                    href="https://www.linkedin.com/in/nicola-mastrangelo-240810107/",
+                                )]
+                            )
+                        ]
+                    ),
+                    html.Tr(
+                        className='pretty_container',
+                        children=[
+                            html.Td(
+                                className='title',
+                                children='Lamorte Gerardo'
+                            ),
+                            html.Td(
+                                className='title',
+                                children='Mastrangelo Nicola'
+                            ),
+                        ]
+                    ),
+                    html.Tr(
+                        className='pretty_container',
+                        children=[
+                            html.Td(
+                                className='title',
+                                children='Java & Python Software Developer'
+                            ),
+                            html.Td(
+                                className='title',
+                                children='ICT Support Specialist & Software developer'
+                            ),
+                        ]
+                    ),
+                    html.Tr(
+                        className='pretty_container',
+                        children=[
+                            html.Td(
+                                className='title',
+                                children='The Hague - The Netherlands'
+                            ),
+                            html.Td(
+                                className='title',
+                                children='Potenza - Italy'
+                            ),
+                        ]
+                    ),
+                    html.Tr(
+                        className='pretty_container',
+                        children=[html.Td(
+                                className='title',
+                                children='lamorte.gerardo@gmail.com'
+                            ),
+                            html.Td(
+                                className='title',
+                                children='mastrangelo.nicola@gmail.com'
+                            )]
+                    )
+                ],
+            ),
+        ]
     )
 
 

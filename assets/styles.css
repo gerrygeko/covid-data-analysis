@@ -89,6 +89,7 @@ body {
   margin-right: 10px;
   margin-top: 30px;
 }
+
 #github-image {
   text-align: center;
   height: 100%;
@@ -99,6 +100,7 @@ body {
   margin-right: 10px;
   margin-top: 30px;
 }
+
 #protezione-civile-image {
   text-align: center;
   height: 100%;
@@ -116,6 +118,13 @@ body {
 
 .title {
   text-align: center;
+}
+
+table.center {
+    margin-top:auto;
+    margin-bottom:auto;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .mini_container {
