@@ -35,7 +35,7 @@ app = dash.Dash(
 )
 server = app.server
 
-image_filename = 'assets/gerardo.png' # replace with your own image
+image_filename = 'assets/gerardo.png'  # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 url_csv_regional_data = \
@@ -50,18 +50,18 @@ news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=science&apiKey=b20640c581554761baab24317b8331e7")
 
 field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
-                          'totale_ospedalizzati', 'isolamento_domiciliare',
-                          'totale_positivi', 'variazione_totale_positivi',
-                          'nuovi_positivi', 'dimessi_guariti',
-                          'deceduti', 'totale_casi',
-                          'tamponi', 'casi_testati']
+                       'totale_ospedalizzati', 'isolamento_domiciliare',
+                       'totale_positivi', 'variazione_totale_positivi',
+                       'nuovi_positivi', 'dimessi_guariti',
+                       'deceduti', 'totale_casi',
+                       'tamponi', 'casi_testati']
 
 field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
-                          'totale_ospedalizzati', 'isolamento_domiciliare',
-                          'totale_positivi', ''
-                          'nuovi_positivi', 'dimessi_guariti',
-                          'deceduti', 'totale_casi',
-                          'tamponi', 'casi_testati']
+                      'totale_ospedalizzati', 'isolamento_domiciliare',
+                      'totale_positivi', ''
+                                         'nuovi_positivi', 'dimessi_guariti',
+                      'deceduti', 'totale_casi',
+                      'tamponi', 'casi_testati']
 
 
 def load_csv_from_file(path):
@@ -243,7 +243,7 @@ def update_map_graph(data_selected):
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
                                   labels={data_selected: 'N° Casi'}
-                                 )
+                                  )
 
     figure.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
@@ -252,7 +252,8 @@ def update_map_graph(data_selected):
             y=0.01,
             xref='paper',
             yref='paper',
-            text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(DATA_DICT[data_selected], date_string),
+            text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(DATA_DICT[data_selected],
+                                                                                         date_string),
             showarrow=False
         )]
     )
@@ -310,7 +311,7 @@ def update_cards_text(n):
 def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
-    df_news = pd.DataFrame(df_news[["urlToImage","title", "url"]])
+    df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
     max_rows = 6
     return html.Div(
         children=[
@@ -318,7 +319,7 @@ def create_news():
             html.P(
                 className="p-news title",
                 children="Ultimo Aggiornamento: "
-                + datetime.now().strftime("%H:%M:%S"),
+                         + datetime.now().strftime("%H:%M:%S"),
             ),
             html.Table(
                 className="table-news",
@@ -372,41 +373,35 @@ def create_contacts():
                             html.Td(
                                 className='td-style',
                                 children=[
-                                    html.A(
-                                        children=
-                                        html.Img(
-                                            src='data:image/png;base64,{}'.format(encoded_image_gerardo),
-                                            id="gerardo-image",
-                                            className='responsive',
-                                            style={
-                                                "height": "150px",
-                                                "width": "150px",
-                                                "float": "center",
-                                                "border-radius": "8px"
-                                            }
-                                        ),
-                                        href="https://www.linkedin.com/in/gerardo-lamorte-a25928149/",
-                                    )
+                                    html.Img(
+                                        src='data:image/png;base64,{}'.format(encoded_image_gerardo),
+                                        id="gerardo-image",
+                                        className='responsive',
+                                        style={
+                                            "height": "100px",
+                                            "width": "100px",
+                                            "float": "center",
+                                            "border-radius": "8px"
+                                        }
+                                    ),
                                 ]
                             ),
                             html.Td(
                                 className='td-style',
                                 children=[
-                                    html.A(
-                                        children=html.Img(
-                                            src='data:image/png;base64,{}'.format(encoded_image_nicola),
-                                            id="nicola-image",
-                                            className='responsive',
-                                            style={
-                                                "height": "150px",
-                                                "width": "150px",
-                                                "float": "center",
-                                                "border-radius": "8px"
-                                            }
-                                        ),
-                                        href="https://www.linkedin.com/in/nicola-mastrangelo-240810107/",
-                                )
-                            ])
+                                    html.Img(
+                                        src='data:image/png;base64,{}'.format(encoded_image_nicola),
+                                        id="nicola-image",
+                                        className='responsive',
+                                        style={
+                                            "height": "100px",
+                                            "width": "100px",
+                                            "float": "center",
+                                            "border-radius": "8px"
+                                        }
+                                    ),
+                                ]
+                            )
                         ]
                     ),
                     html.Tr(
@@ -431,7 +426,7 @@ def create_contacts():
                             ),
                             html.Td(
                                 className='title',
-                                children='ICT Support Specialist & Software Developer'
+                                children='ICT Supp.Spec. & Software Developer'
                             ),
                         ]
                     ),
@@ -440,25 +435,77 @@ def create_contacts():
                         children=[
                             html.Td(
                                 className='title',
-                                children='The Hague - The Netherlands'
+                                children='The Hague (NL)'
                             ),
                             html.Td(
                                 className='title',
-                                children='Potenza - Italy'
+                                children='Potenza (ITA)'
                             ),
                         ]
                     ),
                     html.Tr(
                         className='pretty_container',
-                        children=[html.Td(
-                                className='title-email',
-                                children='lamorte.gerardo@gmail.com'
+                        children=[
+                            html.Td(
+                                className='td-style',
+                                children=[
+                                    html.A(
+                                        children=
+                                        html.Img(
+                                            src=app.get_asset_url("linkedIn.png"),
+                                            className='responsive',
+                                            style={
+                                                "height": "50px",
+                                                "width": "50px",
+                                                "float": "center"
+                                            }
+                                        ),
+                                        href="https://www.linkedin.com/in/gerardo-lamorte-a25928149/",
+                                    ),
+                                    html.A(
+                                        children=html.Img(
+                                            src=app.get_asset_url("gmail.png"),
+                                            className='responsive',
+                                            style={
+                                                "height": "50px",
+                                                "width": "50px",
+                                                "float": "center"
+                                            }
+                                        ),
+                                        href="mailto:lamorte.gerardo@gmail.com",
+                                    )
+                                ]
                             ),
                             html.Td(
-                                className='title-email',
-                                children='mastrangelo.nicola@gmail.com'
-                            )]
-                    )
+                                className='td-style',
+                                children=[
+                                    html.A(
+                                        children=html.Img(
+                                            src=app.get_asset_url("linkedIn.png"),
+                                            className='responsive',
+                                            style={
+                                                "height": "50px",
+                                                "width": "50px",
+                                                "float": "center"
+                                            }
+                                        ),
+                                        href="https://www.linkedin.com/in/nicola-mastrangelo-240810107/",
+                                    ),
+                                    html.A(
+                                        children=html.Img(
+                                            src=app.get_asset_url("gmail.png"),
+                                            className='responsive',
+                                            style={
+                                                "height": "50px",
+                                                "width": "50px",
+                                                "float": "center"
+                                            }
+                                        ),
+                                        href="mailto:mastrangelo.nicola@gmail.com",
+                                    )
+                                ])
+                        ]
+                    ),
                 ],
             ),
         ]
@@ -584,42 +631,47 @@ def app_layout():
                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                         [
                             dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
-                                dcc.Tab(label='Confronta Regioni per Dato', value='tab_region', children=[  # START FIRST TAB
-                                    html.P("Seleziona una o più regioni italiane da confrontare:", className="control_label"),
-                                    dcc.Dropdown(id='dropdown_region_list_selected',
-                                                 options=get_options(
-                                                     df_regional_data['denominazione_regione'].unique()),
-                                                 multi=True,
-                                                 value=['Emilia-Romagna', 'Lazio', 'Campania'],
-                                                 className='dcc_control'
-                                                 ),
-                                    html.P("Seleziona il dato da studiare:", className="control_label"),
-                                    dcc.Dropdown(
-                                        id='dropdown_data_selected',
-                                        options=get_options_from_list(field_list_complete),
-                                        multi=False,
-                                        value='ricoverati_con_sintomi',
-                                        className='dcc_control'
-                                    ),
-                                    dcc.Graph(id="pie_graph")
-                                ]),  # END OF FIRST TAB
-                                dcc.Tab(label='Confronta Dati per Regione', value='tab_data', children=[  # START OF SECOND TAB
-                                    html.P("Seleziona uno o piu' dati da comparare:", className="control_label"),
-                                    dcc.Dropdown(id='dropdown_data_list_selected',
-                                                 options=get_options_from_list(field_list_complete),
-                                                 multi=True,
-                                                 value=['ricoverati_con_sintomi'],
-                                                 className='dcc_control'
-                                                 ),
-                                    html.P("Seleziona la regione italiana da studiare:", className="control_label"),
-                                    dcc.Dropdown(
-                                        id='dropdown_region_selected',
-                                        options=get_options(df_regional_data['denominazione_regione'].unique()),
-                                        multi=False,
-                                        value=df_regional_data['denominazione_regione'].sort_values()[0],
-                                        className='dcc_control'
-                                    ),
-                                ]),  # END OF SECOND TAB
+                                dcc.Tab(label='Confronta Regioni per Dato', value='tab_region',
+                                        children=[  # START FIRST TAB
+                                            html.P("Seleziona una o più regioni italiane da confrontare:",
+                                                   className="control_label"),
+                                            dcc.Dropdown(id='dropdown_region_list_selected',
+                                                         options=get_options(
+                                                             df_regional_data['denominazione_regione'].unique()),
+                                                         multi=True,
+                                                         value=['Emilia-Romagna', 'Lazio', 'Campania'],
+                                                         className='dcc_control'
+                                                         ),
+                                            html.P("Seleziona il dato da studiare:", className="control_label"),
+                                            dcc.Dropdown(
+                                                id='dropdown_data_selected',
+                                                options=get_options_from_list(field_list_complete),
+                                                multi=False,
+                                                value='ricoverati_con_sintomi',
+                                                className='dcc_control'
+                                            ),
+                                            dcc.Graph(id="pie_graph")
+                                        ]),  # END OF FIRST TAB
+                                dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
+                                        children=[  # START OF SECOND TAB
+                                            html.P("Seleziona uno o piu' dati da comparare:",
+                                                   className="control_label"),
+                                            dcc.Dropdown(id='dropdown_data_list_selected',
+                                                         options=get_options_from_list(field_list_complete),
+                                                         multi=True,
+                                                         value=['ricoverati_con_sintomi'],
+                                                         className='dcc_control'
+                                                         ),
+                                            html.P("Seleziona la regione italiana da studiare:",
+                                                   className="control_label"),
+                                            dcc.Dropdown(
+                                                id='dropdown_region_selected',
+                                                options=get_options(df_regional_data['denominazione_regione'].unique()),
+                                                multi=False,
+                                                value=df_regional_data['denominazione_regione'].sort_values()[0],
+                                                className='dcc_control'
+                                            ),
+                                        ]),  # END OF SECOND TAB
 
                             ])  # END OF TABS COMPONENT CREATOR
 
@@ -738,9 +790,5 @@ app.clientside_callback(
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
 
-
 if __name__ == '__main__':
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
-
-
-
