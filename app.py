@@ -264,7 +264,7 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = 'TOP 10 Regioni - {} <br> (ogni 100K abitanti)'.format(DATA_DICT[data_selected])
+    layout_bar['title'] = 'N° {}'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
@@ -682,18 +682,18 @@ def app_layout():
 
                     html.Div(  # START OF 2ND BLOCK
                         [
-                            html.H5(id='card_header', children='Dati Nazionali', className='title'),
+                            html.H5(id='card_header', children='Totale Dati Nazionali', className='title'),
                             html.Div(  # START OF CARDS #
                                 [
                                     html.Div(
                                         [html.H6(id="total_positive_text", children=''),
-                                         html.P("Attualmente Positivi")],
+                                         html.P("Positivi")],
                                         id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_cases_text", children=''),
-                                         html.P("Totale Casi")],
+                                         html.P("Casi")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
@@ -737,7 +737,9 @@ def app_layout():
                         className="pretty_container seven columns",
                     ),
                     html.Div(
-                        [dcc.Graph(id="bar_graph")],
+                        [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
+                         html.P(id='bar_subheader', children='n° casi ogni 100k abitanti', className='title'),
+                         dcc.Graph(id="bar_graph")],
                         className="pretty_container five columns",
                     ),
                 ],
