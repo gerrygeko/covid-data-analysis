@@ -207,7 +207,7 @@ def update_pie_graph(region_list, data_selected):
     if len(region_list) == 0 or data_selected is None or data_selected == 'variazione_totale_positivi':
         data = [go.Pie(labels=[],
                        values=value_list)]
-        layout_pie['title'] = "Nessun dato selezionato o <br> il dato selezionato non è rappresentabile"
+        layout_pie['title'] = "Nessun dato selezionato o <br> il dato selezionato <br> non è rappresentabile"
         figure = dict(data=data, layout=layout_pie)
         return figure
     region_list.sort()
@@ -220,8 +220,7 @@ def update_pie_graph(region_list, data_selected):
                    sort=False,
                    textinfo='label+percent',
                    hole=0.5)]
-    date = df_regional_data.index[-1].strftime('%d/%m/%Y')
-    layout_pie['title'] = "{} al {}".format(DATA_DICT[data_selected], date)
+    layout_pie['title'] = "{}".format(DATA_DICT[data_selected])
     layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
     figure = dict(data=data, layout=layout_pie)
     log.info('Updating pie graph')
