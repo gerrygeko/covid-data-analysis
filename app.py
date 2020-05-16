@@ -39,7 +39,7 @@ image_filename = 'assets/gerardo.png'  # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 url_csv_regional_data = \
-    "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
+    "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy-data/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
     "/dpc-covid19-ita-andamento-nazionale.csv"
@@ -263,7 +263,7 @@ def update_map_graph(data_selected):
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = 'N° {}'.format(DATA_DICT[data_selected])
+    layout_bar['title'] = '{}'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     df_sub = df_rate_regional
     df_sorted = df_sub.sort_values(by=[data_selected])
@@ -737,7 +737,7 @@ def app_layout():
                     ),
                     html.Div(
                         [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
-                         html.P(id='bar_subheader', children='n° casi ogni 100k abitanti', className='title'),
+                         html.P(id='bar_subheader', children='N° casi ogni 100.000 abitanti', className='title'),
                          dcc.Graph(id="bar_graph")],
                         className="pretty_container five columns",
                     ),
