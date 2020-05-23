@@ -425,7 +425,7 @@ def create_contacts():
                             ),
                             html.Td(
                                 className='title',
-                                children='ICT Supp.Spec. & Software Developer'
+                                children='ICT Specialist & Software Developer'
                             ),
                         ]
                     ),
