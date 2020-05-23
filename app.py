@@ -39,7 +39,7 @@ image_filename = 'assets/gerardo.png'  # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 url_csv_regional_data = \
-    "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy-data/dati-regioni/dpc-covid19-ita-regioni.csv"
+    "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
     "/dpc-covid19-ita-andamento-nazionale.csv"
@@ -517,9 +517,28 @@ def update_news(input):
     return create_news()
 
 
+# Merge data of P.A Bolzano and P.A. Trento (in Trentino Alto Adige region, with 'codice_regione' = 4) to match
+# GeoJson structure
+def adjust_region(df_sb):
+    trento_row = df_sb.loc[df_sb['codice_regione'] == 22].squeeze()
+    bolzano_row = df_sb.loc[df_sb['codice_regione'] == 21].squeeze()
+    trentino_row = trento_row
+    for field in field_list_to_rate:
+        trento_value = trento_row.get(field)
+        bolzano_value = bolzano_row.get(field)
+        trentino_row.at[field] = trento_value + bolzano_value
+    df_sb.drop([trento_row.name, bolzano_row.name], inplace=True)
+    trentino_row.at['codice_regione'] = 4
+    trentino_row.at['denominazione_regione'] = 'Trentino-Alto Adige'
+    df_sb = df_sb.append(trentino_row)
+    return df_sb
+
+
 def load_region_rate_data_frame():
     df_sb = pd.read_csv(url_csv_regional_data, parse_dates=['data'])
     df_sb = df_sb.tail(21)
+    df_sb = adjust_region(df_sb)
+    print(df_sb)
     df_sb['population'] = list(region_population.values())
     # Convert field to float
     for field in field_list_to_rate:
