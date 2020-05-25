@@ -1,7 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
 - Keep track of number of visit
-- Make card text different color based on positivity or negativity of the number
 - Remove date field as index in the DataFrame
 - Reduce amount of logs in PROD
 - Scheduler use CET time to not rely on the server time zone
@@ -13,17 +12,19 @@ NEW FEATURES AND BUG TO SOLVE
 - Save logs somewhere and somehow
 - Make all Graphs listen the interval
 - Exception when 'X' is pressed on the choropleth map dropdown
-- Deal with region that have 'codice_regione' 21 and 22
+- Introduce hyperlink for CHANGELOG
 - Time showed in the news feed is displayed in UTC instead of CET timezone
 
 -------------------------------------------------------------------------------------------------
 
 SOLVED
 
-- Introduce MAJOR.MINOR.PATCH in the changelog
+- Introduce MAJOR.MINOR.PATCH in the CHANGELOG
 - Match colors between Pie Graph and Line Graph
 - Show negative data correctly in the pie chart
 - Adjust picture portrait in the news section
 - Logo responsive
 - Logo and hyperlink to Github
 - Hyperlink to Protezione Civile Data
+- Deal with region that have 'codice_regione' 21 and 22
+- Make card text different color based on positivity or negativity of the number
