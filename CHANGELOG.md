@@ -1,3 +1,7 @@
+# 1.0.3
+####Added
+* color control on the four national data cards, based on the trend of the last update (green for positive data trends,
+red for negatives)
 # 1.0.2
 ####Fixed
 * P.A. Bolzano and P.A. Trento are showed as Trentino-Alto Adige from now on map and bar graph in order to conform with 
