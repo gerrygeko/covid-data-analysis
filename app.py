@@ -288,26 +288,32 @@ def update_bar_graph(data_selected):
                Output('total_cases_text', 'children'),
                Output('total_recovered_text', 'children'),
                Output('total_deaths_text', 'children'),
-               Output('total_positive_text', 'style'),
-               Output('total_cases_text', 'style'),
-               Output('total_recovered_text', 'style'),
-               Output('total_deaths_text', 'style'),
+               Output('total_positive_variation', 'children'),
+               Output('total_cases_variation', 'children'),
+               Output('total_recovered_variation', 'children'),
+               Output('total_deaths_variation', 'children'),
+               Output('total_positive_variation', 'style'),
+               Output('total_cases_variation', 'style'),
+               Output('total_recovered_variation', 'style'),
+               Output('total_deaths_variation', 'style'),
                Output('subHeader', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_cards_text(n):
     log.info('update cards')
     sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
-    text_values = []
+    total_text_values = []
+    variation_text_values = []
     color_cards_list = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0:
-            # text = '{} (+{})'.format(card_value, variation_previous_day)
-            text = '{}'.format(card_value) + '(+{})'.format(variation_previous_day)
-            text_values.append(text)
+            total_text = '{}'.format(card_value)
+            variation_text = '(+{})'.format(variation_previous_day)
+            total_text_values.append(total_text)
+            variation_text_values.append(variation_text)
             if field == 'dimessi_guariti':
                 color = 'green'
                 color_cards_list.append(color)
@@ -315,17 +321,21 @@ def update_cards_text(n):
                 color = 'red'
                 color_cards_list.append(color)
         else:
-            text = '{} ({})'.format(card_value, variation_previous_day)
-            text_values.append(text)
+            total_text = '{}'.format(card_value)
+            variation_text = '({})'.format(variation_previous_day)
+            total_text_values.append(total_text)
+            variation_text_values.append(variation_text)
             if field == 'totale_positivi':
                 color = 'green'
                 color_cards_list.append(color)
             else:
                 color = 'red'
                 color_cards_list.append(color)
-    dictionary_color = ({'color':color_cards_list[0]}, {'color':color_cards_list[1]}, {'color':color_cards_list[2]},\
-           {'color':color_cards_list[3]})
-    return (*text_values), (*dictionary_color), sub_header_text
+    dictionary_color = ({'color':color_cards_list[0]},
+                        {'color':color_cards_list[1]},
+                        {'color':color_cards_list[2]},
+                        {'color':color_cards_list[3]})
+    return (*total_text_values), (*variation_text_values), (*dictionary_color), sub_header_text
 
 
 def create_news():
@@ -726,24 +736,28 @@ def app_layout():
                                 [
                                     html.Div(
                                         [html.H6(id="total_positive_text", children=''),
+                                         html.H6(id="total_positive_variation", children=''),
                                          html.P("Positivi")],
                                         id="total_positive",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_cases_text", children=''),
+                                         html.H6(id="total_cases_variation", children=''),
                                          html.P("Casi")],
                                         id="total_cases",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_recovered_text", children=''),
+                                         html.H6(id="total_recovered_variation", children=''),
                                          html.P("Guariti")],
                                         id="total_recovered",
                                         className="mini_container",
                                     ),
                                     html.Div(
                                         [html.H6(id="total_deaths_text", children=''),
+                                         html.H6(id="total_deaths_variation", children=''),
                                          html.P("Decessi")],
                                         id="total_deaths",
                                         className="mini_container",

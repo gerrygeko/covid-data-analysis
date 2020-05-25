@@ -1,3 +1,6 @@
+# 1.0.4
+####Changed
+* color control on the four national data cards now only acts on the variation data text
 # 1.0.3
 ####Added
 * color control on the four national data cards, based on the trend of the last update (green for positive data trends,
