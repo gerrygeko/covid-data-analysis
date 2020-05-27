@@ -2,6 +2,7 @@ import base64
 import copy
 import csv
 import json as js
+import locale
 import time
 from datetime import datetime
 from threading import Thread
@@ -91,6 +92,7 @@ last_update = None
 df_regional_data = None
 df_national_data = None
 df_rate_regional = None
+locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
 
 
 layout = dict(
@@ -238,7 +240,7 @@ def update_map_graph(data_selected):
                                   color=data_selected,
                                   color_continuous_scale="Reds",
                                   hover_name='denominazione_regione',
-                                  hover_data=["population"],
+                                  hover_data=['population'],
                                   range_color=(df[data_selected].min(), df[data_selected].max()),
                                   mapbox_style="carto-positron",
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
@@ -306,13 +308,13 @@ def update_cards_text(n):
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0:
-            total_text = '{}'.format(card_value)
-            variation_text = '(+{})'.format(variation_previous_day)
+            total_text = '{0:n}'.format(card_value)
+            variation_text = '(+{0:n})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
         else:
-            total_text = '{}'.format(card_value)
-            variation_text = '({})'.format(variation_previous_day)
+            total_text = '{0:n}'.format(card_value)
+            variation_text = '({0:n})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values), sub_header_text
