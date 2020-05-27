@@ -13,7 +13,6 @@ NEW FEATURES AND BUG TO SOLVE
 - Make all Graphs listen the interval
 - Exception when 'X' is pressed on the choropleth map dropdown
 - Introduce hyperlink for CHANGELOG
-- Time showed in the news feed is displayed in UTC instead of CET timezone
 
 -------------------------------------------------------------------------------------------------
 
@@ -28,3 +27,4 @@ SOLVED
 - Hyperlink to Protezione Civile Data
 - Deal with region that have 'codice_regione' 21 and 22
 - Make card text different color based on positivity or negativity of the number
+- Time showed in the news feed is displayed in UTC instead of CET timezone

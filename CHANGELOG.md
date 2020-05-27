@@ -1,3 +1,8 @@
+# 1.0.5
+####Fixed
+* news feed time is now displayed in CET format timezone instead of UTC
+####Changed
+* separation of label generation (total value + variation value) from color variation
 # 1.0.4
 ####Changed
 * color control on the four national data cards now only acts on the variation data text

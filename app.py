@@ -17,6 +17,7 @@ import requests
 import schedule
 
 from dash.dependencies import Input, Output, ClientsideFunction
+from pytz import timezone
 
 import logger
 from constants import DATA_DICT
@@ -362,7 +363,7 @@ def create_news():
             html.P(
                 className="p-news title",
                 children="Ultimo Aggiornamento: "
-                         + datetime.now().strftime("%H:%M:%S"),
+                         + datetime.now().astimezone(timezone('Europe/Berlin')).strftime("%d/%m/%Y %H:%M"),
             ),
             html.Table(
                 className="table-news",
