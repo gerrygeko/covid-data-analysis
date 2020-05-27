@@ -330,20 +330,13 @@ def update_cards_color(n):
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        if variation_previous_day > 0:
-            if field == 'dimessi_guariti':
-                color = 'limegreen'
-                color_cards_list.append(color)
-            else:
-                color = 'red'
-                color_cards_list.append(color)
+        if variation_previous_day > 0 and field == 'dimessi_guariti' or \
+                variation_previous_day < 0 and field == 'totale_positivi':
+            color = 'limegreen'
+            color_cards_list.append(color)
         else:
-            if field == 'totale_positivi':
-                color = 'limegreen'
-                color_cards_list.append(color)
-            else:
-                color = 'red'
-                color_cards_list.append(color)
+            color = 'red'
+            color_cards_list.append(color)
     dictionary_color = ({'color': color_cards_list[0]},
                         {'color': color_cards_list[1]},
                         {'color': color_cards_list[2]},
