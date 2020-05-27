@@ -292,10 +292,6 @@ def update_bar_graph(data_selected):
                Output('total_cases_variation', 'children'),
                Output('total_recovered_variation', 'children'),
                Output('total_deaths_variation', 'children'),
-               Output('total_positive_variation', 'style'),
-               Output('total_cases_variation', 'style'),
-               Output('total_recovered_variation', 'style'),
-               Output('total_deaths_variation', 'style'),
                Output('subHeader', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_cards_text(n):
@@ -304,7 +300,6 @@ def update_cards_text(n):
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
     total_text_values = []
     variation_text_values = []
-    color_cards_list = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
@@ -314,28 +309,46 @@ def update_cards_text(n):
             variation_text = '(+{})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
-            if field == 'dimessi_guariti':
-                color = 'green'
-                color_cards_list.append(color)
-            else:
-                color = 'red'
-                color_cards_list.append(color)
         else:
             total_text = '{}'.format(card_value)
             variation_text = '({})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
-            if field == 'totale_positivi':
-                color = 'green'
+    return (*total_text_values), (*variation_text_values), sub_header_text
+
+
+@app.callback([Output('total_positive_variation', 'style'),
+               Output('total_cases_variation', 'style'),
+               Output('total_recovered_variation', 'style'),
+               Output('total_deaths_variation', 'style')
+               ], [Input("i_news", "n_intervals")])
+def update_cards_color(n):
+    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
+    color_cards_list = []
+    for field in field_list:
+        card_value = df_national_data[field].iloc[-1]
+        card_value_previous_day = df_national_data[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        if variation_previous_day > 0:
+            if field == 'dimessi_guariti':
+                color = 'limegreen'
                 color_cards_list.append(color)
             else:
                 color = 'red'
                 color_cards_list.append(color)
-    dictionary_color = ({'color':color_cards_list[0]},
-                        {'color':color_cards_list[1]},
-                        {'color':color_cards_list[2]},
-                        {'color':color_cards_list[3]})
-    return (*total_text_values), (*variation_text_values), (*dictionary_color), sub_header_text
+        else:
+            if field == 'totale_positivi':
+                color = 'limegreen'
+                color_cards_list.append(color)
+            else:
+                color = 'red'
+                color_cards_list.append(color)
+    dictionary_color = ({'color': color_cards_list[0]},
+                        {'color': color_cards_list[1]},
+                        {'color': color_cards_list[2]},
+                        {'color': color_cards_list[3]})
+    return (*dictionary_color),
+
 
 
 def create_news():
