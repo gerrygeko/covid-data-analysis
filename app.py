@@ -578,7 +578,6 @@ def load_region_rate_data_frame():
     df_sb = pd.read_csv(url_csv_regional_data, parse_dates=['data'])
     df_sb = df_sb.tail(21)
     df_sb = adjust_region(df_sb)
-    print(df_sb)
     df_sb['population'] = list(region_population.values())
     # Convert field to float
     for field in field_list_to_rate:
