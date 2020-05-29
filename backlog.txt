@@ -28,3 +28,4 @@ SOLVED
 - Deal with region that have 'codice_regione' 21 and 22
 - Make card text different color based on positivity or negativity of the number
 - Time showed in the news feed is displayed in UTC instead of CET timezone
+- Change format of Cloropleth hover_data to it_IT

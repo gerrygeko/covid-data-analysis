@@ -27,6 +27,8 @@ SECONDS = 1000
 
 INHABITANT_RATE = 100000
 
+locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
+
 log = logger.get_logger()
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
@@ -76,6 +78,8 @@ def load_csv_from_file(path):
 
 
 def load_csv(url):
+    #locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
+    #pd.set_option('display.float_format', lambda x: locale.format('%.2f', x, grouping=True))
     data_loaded = pd.read_csv(url, index_col=[0], parse_dates=['data'])
     return data_loaded
 
@@ -92,7 +96,6 @@ last_update = None
 df_regional_data = None
 df_national_data = None
 df_rate_regional = None
-locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
 
 
 layout = dict(
@@ -230,10 +233,16 @@ def update_pie_graph(region_list, data_selected):
     log.info('Updating pie graph')
     return figure
 
+def format_int_to_locale(value):
+    return locale.format_string('%.0f', value, True)
+
 
 @app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
+    df['population'] = pd.to_numeric(df['population'], downcast='float')
+    df['population'] = df['population'].apply(format_int_to_locale)
+    print(df['population'])
     date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
@@ -308,13 +317,15 @@ def update_cards_text(n):
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0:
-            total_text = '{0:n}'.format(card_value)
-            variation_text = '(+{0:n})'.format(variation_previous_day)
+            total_text = f'{card_value:n}'
+            variation_text = f'+{variation_previous_day:n}'
+            #variation_text = '(+{0:n})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
         else:
-            total_text = '{0:n}'.format(card_value)
-            variation_text = '({0:n})'.format(variation_previous_day)
+            total_text = f'{card_value:n}'
+            variation_text = f'{variation_previous_day:n}'
+            #variation_text = '({0:n})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values), sub_header_text
