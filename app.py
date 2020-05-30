@@ -113,6 +113,9 @@ layout = dict(
     ),
 )
 
+def format_value_string_to_locale(value):
+    return locale.format_string('%.0f', value, True)
+
 
 def get_options(list_value):
     dict_list = []
@@ -233,16 +236,12 @@ def update_pie_graph(region_list, data_selected):
     log.info('Updating pie graph')
     return figure
 
-def format_int_to_locale(value):
-    return locale.format_string('%.0f', value, True)
-
 
 @app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
-    df['population'] = df['population'].apply(format_int_to_locale)
-    print(df['population'])
+    df['population'] = df['population'].apply(format_value_string_to_locale)
     date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
@@ -606,6 +605,8 @@ def load_interactive_data():
     log.info('Start scheduled task to check data updates')
     global df_regional_data, df_national_data, df_rate_regional, region_population, last_update
     df_regional_data = load_csv(url_csv_regional_data)
+    df_regional_data.index = df_regional_data.index.normalize()
+    #df_regional_data.index = df_regional_data.index.strftime('%d/%b')
     df_national_data = load_csv(url_csv_italy_data)
     current_update = df_national_data.index[-1]
     if df_rate_regional is None or current_update != last_update:
