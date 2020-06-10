@@ -237,7 +237,7 @@ def update_pie_graph(region_list, data_selected):
     return figure
 
 
-@app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
+@app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
@@ -272,7 +272,7 @@ def update_map_graph(data_selected):
     return figure
 
 
-@app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_rate_selected', 'value')])
+@app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
 def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
     layout_bar['title'] = '{}'.format(DATA_DICT[data_selected])
@@ -801,17 +801,13 @@ def app_layout():
             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                 [
                     html.Div(
-                        [dcc.Dropdown(id='dropdown_data_rate_selected',
-                                      options=get_options_from_list(field_list_to_rate),
-                                      multi=False,
-                                      value='ricoverati_con_sintomi',
-                                      className='dcc_control'),
+                        [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti', className='title'),
                          dcc.Graph(id="map_graph")],
                         className="pretty_container seven columns",
                     ),
                     html.Div(
                         [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
-                         html.P(id='bar_subheader', children='N° casi ogni 100.000 abitanti', className='title'),
+                         #html.P(id='bar_subheader', children='N° casi ogni 100.000 abitanti', className='title'),
                          dcc.Graph(id="bar_graph")],
                         className="pretty_container five columns",
                     ),

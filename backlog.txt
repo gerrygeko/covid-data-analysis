@@ -29,3 +29,4 @@ SOLVED
 - Time showed in the news feed is displayed in UTC instead of CET timezone
 - Change format of Cloropleth hover_data to it_IT
 - Don't show hour in the date format in the Line Graph
+- Remove dropdown selection for CloroplethMap
