@@ -618,6 +618,17 @@ def load_interactive_data():
     log.info('Update task completed')
 
 
+def new_positive_regions():
+    df = df_regional_data.tail(21)
+    regions_list = []
+    value_list = []
+    new_positive_rows = df.loc[df['nuovi_positivi'] > 0]
+    regions_list.append(new_positive_rows)
+    for region in regions_list:
+        value_list = region['denominazione_regione'].tolist()
+    return value_list
+
+
 def app_layout():
     app.layout = html.Div(
         [  # START OF SUPREME INCAPSULATION ############################################
@@ -708,7 +719,7 @@ def app_layout():
                                                          options=get_options(
                                                              df_regional_data['denominazione_regione'].unique()),
                                                          multi=True,
-                                                         value=['Emilia-Romagna', 'Lazio', 'Campania'],
+                                                         value=new_positive_regions(),
                                                          className='dcc_control'
                                                          ),
                                             html.P("Seleziona il dato da studiare:", className="control_label"),
@@ -716,7 +727,7 @@ def app_layout():
                                                 id='dropdown_data_selected',
                                                 options=get_options_from_list(field_list_complete),
                                                 multi=False,
-                                                value='ricoverati_con_sintomi',
+                                                value='nuovi_positivi',
                                                 className='dcc_control'
                                             ),
                                             dcc.Graph(id="pie_graph")
@@ -728,7 +739,7 @@ def app_layout():
                                             dcc.Dropdown(id='dropdown_data_list_selected',
                                                          options=get_options_from_list(field_list_complete),
                                                          multi=True,
-                                                         value=['ricoverati_con_sintomi'],
+                                                         value=['nuovi_positivi'],
                                                          className='dcc_control'
                                                          ),
                                             html.P("Seleziona la regione italiana da studiare:",
@@ -860,6 +871,7 @@ app.clientside_callback(
 )
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
+new_positive_regions()
 
 if __name__ == '__main__':
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
