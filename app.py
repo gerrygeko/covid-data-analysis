@@ -78,8 +78,6 @@ def load_csv_from_file(path):
 
 
 def load_csv(url):
-    #locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
-    #pd.set_option('display.float_format', lambda x: locale.format('%.2f', x, grouping=True))
     data_loaded = pd.read_csv(url, index_col=[0], parse_dates=['data'])
     return data_loaded
 
@@ -241,7 +239,7 @@ def update_pie_graph(region_list, data_selected):
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
-    df['population'] = df['population'].apply(format_value_string_to_locale)
+    #df['population'] = df['population'].apply(format_value_string_to_locale)
     date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
