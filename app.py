@@ -620,6 +620,7 @@ def load_interactive_data():
 
 def new_positive_regions():
     df = df_regional_data.tail(21)
+    df = df.sort_values(by=['nuovi_positivi']).tail(3)
     regions_list = []
     value_list = []
     new_positive_rows = df.loc[df['nuovi_positivi'] > 0]
