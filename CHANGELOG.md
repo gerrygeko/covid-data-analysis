@@ -1,20 +1,22 @@
 # 1.0.6
+#### Added
+* National data cards and map now support Italian data format
 #### Changed
-* Update of national data cards and map hover data to it_IT format location
-* Set "Nuovi Positivi" as dafault data for dropdown selection and "Nuovi Positivi" TOP 3 Region for multi-region selection
-* Cloropleth Map and Bar Graph now depend on dropdown selection TOP 3 Region data (as default data graph)
+* "Nuovi Positivi" is now the default data for data selection 
+* Multi-region selection shows the "Nuovi Positivi" Top 3 Regions
+* All components depend now on the same data selection
 
 # 1.0.5
 #### Fixed
-* news feed time is now displayed in CET format timezone instead of UTC
+* News feed time is now displayed in CET format timezone instead of UTC
 
 # 1.0.4
 #### Changed
-* color control on the four national data cards now only acts on the variation data text
+* Color control on the four national data cards now only acts on the variation data text
 
 # 1.0.3
 #### Added
-* color control on the four national data cards, based on the trend of the last update (green for positive data trends,
+* Color control on the four national data cards, based on the trend of the last update (green for positive data trends,
 red for negatives)
 
 # 1.0.2
