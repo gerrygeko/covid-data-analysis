@@ -27,7 +27,7 @@ SECONDS = 1000
 
 INHABITANT_RATE = 100000
 
-locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
+locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 
 log = logger.get_logger()
 app = dash.Dash(
@@ -239,7 +239,7 @@ def update_pie_graph(region_list, data_selected):
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
-    #df['population'] = df['population'].apply(format_value_string_to_locale)
+    df['population'] = df['population'].apply(format_value_string_to_locale)
     date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
