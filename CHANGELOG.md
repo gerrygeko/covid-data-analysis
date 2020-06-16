@@ -1,6 +1,7 @@
 # 1.0.7
 #### Changed
 * Bar Graph shows the raw data updated to the current day, no longer the rate calculated on the population
+* The position of the map and bar chart has been reversed to optimize understanding of data in mobile view
 
 # 1.0.6
 #### Added

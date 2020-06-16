@@ -808,14 +808,14 @@ def app_layout():
             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                 [
                     html.Div(
-                        [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti', className='title'),
-                         dcc.Graph(id="map_graph")],
-                        className="pretty_container seven columns",
-                    ),
-                    html.Div(
                         [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
                          dcc.Graph(id="bar_graph")],
                         className="pretty_container five columns",
+                    ),
+                    html.Div(
+                        [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti', className='title'),
+                         dcc.Graph(id="map_graph")],
+                        className="pretty_container seven columns",
                     ),
                 ],
                 className="row flex-display",
