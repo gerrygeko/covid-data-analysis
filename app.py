@@ -316,13 +316,11 @@ def update_cards_text(n):
         if variation_previous_day > 0:
             total_text = f'{card_value:n}'
             variation_text = f'+{variation_previous_day:n}'
-            #variation_text = '(+{0:n})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
         else:
             total_text = f'{card_value:n}'
             variation_text = f'{variation_previous_day:n}'
-            #variation_text = '({0:n})'.format(variation_previous_day)
             total_text_values.append(total_text)
             variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values), sub_header_text
@@ -604,7 +602,6 @@ def load_interactive_data():
     global df_regional_data, df_national_data, df_rate_regional, region_population, last_update
     df_regional_data = load_csv(url_csv_regional_data)
     df_regional_data.index = df_regional_data.index.normalize()
-    #df_regional_data.index = df_regional_data.index.strftime('%d/%b')
     df_national_data = load_csv(url_csv_italy_data)
     current_update = df_national_data.index[-1]
     if df_rate_regional is None or current_update != last_update:
@@ -817,7 +814,6 @@ def app_layout():
                     ),
                     html.Div(
                         [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
-                         #html.P(id='bar_subheader', children='N° casi ogni 100.000 abitanti', className='title'),
                          dcc.Graph(id="bar_graph")],
                         className="pretty_container five columns",
                     ),
