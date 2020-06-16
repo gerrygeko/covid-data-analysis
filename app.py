@@ -275,7 +275,7 @@ def update_bar_graph(data_selected):
     layout_bar = copy.deepcopy(layout)
     layout_bar['title'] = '{}'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
-    df_sub = df_rate_regional
+    df_sub = df_regional_data.tail(21)
     df_sorted = df_sub.sort_values(by=[data_selected])
     df_sorted = df_sorted.tail(10)
     region_list = df_sorted['denominazione_regione'].values.tolist()

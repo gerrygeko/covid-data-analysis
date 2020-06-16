@@ -1,3 +1,7 @@
+# 1.0.7
+#### Changed
+* Bar Graph shows the raw data updated to the current day, no longer the rate calculated on the population
+
 # 1.0.6
 #### Added
 * National data cards and map now support Italian data format
