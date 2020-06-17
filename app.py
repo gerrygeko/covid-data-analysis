@@ -95,7 +95,6 @@ df_regional_data = None
 df_national_data = None
 df_rate_regional = None
 
-
 layout = dict(
     autosize=True,
     automargin=True,
@@ -110,6 +109,7 @@ layout = dict(
         zoom=7,
     ),
 )
+
 
 def format_value_string_to_locale(value):
     return locale.format_string('%.0f', value, True)
@@ -700,14 +700,14 @@ def app_layout():
                 className="row flex-display",
                 style={"margin-bottom": "0px", "margin-top": "0px"},
             ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
+            dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
+                dcc.Tab(label='Confronta Regioni per Dato', value='tab_region',
+                        children=[  # START FIRST TAB
+                            html.Div(  # START OF 2ND INCAPSULATION  ############################################
+                                [
+                                    html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                        [
 
-            html.Div(  # START OF 2ND INCAPSULATION  ############################################
-                [
-                    html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
-                        [
-                            dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
-                                dcc.Tab(label='Confronta Regioni per Dato', value='tab_region',
-                                        children=[  # START FIRST TAB
                                             html.P("Seleziona una o più regioni italiane da confrontare:",
                                                    className="control_label"),
                                             dcc.Dropdown(id='dropdown_region_list_selected',
@@ -725,97 +725,109 @@ def app_layout():
                                                 value='nuovi_positivi',
                                                 className='dcc_control'
                                             ),
-                                            dcc.Graph(id="pie_graph")
-                                        ]),  # END OF FIRST TAB
-                                dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
-                                        children=[  # START OF SECOND TAB
-                                            html.P("Seleziona uno o piu' dati da comparare:",
-                                                   className="control_label"),
-                                            dcc.Dropdown(id='dropdown_data_list_selected',
-                                                         options=get_options_from_list(field_list_complete),
-                                                         multi=True,
-                                                         value=['nuovi_positivi'],
-                                                         className='dcc_control'
-                                                         ),
-                                            html.P("Seleziona la regione italiana da studiare:",
-                                                   className="control_label"),
-                                            dcc.Dropdown(
-                                                id='dropdown_region_selected',
-                                                options=get_options(df_regional_data['denominazione_regione'].unique()),
-                                                multi=False,
-                                                value=df_regional_data['denominazione_regione'].sort_values()[0],
-                                                className='dcc_control'
-                                            ),
-                                        ]),  # END OF SECOND TAB
-                            ])  # END OF TABS COMPONENT CREATOR
-                        ],
-                        className="pretty_container four columns",
-                        id="cross-filter-options",
-                    ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
-                    html.Div(  # START OF 2ND BLOCK
-                        [
-                            html.H5(id='card_header', children='Totale Dati Nazionali', className='title'),
-                            html.Div(  # START OF CARDS #
+                                            dcc.Graph(id="pie_graph"),
+                                            # dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
+                                            #       children=[  # START OF SECOND TAB
+                                        ],
+                                        className="pretty_container four columns",
+                                        id="cross-filter-options-tab1",
+                                    ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                    html.Div(  # START OF 2ND BLOCK
+                                        [
+                                            html.H5(id='card_header', children='Totale Dati Nazionali',
+                                                    className='title'),
+                                            html.Div(  # START OF CARDS #
+                                                [
+                                                    html.Div(
+                                                        [html.H6(id="total_positive_text", children=''),
+                                                         html.H6(id="total_positive_variation", children=''),
+                                                         html.P("Positivi")],
+                                                        id="total_positive",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_cases_text", children=''),
+                                                         html.H6(id="total_cases_variation", children=''),
+                                                         html.P("Casi")],
+                                                        id="total_cases",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_recovered_text", children=''),
+                                                         html.H6(id="total_recovered_variation", children=''),
+                                                         html.P("Guariti")],
+                                                        id="total_recovered",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_deaths_text", children=''),
+                                                         html.H6(id="total_deaths_variation", children=''),
+                                                         html.P("Decessi")],
+                                                        id="total_deaths",
+                                                        className="mini_container",
+                                                    ),
+                                                ],
+                                                id="info-container",
+                                                className="row container-display",
+                                            ),  # END OF CARDS #
+                                            html.Div(  # START OF THE GRAPH UNDER THE CARDS#
+                                                [dcc.Graph(id='regional_timeseries_linear')],
+                                                id="countGraphContainer",
+                                                className="pretty_container",
+                                            ),  # END OF THE GRAPH #
+                                        ],
+                                        id="right-column",
+                                        className="eight columns",
+                                    ),  # END OF 2ND BLOCK
+                                ],
+                                className="row flex-display",
+                            ),  # END OF 2ND INCAPSULATION  ############################################
+                            html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                                 [
                                     html.Div(
-                                        [html.H6(id="total_positive_text", children=''),
-                                         html.H6(id="total_positive_variation", children=''),
-                                         html.P("Positivi")],
-                                        id="total_positive",
-                                        className="mini_container",
+                                        [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
+                                         dcc.Graph(id="bar_graph")],
+                                        className="pretty_container five columns",
                                     ),
                                     html.Div(
-                                        [html.H6(id="total_cases_text", children=''),
-                                         html.H6(id="total_cases_variation", children=''),
-                                         html.P("Casi")],
-                                        id="total_cases",
-                                        className="mini_container",
-                                    ),
-                                    html.Div(
-                                        [html.H6(id="total_recovered_text", children=''),
-                                         html.H6(id="total_recovered_variation", children=''),
-                                         html.P("Guariti")],
-                                        id="total_recovered",
-                                        className="mini_container",
-                                    ),
-                                    html.Div(
-                                        [html.H6(id="total_deaths_text", children=''),
-                                         html.H6(id="total_deaths_variation", children=''),
-                                         html.P("Decessi")],
-                                        id="total_deaths",
-                                        className="mini_container",
+                                        [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti',
+                                                 className='title'),
+                                         dcc.Graph(id="map_graph")],
+                                        className="pretty_container seven columns",
                                     ),
                                 ],
-                                id="info-container",
-                                className="row container-display",
-                            ),  # END OF CARDS #
-                            html.Div(  # START OF THE GRAPH UNDER THE CARDS#
-                                [dcc.Graph(id='regional_timeseries_linear')],
-                                id="countGraphContainer",
-                                className="pretty_container",
-                            ),  # END OF THE GRAPH #
-                        ],
-                        id="right-column",
-                        className="eight columns",
-                    ),  # END OF 2ND BLOCK
-                ],
-                className="row flex-display",
-            ),  # END OF 2ND INCAPSULATION  ############################################
-            html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
-                [
-                    html.Div(
-                        [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
-                         dcc.Graph(id="bar_graph")],
-                        className="pretty_container five columns",
-                    ),
-                    html.Div(
-                        [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti', className='title'),
-                         dcc.Graph(id="map_graph")],
-                        className="pretty_container seven columns",
-                    ),
-                ],
-                className="row flex-display",
-            ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                                className="row flex-display",
+                            ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+
+                        ]),  # END OF FIRST TAB
+                dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
+                        children=[  # START OF SECOND TAB
+                            html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                [
+                                    # html.P("Seleziona uno o piu' dati da comparare:",
+                                    #        className="control_label"),
+                                    # dcc.Dropdown(id='dropdown_data_list_selected',
+                                    #              options=get_options_from_list(field_list_complete),
+                                    #              multi=True,
+                                    #              value=['nuovi_positivi'],
+                                    #              className='dcc_control'
+                                    #              ),
+                                    html.P("Seleziona la regione italiana da studiare:",
+                                           className="control_label"),
+                                    dcc.Dropdown(
+                                        id='dropdown_region_selected',
+                                        options=get_options(df_regional_data['denominazione_regione'].unique()),
+                                        multi=False,
+                                        value=df_regional_data['denominazione_regione'].sort_values()[0],
+                                        className='dcc_control'
+                                    ),
+                                ],
+                                className="pretty_container four columns",
+                                id="cross-filter-options-tab2",
+                            ),
+                        ]),  # END OF SECOND TAB
+            ]),  # END OF TABS COMPONENT CREATOR
+
             html.Div(  # START 4TH INCAPS
                 [
                     html.Div(  # START OF NEWS FEEDER
