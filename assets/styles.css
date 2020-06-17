@@ -116,6 +116,12 @@ body {
   text-align: center;
 }
 
+#version_text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
 .title {
   text-align: center;
 }

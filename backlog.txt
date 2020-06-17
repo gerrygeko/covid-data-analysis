@@ -11,7 +11,6 @@ NEW FEATURES AND BUG TO SOLVE
 - Save logs somewhere and somehow
 - Make all Graphs listen the interval
 - Exception when 'X' is pressed on the choropleth map dropdown
-- Introduce hyperlink for CHANGELOG
 
 -------------------------------------------------------------------------------------------------
 
@@ -30,3 +29,4 @@ SOLVED
 - Change format of Cloropleth hover_data to it_IT
 - Don't show hour in the date format in the Line Graph
 - Remove dropdown selection for CloroplethMap
+- Introduce hyperlink for CHANGELOG

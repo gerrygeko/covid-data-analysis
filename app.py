@@ -352,7 +352,6 @@ def update_cards_color(n):
     return (*dictionary_color),
 
 
-
 def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
@@ -748,14 +747,11 @@ def app_layout():
                                                 className='dcc_control'
                                             ),
                                         ]),  # END OF SECOND TAB
-
                             ])  # END OF TABS COMPONENT CREATOR
-
                         ],
                         className="pretty_container four columns",
                         id="cross-filter-options",
                     ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
-
                     html.Div(  # START OF 2ND BLOCK
                         [
                             html.H5(id='card_header', children='Totale Dati Nazionali', className='title'),
@@ -833,6 +829,14 @@ def app_layout():
                 ],
                 className="row flex-display",
             ),  # END OF 4TH INCAPSULATION
+            html.A(
+                html.P(
+                    id="version_text",
+                    className="p-version changelog",
+                    children="v1.0.7"
+                ),
+                href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
+            )
         ],  # END OF SUPEREME INCAPSULATION ############################################
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
