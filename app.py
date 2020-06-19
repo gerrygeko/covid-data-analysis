@@ -350,11 +350,11 @@ def update_national_cards_color(n):
         else:
             color = 'red'
             color_cards_list.append(color)
-    dictionary_color = ({'color': color_cards_list[0]},
+    dictionary_color = [{'color': color_cards_list[0]},
                         {'color': color_cards_list[1]},
                         {'color': color_cards_list[2]},
-                        {'color': color_cards_list[3]})
-    return (*dictionary_color),
+                        {'color': color_cards_list[3]}]
+    return dictionary_color
 
 
 @app.callback([Output('total_cases_text_tab2', 'children'),
