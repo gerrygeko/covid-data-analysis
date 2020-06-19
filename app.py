@@ -274,7 +274,7 @@ def update_bar_graph(data_selected):
                    )
             ]
     figure = dict(data=data, layout=layout_bar)
-    log.info('Updating bar graph')
+    log.info('Updating bar graph in Tab 1')
     return figure
 
 
@@ -290,11 +290,11 @@ def update_bar_graph_active_cases(region_selected):
     figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=DATA_DICT['ricoverati_con_sintomi']))
     figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=DATA_DICT['isolamento_domiciliare']))
     figure.update_layout(barmode='stack',
-                         title='{}'.format(region_selected),
+                         title=region_selected,
                          xaxis={'categoryorder': 'total descending'},
                          autosize=True
                          )
-    log.info('Updating bar graph')
+    log.info('Updating bar graph in Tab 2')
     return figure
 
 
@@ -382,7 +382,6 @@ def update_regional_cards_text(region_selected):
     total_text_values = []
     variation_text_values = []
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
-    print(df)
     for field in field_list:
         card_value = df[field].iloc[-1]
         card_value_previous_day = df[field].iloc[-2]
