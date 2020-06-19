@@ -318,16 +318,11 @@ def update_national_cards_text(n):
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        if variation_previous_day > 0:
-            total_text = f'{card_value:n}'
-            variation_text = f'+{variation_previous_day:n}'
-            total_text_values.append(total_text)
-            variation_text_values.append(variation_text)
-        else:
-            total_text = f'{card_value:n}'
-            variation_text = f'{variation_previous_day:n}'
-            total_text_values.append(total_text)
-            variation_text_values.append(variation_text)
+        total_text = f'{card_value:n}'
+        total_text_values.append(total_text)
+        sign = '+' if variation_previous_day > 0 else ''
+        variation_text = f'{sign}{variation_previous_day:n}'
+        variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values), sub_header_text
 
 
