@@ -375,8 +375,7 @@ def update_national_cards_color(n):
                Output('total_swabs_variation_tab2', 'children')
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
-    log.info('update regional cards')
-    # sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
+    log.info('Update regional cards')
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
@@ -386,16 +385,11 @@ def update_regional_cards_text(region_selected):
         card_value = df[field].iloc[-1]
         card_value_previous_day = df[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        if variation_previous_day > 0:
-            total_text = f'{card_value:n}'
-            variation_text = f'+{variation_previous_day:n}'
-            total_text_values.append(total_text)
-            variation_text_values.append(variation_text)
-        else:
-            total_text = f'{card_value:n}'
-            variation_text = f'{variation_previous_day:n}'
-            total_text_values.append(total_text)
-            variation_text_values.append(variation_text)
+        total_text = f'{card_value:n}'
+        total_text_values.append(total_text)
+        sign = '+' if variation_previous_day > 0 else ''
+        variation_text = f'{sign}{variation_previous_day:n}'
+        variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values),
 
 
