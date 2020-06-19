@@ -286,9 +286,9 @@ def update_bar_graph_active_cases(region_selected):
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df.index.drop_duplicates()
     figure = go.Figure(
-        go.Bar(x=x_list, y=y_list_1, name='Terapia Intensiva', textposition='auto', insidetextanchor="start"))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name='Ospedalizzati'))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name='Quarantena'))
+        go.Bar(x=x_list, y=y_list_1, name=DATA_DICT['terapia_intensiva'], textposition='auto', insidetextanchor="start"))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=DATA_DICT['ricoverati_con_sintomi']))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=DATA_DICT['isolamento_domiciliare']))
     figure.update_layout(barmode='stack',
                          title='{}'.format(region_selected),
                          xaxis={'categoryorder': 'total descending'},
