@@ -11,10 +11,8 @@ NEW FEATURES AND BUG TO SOLVE
 - Save logs somewhere and somehow
 - Make all Graphs listen the interval
 - Exception when 'X' is pressed on the choropleth map dropdown
-
-- Regional Cards
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project)
-- Vertical Bar Chart to show Active Case by day(hozpitalized w symptoms,ICU, quarantined)
+
 -------------------------------------------------------------------------------------------------
 
 SOLVED
@@ -33,3 +31,5 @@ SOLVED
 - Don't show hour in the date format in the Line Graph
 - Remove dropdown selection for CloroplethMap
 - Introduce hyperlink for CHANGELOG
+- Regional Cards
+- Vertical Bar Chart to show Active Case by day(hozpitalized w symptoms,ICU, quarantined)
