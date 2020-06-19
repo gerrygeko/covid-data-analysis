@@ -310,6 +310,24 @@ def update_bar_graph(data_selected):
     log.info('Updating bar graph')
     return figure
 
+@app.callback(Output('bar_graph_tab2', 'figure'), [Input('dropdown_region_selected', 'value')])
+def update_bar_graph_active_cases(region_selected):
+    layout_bar = copy.deepcopy(layout)
+    layout_bar['title'] = '{}'.format(region_selected)
+    df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+    y_list_1 = df['ricoverati_con_sintomi'].values.tolist()
+    y_list_2 = df['terapia_intensiva'].values.tolist()
+    y_list_3 = df['isolamento_domiciliare'].values.tolist()
+    x_list = df.index.drop_duplicates()
+    figure = go.Figure(go.Bar(x=x_list, y=y_list_1,name='Ospedalizzati', textposition='auto', insidetextanchor="start"))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name='Terapia Intensiva'))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name='Quarantena'))
+    figure.update_layout(barmode='stack', title='{}'.format(region_selected), xaxis={'categoryorder': 'total descending'})
+    #data.add_trace(x=x_list, y=y_list_2, textposition='auto', insidetextanchor="start")
+    #figure = dict(data=data, layout=layout_bar)
+    log.info('Updating bar graph')
+    return figure
+
 
 @app.callback([Output('total_positive_text', 'children'),
                Output('total_cases_text', 'children'),
@@ -974,6 +992,16 @@ def app_layout():
                                 ],
                                 className="row flex-display",
                             ),  # END OF 2ND INCAPSULATION  ############################################
+                            html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                                [
+                                    html.Div(
+                                        [html.H5(id='bar_header_tab2', children='Casi Attivi per giorno:', className='title'),
+                                         dcc.Graph(id="bar_graph_tab2")],
+                                        className="pretty_container twelve columns",
+                                    ),
+                                ],
+                                className="row flex-display",
+                            ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
 
                         ]),  # END OF SECOND TAB
             ]),  # END OF TABS COMPONENT CREATOR
