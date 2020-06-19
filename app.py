@@ -313,16 +313,21 @@ def update_bar_graph(data_selected):
 @app.callback(Output('bar_graph_tab2', 'figure'), [Input('dropdown_region_selected', 'value')])
 def update_bar_graph_active_cases(region_selected):
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{}'.format(region_selected)
+    #layout_bar['title'] = '{}'.format(region_selected)
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
-    y_list_1 = df['ricoverati_con_sintomi'].values.tolist()
-    y_list_2 = df['terapia_intensiva'].values.tolist()
+    y_list_1 = df['terapia_intensiva'].values.tolist()
+    y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df.index.drop_duplicates()
-    figure = go.Figure(go.Bar(x=x_list, y=y_list_1,name='Ospedalizzati', textposition='auto', insidetextanchor="start"))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name='Terapia Intensiva'))
+    figure = go.Figure(go.Bar(x=x_list, y=y_list_1,name='Terapia Intensiva', textposition='auto', insidetextanchor="start"))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name='Ospedalizzati'))
     figure.add_trace(go.Bar(x=x_list, y=y_list_3, name='Quarantena'))
-    figure.update_layout(barmode='stack', title='{}'.format(region_selected), xaxis={'categoryorder': 'total descending'})
+    figure.update_layout(barmode='stack',
+                         title='{}'.format(region_selected),
+                         xaxis={'categoryorder': 'total descending'},
+                         autosize=True
+                         )
+
     #data.add_trace(x=x_list, y=y_list_2, textposition='auto', insidetextanchor="start")
     #figure = dict(data=data, layout=layout_bar)
     log.info('Updating bar graph')
