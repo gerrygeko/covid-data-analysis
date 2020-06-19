@@ -748,13 +748,7 @@ def load_interactive_data():
 def new_positive_regions():
     df = df_regional_data.tail(21)
     df = df.sort_values(by=['nuovi_positivi']).tail(3)
-    regions_list = []
-    value_list = []
-    new_positive_rows = df.loc[df['nuovi_positivi'] > 0]
-    regions_list.append(new_positive_rows)
-    for region in regions_list:
-        value_list = region['denominazione_regione'].tolist()
-    return value_list
+    return df['denominazione_regione'].tolist()
 
 
 def app_layout():
@@ -1111,7 +1105,6 @@ app.clientside_callback(
 )
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
-new_positive_regions()
 
 if __name__ == '__main__':
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
