@@ -181,7 +181,7 @@ def create_figure(data, title):
 #                                                                Input('dropdown_region_selected', 'value'),
 #                                                                Input('tabs', 'value')])
 # def update_graph(region_list, data_selected, data_list, region_selected, tab_selected):
-#     if tab_selected == 'tab_region':
+#     if tab_selected == 'tab_national':
 #         regions_list_mapping = []
 #         # if no region selected, create empty figure
 #         if len(region_list) == 0 or data_selected is None:
@@ -192,7 +192,7 @@ def create_figure(data, title):
 #         x_axis_data = df_regional_data.index.drop_duplicates()
 #         figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
 #                                                x_axis_data, regions_list_mapping)
-#     elif tab_selected == 'tab_data':
+#     elif tab_selected == 'tab_regional':
 #         data_list_mapping = []
 #         # if no region selected, create empty figure
 #         if len(data_list) == 0 or region_selected is None:
@@ -208,33 +208,19 @@ def create_figure(data, title):
 
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
-                                                               Input('dropdown_data_selected', 'value'),
-                                                               Input('dropdown_data_list_selected', 'value'),
-                                                               Input('dropdown_region_selected', 'value'),
-                                                               Input('tabs', 'value')])
-def update_graph(region_list, data_selected, data_list, region_selected, tab_selected):
-    if tab_selected == 'tab_region':
-        regions_list_mapping = []
-        # if no region selected, create empty figure
-        if len(region_list) == 0 or data_selected is None:
-            figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
-            return figure
-        for region in region_list:
-            regions_list_mapping.append((data_selected, region))
-        x_axis_data = df_regional_data.index.drop_duplicates()
-        figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
-                                               x_axis_data, regions_list_mapping)
-    elif tab_selected == 'tab_data':
-        data_list_mapping = []
-        # if no region selected, create empty figure
-        if len(data_list) == 0 or region_selected is None:
-            figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
-            return figure
-        df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
-        for data in data_list:
-            data_list_mapping.append((data, DATA_DICT[data]))
-        x_axis_data = df_sub.index
-        figure = create_scatter_plot(df_sub, region_selected, x_axis_data, data_list_mapping)
+                                                               Input('dropdown_data_selected', 'value')])
+def update_graph(region_list, data_selected):
+    # if tab_selected == 'tab_national':
+    regions_list_mapping = []
+    # if no region selected, create empty figure
+    if len(region_list) == 0 or data_selected is None:
+        figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
+        return figure
+    for region in region_list:
+        regions_list_mapping.append((data_selected, region))
+    x_axis_data = df_regional_data.index.drop_duplicates()
+    figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
+                                           x_axis_data, regions_list_mapping)
     log.info('Updating main graph')
     return figure
 
@@ -403,9 +389,9 @@ def update_national_cards_color(n):
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
     log.info('update regional cards')
-    #sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
+    # sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
-                  'ricoverati_con_sintomi','terapia_intensiva','isolamento_domiciliare','tamponi']
+                  'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
     variation_text_values = []
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
@@ -775,8 +761,8 @@ def app_layout():
                 className="row flex-display",
                 style={"margin-bottom": "0px", "margin-top": "0px"},
             ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
-            dcc.Tabs(id='tabs', value='tab_region', children=[  # START OF TABS COMPONENT CREATOR
-                dcc.Tab(label='Confronta Regioni per Dato', value='tab_region',
+            dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
+                dcc.Tab(label='Confronta Regioni per Dato', value='tab_national',
                         children=[  # START FIRST TAB
                             html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
@@ -800,7 +786,7 @@ def app_layout():
                                                 className='dcc_control'
                                             ),
                                             dcc.Graph(id="pie_graph"),
-                                            # dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
+                                            # dcc.Tab(label='Confronta Dati per Regione', value='tab_regional',
                                             #       children=[  # START OF SECOND TAB
                                         ],
                                         className="pretty_container four columns",
@@ -874,7 +860,7 @@ def app_layout():
                             ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
 
                         ]),  # END OF FIRST TAB
-                dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
+                dcc.Tab(label='Confronta Dati per Regione', value='tab_regional',
                         children=[  # START OF SECOND TAB
                             html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
@@ -975,7 +961,7 @@ def app_layout():
                                                 id="info-container_2_tab2",
                                                 className="row container-display",
                                             ),
-                                    # END OF CARDS #
+                                            # END OF CARDS #
                                             # html.Div(  # START OF THE GRAPH UNDER THE CARDS#
                                             #     [dcc.Graph(id='regional_timeseries_linear_tab2')],
                                             #     id="countGraphContainer_tab2",
