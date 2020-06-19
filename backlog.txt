@@ -12,6 +12,7 @@ NEW FEATURES AND BUG TO SOLVE
 - Make all Graphs listen the interval
 - Exception when 'X' is pressed on the choropleth map dropdown
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project)
+- Create the color control on data variation value for Region Cards (Tab 2)
 
 -------------------------------------------------------------------------------------------------
 

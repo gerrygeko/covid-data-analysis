@@ -174,43 +174,10 @@ def create_figure(data, title):
     return figure
 
 
-# # Callback for timeseries/region
-# @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
-#                                                                Input('dropdown_data_selected', 'value'),
-#                                                                Input('dropdown_data_list_selected', 'value'),
-#                                                                Input('dropdown_region_selected', 'value'),
-#                                                                Input('tabs', 'value')])
-# def update_graph(region_list, data_selected, data_list, region_selected, tab_selected):
-#     if tab_selected == 'tab_national':
-#         regions_list_mapping = []
-#         # if no region selected, create empty figure
-#         if len(region_list) == 0 or data_selected is None:
-#             figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
-#             return figure
-#         for region in region_list:
-#             regions_list_mapping.append((data_selected, region))
-#         x_axis_data = df_regional_data.index.drop_duplicates()
-#         figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
-#                                                x_axis_data, regions_list_mapping)
-#     elif tab_selected == 'tab_regional':
-#         data_list_mapping = []
-#         # if no region selected, create empty figure
-#         if len(data_list) == 0 or region_selected is None:
-#             figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
-#             return figure
-#         df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
-#         for data in data_list:
-#             data_list_mapping.append((data, DATA_DICT[data]))
-#         x_axis_data = df_sub.index
-#         figure = create_scatter_plot(df_sub, region_selected, x_axis_data, data_list_mapping)
-#     log.info('Updating main graph')
-#     return figure
-
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
                                                                Input('dropdown_data_selected', 'value')])
 def update_graph(region_list, data_selected):
-    # if tab_selected == 'tab_national':
     regions_list_mapping = []
     # if no region selected, create empty figure
     if len(region_list) == 0 or data_selected is None:
@@ -310,16 +277,16 @@ def update_bar_graph(data_selected):
     log.info('Updating bar graph')
     return figure
 
+
 @app.callback(Output('bar_graph_tab2', 'figure'), [Input('dropdown_region_selected', 'value')])
 def update_bar_graph_active_cases(region_selected):
-    layout_bar = copy.deepcopy(layout)
-    #layout_bar['title'] = '{}'.format(region_selected)
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
     y_list_1 = df['terapia_intensiva'].values.tolist()
     y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df.index.drop_duplicates()
-    figure = go.Figure(go.Bar(x=x_list, y=y_list_1,name='Terapia Intensiva', textposition='auto', insidetextanchor="start"))
+    figure = go.Figure(
+        go.Bar(x=x_list, y=y_list_1, name='Terapia Intensiva', textposition='auto', insidetextanchor="start"))
     figure.add_trace(go.Bar(x=x_list, y=y_list_2, name='Ospedalizzati'))
     figure.add_trace(go.Bar(x=x_list, y=y_list_3, name='Quarantena'))
     figure.update_layout(barmode='stack',
@@ -327,9 +294,6 @@ def update_bar_graph_active_cases(region_selected):
                          xaxis={'categoryorder': 'total descending'},
                          autosize=True
                          )
-
-    #data.add_trace(x=x_list, y=y_list_2, textposition='auto', insidetextanchor="start")
-    #figure = dict(data=data, layout=layout_bar)
     log.info('Updating bar graph')
     return figure
 
@@ -809,8 +773,6 @@ def app_layout():
                                                 className='dcc_control'
                                             ),
                                             dcc.Graph(id="pie_graph"),
-                                            # dcc.Tab(label='Confronta Dati per Regione', value='tab_regional',
-                                            #       children=[  # START OF SECOND TAB
                                         ],
                                         className="pretty_container four columns",
                                         id="cross-filter-options-tab1",
@@ -889,14 +851,6 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
-                                            # html.P("Seleziona uno o piu' dati da comparare:",
-                                            #        className="control_label"),
-                                            # dcc.Dropdown(id='dropdown_data_list_selected',
-                                            #              options=get_options_from_list(field_list_complete),
-                                            #              multi=True,
-                                            #              value=['nuovi_positivi'],
-                                            #              className='dcc_control'
-                                            #              ),
                                             html.P("Seleziona la regione italiana da studiare:",
                                                    className="control_label"),
                                             dcc.Dropdown(
@@ -984,12 +938,6 @@ def app_layout():
                                                 id="info-container_2_tab2",
                                                 className="row container-display",
                                             ),
-                                            # END OF CARDS #
-                                            # html.Div(  # START OF THE GRAPH UNDER THE CARDS#
-                                            #     [dcc.Graph(id='regional_timeseries_linear_tab2')],
-                                            #     id="countGraphContainer_tab2",
-                                            #     className="pretty_container",
-                                            # ),  # END OF THE GRAPH #
                                         ],
                                         id="right-column_tab2",
                                         className="eight columns",
@@ -1000,7 +948,8 @@ def app_layout():
                             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                                 [
                                     html.Div(
-                                        [html.H5(id='bar_header_tab2', children='Casi Attivi per giorno:', className='title'),
+                                        [html.H5(id='bar_header_tab2', children='Casi Attivi per giorno:',
+                                                 className='title'),
                                          dcc.Graph(id="bar_graph_tab2")],
                                         className="pretty_container twelve columns",
                                     ),
