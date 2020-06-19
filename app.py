@@ -174,6 +174,38 @@ def create_figure(data, title):
     return figure
 
 
+# # Callback for timeseries/region
+# @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
+#                                                                Input('dropdown_data_selected', 'value'),
+#                                                                Input('dropdown_data_list_selected', 'value'),
+#                                                                Input('dropdown_region_selected', 'value'),
+#                                                                Input('tabs', 'value')])
+# def update_graph(region_list, data_selected, data_list, region_selected, tab_selected):
+#     if tab_selected == 'tab_region':
+#         regions_list_mapping = []
+#         # if no region selected, create empty figure
+#         if len(region_list) == 0 or data_selected is None:
+#             figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
+#             return figure
+#         for region in region_list:
+#             regions_list_mapping.append((data_selected, region))
+#         x_axis_data = df_regional_data.index.drop_duplicates()
+#         figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
+#                                                x_axis_data, regions_list_mapping)
+#     elif tab_selected == 'tab_data':
+#         data_list_mapping = []
+#         # if no region selected, create empty figure
+#         if len(data_list) == 0 or region_selected is None:
+#             figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
+#             return figure
+#         df_sub = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+#         for data in data_list:
+#             data_list_mapping.append((data, DATA_DICT[data]))
+#         x_axis_data = df_sub.index
+#         figure = create_scatter_plot(df_sub, region_selected, x_axis_data, data_list_mapping)
+#     log.info('Updating main graph')
+#     return figure
+
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
                                                                Input('dropdown_data_selected', 'value'),
@@ -303,7 +335,7 @@ def update_bar_graph(data_selected):
                Output('total_deaths_variation', 'children'),
                Output('subHeader', 'children')
                ], [Input("i_news", "n_intervals")])
-def update_cards_text(n):
+def update_national_cards_text(n):
     log.info('update cards')
     sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
@@ -331,7 +363,7 @@ def update_cards_text(n):
                Output('total_recovered_variation', 'style'),
                Output('total_deaths_variation', 'style')
                ], [Input("i_news", "n_intervals")])
-def update_cards_color(n):
+def update_national_cards_color(n):
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
     color_cards_list = []
     for field in field_list:
@@ -350,6 +382,49 @@ def update_cards_color(n):
                         {'color': color_cards_list[2]},
                         {'color': color_cards_list[3]})
     return (*dictionary_color),
+
+
+@app.callback([Output('total_cases_text_tab2', 'children'),
+               Output('total_positive_text_tab2', 'children'),
+               Output('total_recovered_text_tab2', 'children'),
+               Output('total_deaths_text_tab2', 'children'),
+               Output('total_hospitalized_w_symptoms_text_tab2', 'children'),
+               Output('total_icu_text_tab2', 'children'),
+               Output('total_isolation_text_tab2', 'children'),
+               Output('total_swabs_text_tab2', 'children'),
+               Output('total_cases_variation_tab2', 'children'),
+               Output('total_positive_variation_tab2', 'children'),
+               Output('total_recovered_variation_tab2', 'children'),
+               Output('total_deaths_variation_tab2', 'children'),
+               Output('total_hospitalized_w_symptoms_variation_tab2', 'children'),
+               Output('total_icu_variation_tab2', 'children'),
+               Output('total_isolation_variation_tab2', 'children'),
+               Output('total_swabs_variation_tab2', 'children')
+               ], [Input("dropdown_region_selected", "value")])
+def update_regional_cards_text(region_selected):
+    log.info('update regional cards')
+    #sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
+    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
+                  'ricoverati_con_sintomi','terapia_intensiva','isolamento_domiciliare','tamponi']
+    total_text_values = []
+    variation_text_values = []
+    df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+    print(df)
+    for field in field_list:
+        card_value = df[field].iloc[-1]
+        card_value_previous_day = df[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        if variation_previous_day > 0:
+            total_text = f'{card_value:n}'
+            variation_text = f'+{variation_previous_day:n}'
+            total_text_values.append(total_text)
+            variation_text_values.append(variation_text)
+        else:
+            total_text = f'{card_value:n}'
+            variation_text = f'{variation_previous_day:n}'
+            total_text_values.append(total_text)
+            variation_text_values.append(variation_text)
+    return (*total_text_values), (*variation_text_values),
 
 
 def create_news():
@@ -707,7 +782,6 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
-
                                             html.P("Seleziona una o più regioni italiane da confrontare:",
                                                    className="control_label"),
                                             dcc.Dropdown(id='dropdown_region_list_selected',
@@ -802,29 +876,119 @@ def app_layout():
                         ]),  # END OF FIRST TAB
                 dcc.Tab(label='Confronta Dati per Regione', value='tab_data',
                         children=[  # START OF SECOND TAB
-                            html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                            html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
-                                    # html.P("Seleziona uno o piu' dati da comparare:",
-                                    #        className="control_label"),
-                                    # dcc.Dropdown(id='dropdown_data_list_selected',
-                                    #              options=get_options_from_list(field_list_complete),
-                                    #              multi=True,
-                                    #              value=['nuovi_positivi'],
-                                    #              className='dcc_control'
-                                    #              ),
-                                    html.P("Seleziona la regione italiana da studiare:",
-                                           className="control_label"),
-                                    dcc.Dropdown(
-                                        id='dropdown_region_selected',
-                                        options=get_options(df_regional_data['denominazione_regione'].unique()),
-                                        multi=False,
-                                        value=df_regional_data['denominazione_regione'].sort_values()[0],
-                                        className='dcc_control'
+                                    html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                        [
+                                            # html.P("Seleziona uno o piu' dati da comparare:",
+                                            #        className="control_label"),
+                                            # dcc.Dropdown(id='dropdown_data_list_selected',
+                                            #              options=get_options_from_list(field_list_complete),
+                                            #              multi=True,
+                                            #              value=['nuovi_positivi'],
+                                            #              className='dcc_control'
+                                            #              ),
+                                            html.P("Seleziona la regione italiana da studiare:",
+                                                   className="control_label"),
+                                            dcc.Dropdown(
+                                                id='dropdown_region_selected',
+                                                options=get_options(df_regional_data['denominazione_regione'].unique()),
+                                                multi=False,
+                                                value=df_regional_data['denominazione_regione'].sort_values()[0],
+                                                className='dcc_control'
+                                            ),
+                                        ],
+                                        className="pretty_container four columns",
+                                        id="cross-filter-options-tab2",
                                     ),
+                                    html.Div(  # START OF 2ND BLOCK
+                                        [
+                                            html.H5(id='card_header_tab2', children='Dati Regionali',
+                                                    className='title'),
+                                            html.Div(  # START OF CARDS #
+                                                [
+                                                    html.Div(
+                                                        [html.H6(id="total_cases_text_tab2", children=''),
+                                                         html.H6(id="total_cases_variation_tab2", children=''),
+                                                         html.P("Totale Casi")],
+                                                        id="total_cases_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_positive_text_tab2", children=''),
+                                                         html.H6(id="total_positive_variation_tab2", children=''),
+                                                         html.P("Casi Attivi")],
+                                                        id="total_positive_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_recovered_text_tab2", children=''),
+                                                         html.H6(id="total_recovered_variation_tab2", children=''),
+                                                         html.P("Guariti")],
+                                                        id="total_recovered_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_deaths_text_tab2", children=''),
+                                                         html.H6(id="total_deaths_variation_tab2", children=''),
+                                                         html.P("Decessi")],
+                                                        id="total_deaths_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                ],
+                                                id="info-container_1_tab2",
+                                                className="row container-display",
+                                            ),
+                                            html.Div(  # START OF CARDS #
+                                                [
+                                                    html.Div(
+                                                        [html.H6(id="total_hospitalized_w_symptoms_text_tab2",
+                                                                 children=''),
+                                                         html.H6(id="total_hospitalized_w_symptoms_variation_tab2",
+                                                                 children=''),
+                                                         html.P("Ospedalizzati con sintomi")],
+                                                        id="total_hospitalized_w_symptoms_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_icu_text_tab2", children=''),
+                                                         html.H6(id="total_icu_variation_tab2", children=''),
+                                                         html.P("Terapia intensiva")],
+                                                        id="total_icu_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_isolation_text_tab2", children=''),
+                                                         html.H6(id="total_isolation_variation_tab2", children=''),
+                                                         html.P("Isolamento domiciliare")],
+                                                        id="total_isolation_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H6(id="total_swabs_text_tab2", children=''),
+                                                         html.H6(id="total_swabs_variation_tab2", children=''),
+                                                         html.P("Tamponi effettuati")],
+                                                        id="total_swabs_tab2",
+                                                        className="mini_container",
+                                                    ),
+                                                ],
+                                                id="info-container_2_tab2",
+                                                className="row container-display",
+                                            ),
+                                    # END OF CARDS #
+                                            # html.Div(  # START OF THE GRAPH UNDER THE CARDS#
+                                            #     [dcc.Graph(id='regional_timeseries_linear_tab2')],
+                                            #     id="countGraphContainer_tab2",
+                                            #     className="pretty_container",
+                                            # ),  # END OF THE GRAPH #
+                                        ],
+                                        id="right-column_tab2",
+                                        className="eight columns",
+                                    ),  # END OF 2ND BLOCK
                                 ],
-                                className="pretty_container four columns",
-                                id="cross-filter-options-tab2",
-                            ),
+                                className="row flex-display",
+                            ),  # END OF 2ND INCAPSULATION  ############################################
+
                         ]),  # END OF SECOND TAB
             ]),  # END OF TABS COMPONENT CREATOR
 
