@@ -312,7 +312,9 @@ def update_bar_graph_active_cases(region_selected):
     figure.update_layout(barmode='stack',
                          title=region_selected,
                          xaxis={'categoryorder': 'total descending'},
-                         autosize=True
+                         autosize=True,
+                         margin=dict(l=30, r=30, b=20, t=40),
+                         legend=dict(font=dict(size=10), orientation="h")
                          )
     log.info('Updating bar graph in Tab 2')
     return figure
