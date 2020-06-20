@@ -737,7 +737,7 @@ def app_layout():
                 style={"margin-bottom": "0px", "margin-top": "0px"},
             ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
             dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
-                dcc.Tab(label='Confronta Regioni per Dato', value='tab_national',
+                dcc.Tab(label='Analisi dei dati nazionali', value='tab_national',
                         children=[  # START FIRST TAB
                             html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
@@ -833,7 +833,7 @@ def app_layout():
                             ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
 
                         ]),  # END OF FIRST TAB
-                dcc.Tab(label='Confronta Dati per Regione', value='tab_regional',
+                dcc.Tab(label='Analisi dei dati regionali', value='tab_regional',
                         children=[  # START OF SECOND TAB
                             html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
