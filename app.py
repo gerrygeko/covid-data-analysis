@@ -752,7 +752,7 @@ def app_layout():
                                                          value=new_positive_regions(),
                                                          className='dcc_control'
                                                          ),
-                                            html.P("Seleziona il dato da studiare:", className="control_label"),
+                                            html.P("Seleziona il dato da analizzare:", className="control_label"),
                                             dcc.Dropdown(
                                                 id='dropdown_data_selected',
                                                 options=get_options_from_list(field_list_complete),
@@ -839,7 +839,7 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
-                                            html.P("Seleziona la regione italiana da studiare:",
+                                            html.P("Seleziona la regione italiana da analizzare:",
                                                    className="control_label"),
                                             dcc.Dropdown(
                                                 id='dropdown_region_selected',
