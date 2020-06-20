@@ -289,6 +289,26 @@ def update_bar_graph_active_cases(region_selected):
         go.Bar(x=x_list, y=y_list_1, name=DATA_DICT['terapia_intensiva'], textposition='auto', insidetextanchor="start"))
     figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=DATA_DICT['ricoverati_con_sintomi']))
     figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=DATA_DICT['isolamento_domiciliare']))
+    figure.add_annotation(
+        x=x_list[14],
+        y=y_list_3[14],
+        text="Fase-1")
+    figure.add_annotation(
+        x=x_list[70],
+        y=y_list_3[70],
+        text="Fase-2")
+    figure.add_annotation(
+        x=x_list[112],
+        y=y_list_3[112],
+        text="Fase-3")
+    figure.update_annotations(dict(
+        xref="x",
+        yref="y",
+        showarrow=True,
+        arrowhead=7,
+        ax=0,
+        ay=-60
+    ))
     figure.update_layout(barmode='stack',
                          title=region_selected,
                          xaxis={'categoryorder': 'total descending'},
