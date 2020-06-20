@@ -286,7 +286,8 @@ def update_bar_graph_active_cases(region_selected):
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df.index.drop_duplicates()
     figure = go.Figure(
-        go.Bar(x=x_list, y=y_list_1, name=DATA_DICT['terapia_intensiva'], textposition='auto', insidetextanchor="start"))
+        go.Bar(x=x_list, y=y_list_1, name=DATA_DICT['terapia_intensiva'], textposition='auto',
+               insidetextanchor="start"))
     figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=DATA_DICT['ricoverati_con_sintomi']))
     figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=DATA_DICT['isolamento_domiciliare']))
     figure.add_annotation(
@@ -374,6 +375,22 @@ def update_national_cards_color(n):
     return dictionary_color
 
 
+@app.callback(Output('table_tab2', 'figure'), [Input("i_news", "n_intervals")])
+def new_positives_table(n):
+    df = df_regional_data[['denominazione_regione', 'nuovi_positivi']].tail(21)
+    df = df.sort_values(by=['nuovi_positivi'], ascending=False)
+    figure = go.Figure(data=[go.Table(
+        header=dict(values=list(df.columns),
+                    fill_color='paleturquoise',
+                    align='left'),
+        cells=dict(values=[df['denominazione_regione'], df['nuovi_positivi']],
+                   fill_color='lavender',
+                   align='left'))
+    ])
+    figure.update_layout(height=280, margin=dict(l=0, r=0, b=0, t=0))
+    return figure
+
+
 @app.callback([Output('total_cases_text_tab2', 'children'),
                Output('total_positive_text_tab2', 'children'),
                Output('total_recovered_text_tab2', 'children'),
@@ -429,8 +446,8 @@ def update_regional_cards_color(region_selected):
         card_value_previous_day = df[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day < 1 and field == 'totale_casi' or \
-                variation_previous_day < 0 and field == 'totale_positivi'or \
-                variation_previous_day > 0 and field == 'dimessi_guariti'or \
+                variation_previous_day < 0 and field == 'totale_positivi' or \
+                variation_previous_day > 0 and field == 'dimessi_guariti' or \
                 variation_previous_day == 0 and field == 'deceduti' or \
                 (variation_previous_day <= 0 and card_value == 0) and field == 'ricoverati_con_sintomi' or \
                 (variation_previous_day <= 0 and card_value == 0) and field == 'terapia_intensiva' or \
@@ -905,6 +922,25 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
+                                            html.Div(
+                                                [dcc.Graph(id="table_tab2")],
+                                                className="pretty_container twelve columns",
+                                            ),
+                                            # html.P("Seleziona la regione italiana da analizzare:",
+                                            #        className="control_label"),
+                                            # dcc.Dropdown(
+                                            #     id='dropdown_region_selected',
+                                            #     options=get_options(df_regional_data['denominazione_regione'].unique()),
+                                            #     multi=False,
+                                            #     value=df_regional_data['denominazione_regione'].sort_values()[0],
+                                            #     className='dcc_control'
+                                            # ),
+                                        ],
+                                        className="pretty_container four columns",
+                                        id="cross-filter-options-tab2",
+                                    ),
+                                    html.Div(  # START OF 2ND BLOCK
+                                        [
                                             html.P("Seleziona la regione italiana da analizzare:",
                                                    className="control_label"),
                                             dcc.Dropdown(
@@ -914,14 +950,8 @@ def app_layout():
                                                 value=df_regional_data['denominazione_regione'].sort_values()[0],
                                                 className='dcc_control'
                                             ),
-                                        ],
-                                        className="pretty_container four columns",
-                                        id="cross-filter-options-tab2",
-                                    ),
-                                    html.Div(  # START OF 2ND BLOCK
-                                        [
-                                            html.H5(id='card_header_tab2', children='Dati Regionali',
-                                                    className='title'),
+                                            # html.H5(id='card_header_tab2', children='Dati Regionali',
+                                            #         className='title'),
                                             html.Div(  # START OF CARDS #
                                                 [
                                                     html.Div(
