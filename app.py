@@ -238,7 +238,6 @@ def update_map_graph(data_selected):
                                   opacity=0.5,
                                   labels={data_selected: 'N° Casi'}
                                   )
-
     figure.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
         annotations=[dict(
@@ -375,19 +374,21 @@ def update_national_cards_color(n):
     return dictionary_color
 
 
-@app.callback(Output('table_tab2', 'figure'), [Input("i_news", "n_intervals")])
-def new_positives_table(n):
-    df = df_regional_data[['denominazione_regione', 'nuovi_positivi']].tail(21)
-    df = df.sort_values(by=['nuovi_positivi'], ascending=False)
+@app.callback(Output('table_tab1', 'figure'), [Input("dropdown_data_selected", "value")])
+def new_positives_table(data_selected):
+    df = df_regional_data.tail(21)
+    df = df.sort_values(by=[data_selected], ascending=False)
     figure = go.Figure(data=[go.Table(
-        header=dict(values=list(df.columns),
+        header=dict(values=('denominazione_regione', data_selected),
                     fill_color='paleturquoise',
                     align='left'),
-        cells=dict(values=[df['denominazione_regione'], df['nuovi_positivi']],
+        cells=dict(values=[df['denominazione_regione'], df[data_selected]],
                    fill_color='lavender',
-                   align='left'))
+                   align='left',
+                   font_size=16,
+                   height=27))
     ])
-    figure.update_layout(height=280, margin=dict(l=0, r=0, b=0, t=0))
+    figure.update_layout(height=600, margin=dict(l=0, r=0, b=0, t=0))
     return figure
 
 
@@ -826,15 +827,6 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
-                                            html.P("Seleziona una o più regioni italiane da confrontare:",
-                                                   className="control_label"),
-                                            dcc.Dropdown(id='dropdown_region_list_selected',
-                                                         options=get_options(
-                                                             df_regional_data['denominazione_regione'].unique()),
-                                                         multi=True,
-                                                         value=new_positive_regions(),
-                                                         className='dcc_control'
-                                                         ),
                                             html.P("Seleziona il dato da analizzare:", className="control_label"),
                                             dcc.Dropdown(
                                                 id='dropdown_data_selected',
@@ -843,7 +835,7 @@ def app_layout():
                                                 value='nuovi_positivi',
                                                 className='dcc_control'
                                             ),
-                                            dcc.Graph(id="pie_graph"),
+
                                         ],
                                         className="pretty_container four columns",
                                         id="cross-filter-options-tab1",
@@ -886,11 +878,13 @@ def app_layout():
                                                 id="info-container",
                                                 className="row container-display",
                                             ),  # END OF CARDS #
-                                            html.Div(  # START OF THE GRAPH UNDER THE CARDS#
-                                                [dcc.Graph(id='regional_timeseries_linear')],
-                                                id="countGraphContainer",
-                                                className="pretty_container",
-                                            ),  # END OF THE GRAPH #
+                                            # html.Div(  # START OF THE GRAPH UNDER THE CARDS#
+                                            #     [
+                                            #
+                                            #     ],
+                                            #     id="countGraphContainer",
+                                            #     className="pretty_container",
+                                            # ),  # END OF THE GRAPH #
                                         ],
                                         id="right-column",
                                         className="eight columns",
@@ -898,18 +892,57 @@ def app_layout():
                                 ],
                                 className="row flex-display",
                             ),  # END OF 2ND INCAPSULATION  ############################################
+                            html.Div(  #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                [
+                                    html.Div(
+                                        [
+                                            html.P("Seleziona una o più regioni italiane da confrontare:",
+                                                   className="control_label"),
+                                            dcc.Dropdown(id='dropdown_region_list_selected',
+                                                         options=get_options(
+                                                             df_regional_data[
+                                                                 'denominazione_regione'].unique()),
+                                                         multi=True,
+                                                         value=new_positive_regions(),
+                                                         className='dcc_control'
+                                                         ),
+                                            dcc.Graph(id="pie_graph")
+                                        ],
+                                        className="pretty_container four columns",
+                                    ),
+                                    html.Div(
+                                        [
+                                            dcc.Graph(id='regional_timeseries_linear'),
+                                        ],
+                                        className="pretty_container eight columns",
+                                    ),
+                                ],
+                                className="row flex-display",
+                            ),  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                                 [
                                     html.Div(
+                                        [
+                                            dcc.Graph(id="table_tab1"),
+
+                                        ],
+                                        className="pretty_container six columns",
+                                    ),
+                                    html.Div(
                                         [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
                                          dcc.Graph(id="bar_graph")],
-                                        className="pretty_container five columns",
+                                        className="pretty_container six columns",
                                     ),
+                                ],
+                                className="row flex-display",
+                            ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                            html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                                [
                                     html.Div(
                                         [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti',
                                                  className='title'),
                                          dcc.Graph(id="map_graph")],
-                                        className="pretty_container seven columns",
+                                        className="pretty_container twelve columns",
                                     ),
                                 ],
                                 className="row flex-display",
@@ -922,10 +955,10 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
-                                            html.Div(
-                                                [dcc.Graph(id="table_tab2")],
-                                                className="pretty_container twelve columns",
-                                            ),
+                                            # html.Div(
+                                            #     [dcc.Graph(id="table_tab2")],
+                                            #     className="pretty_container twelve columns",
+                                            # ),
                                             # html.P("Seleziona la regione italiana da analizzare:",
                                             #        className="control_label"),
                                             # dcc.Dropdown(
