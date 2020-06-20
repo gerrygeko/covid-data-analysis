@@ -388,6 +388,48 @@ def update_regional_cards_text(region_selected):
     return (*total_text_values), (*variation_text_values),
 
 
+@app.callback([Output('total_cases_variation_tab2', 'style'),
+               Output('total_positive_variation_tab2', 'style'),
+               Output('total_recovered_variation_tab2', 'style'),
+               Output('total_deaths_variation_tab2', 'style'),
+               Output('total_hospitalized_w_symptoms_variation_tab2', 'style'),
+               Output('total_icu_variation_tab2', 'style'),
+               Output('total_isolation_variation_tab2', 'style'),
+               Output('total_swabs_variation_tab2', 'style')
+               ], [Input("dropdown_region_selected", "value")])
+def update_regional_cards_color(region_selected):
+    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
+                  'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
+    color_cards_list = []
+    df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+    for field in field_list:
+        card_value = df[field].iloc[-1]
+        card_value_previous_day = df[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        if variation_previous_day < 1 and field == 'totale_casi' or \
+                variation_previous_day < 0 and field == 'totale_positivi'or \
+                variation_previous_day > 0 and field == 'dimessi_guariti'or \
+                variation_previous_day == 0 and field == 'deceduti' or \
+                (variation_previous_day <= 0 and card_value == 0) and field == 'ricoverati_con_sintomi' or \
+                 (variation_previous_day <= 0 and card_value == 0) and field == 'terapia_intensiva' or \
+                variation_previous_day < 0 and field == 'isolamento_domiciliare' or \
+                variation_previous_day > 0 and field == 'tamponi':
+            color = 'limegreen'
+            color_cards_list.append(color)
+        else:
+            color = 'red'
+            color_cards_list.append(color)
+    dictionary_color = [{'color': color_cards_list[0]},
+                        {'color': color_cards_list[1]},
+                        {'color': color_cards_list[2]},
+                        {'color': color_cards_list[3]},
+                        {'color': color_cards_list[4]},
+                        {'color': color_cards_list[5]},
+                        {'color': color_cards_list[6]},
+                        {'color': color_cards_list[7]}]
+    return dictionary_color
+
+
 def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
