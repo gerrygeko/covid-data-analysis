@@ -433,7 +433,9 @@ def update_regional_cards_color(region_selected):
                 variation_previous_day > 0 and field == 'dimessi_guariti'or \
                 variation_previous_day == 0 and field == 'deceduti' or \
                 (variation_previous_day <= 0 and card_value == 0) and field == 'ricoverati_con_sintomi' or \
-                 (variation_previous_day <= 0 and card_value == 0) and field == 'terapia_intensiva' or \
+                (variation_previous_day <= 0 and card_value == 0) and field == 'terapia_intensiva' or \
+                variation_previous_day < 0 and field == 'ricoverati_con_sintomi' or \
+                variation_previous_day < 0 and field == 'terapia_intensiva' or \
                 variation_previous_day < 0 and field == 'isolamento_domiciliare' or \
                 variation_previous_day > 0 and field == 'tamponi':
             color = 'limegreen'
