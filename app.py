@@ -472,6 +472,19 @@ def update_regional_cards_color(region_selected):
     return dictionary_color
 
 
+@app.callback([Output('mean_total_cases', 'children'),
+               Output('string_max_new_positives', 'children')
+               ], [Input("dropdown_region_selected", "value")])
+def update_regional_details_card(region_selected):
+    df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+    rounded_mean = round(df['nuovi_positivi'].mean())
+    max_value_new_positives = df['nuovi_positivi'].max()
+    df_sub = df.loc[df['nuovi_positivi'] == max_value_new_positives]
+    date_max_value = df_sub.index.strftime('%d/%m/%Y')
+    string_max = ('il ' + date_max_value + ' con ' + str(max_value_new_positives) + ' contagi')
+    return rounded_mean, string_max
+
+
 def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
@@ -931,7 +944,8 @@ def app_layout():
                         children=[  # START OF SECOND TAB
                             html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
-                                    html.Div(  # START OF 2ND BLOCK
+                                    html.Div(
+                                        ##########################################################################
                                         [
                                             html.P("Seleziona la regione italiana da analizzare:",
                                                    className="control_label"),
@@ -942,8 +956,15 @@ def app_layout():
                                                 value=df_regional_data['denominazione_regione'].sort_values()[0],
                                                 className='dcc_control'
                                             ),
-                                            # html.H5(id='card_header_tab2', children='Dati Regionali',
-                                            #         className='title'),
+                                            html.P("N° medio di contagi al gg"),
+                                            html.P(id="mean_total_cases"),
+                                            html.P("Picco massimo:"),
+                                            html.P(id="string_max_new_positives")
+                                        ],
+                                        className="pretty_container four columns",
+                                    ),  ################################################################################
+                                    html.Div(  # START OF 2ND BLOCK
+                                        [
                                             html.Div(  # START OF CARDS #
                                                 [
                                                     html.Div(
@@ -1014,6 +1035,7 @@ def app_layout():
                                                 id="info-container_2_tab2",
                                                 className="row container-display",
                                             ),
+
                                         ],
                                         id="right-column_tab2",
                                         className="eight columns",
