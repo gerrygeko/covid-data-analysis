@@ -825,21 +825,6 @@ def app_layout():
                         children=[  # START FIRST TAB
                             html.Div(  # START OF 2ND INCAPSULATION  ############################################
                                 [
-                                    html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
-                                        [
-                                            html.P("Seleziona il dato da analizzare:", className="control_label"),
-                                            dcc.Dropdown(
-                                                id='dropdown_data_selected',
-                                                options=get_options_from_list(field_list_complete),
-                                                multi=False,
-                                                value='nuovi_positivi',
-                                                className='dcc_control'
-                                            ),
-
-                                        ],
-                                        className="pretty_container four columns",
-                                        id="cross-filter-options-tab1",
-                                    ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                     html.Div(  # START OF 2ND BLOCK
                                         [
                                             html.H5(id='card_header', children='Totale Dati Nazionali',
@@ -878,64 +863,81 @@ def app_layout():
                                                 id="info-container",
                                                 className="row container-display",
                                             ),  # END OF CARDS #
-                                            # html.Div(  # START OF THE GRAPH UNDER THE CARDS#
-                                            #     [
-                                            #
-                                            #     ],
-                                            #     id="countGraphContainer",
-                                            #     className="pretty_container",
-                                            # ),  # END OF THE GRAPH #
+                                            html.Div(
+                                                [
+                                                    html.P("Seleziona una o più regioni italiane da confrontare:",
+                                                           className="control_label"),
+                                                    dcc.Dropdown(id='dropdown_region_list_selected',
+                                                                 options=get_options(
+                                                                     df_regional_data[
+                                                                         'denominazione_regione'].unique()),
+                                                                 multi=True,
+                                                                 value=new_positive_regions(),
+                                                                 className='dcc_control'
+                                                                 ),
+                                                    dcc.Graph(id='regional_timeseries_linear'),
+                                                    dcc.Graph(id="pie_graph")
+                                                ],
+                                                className="pretty_container",
+                                            ),
                                         ],
                                         id="right-column",
                                         className="eight columns",
                                     ),  # END OF 2ND BLOCK
+                                    html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                        [
+                                            html.P("Seleziona il dato da analizzare:", className="control_label"),
+                                            dcc.Dropdown(
+                                                id='dropdown_data_selected',
+                                                options=get_options_from_list(field_list_complete),
+                                                multi=False,
+                                                value='nuovi_positivi',
+                                                className='dcc_control'
+                                            ),
+                                            html.Div(
+                                                [
+                                                    dcc.Graph(id="table_tab1"),
+
+                                                ],
+                                                className="pretty_container twelve columns",
+                                            ),
+                                            html.Div(
+                                                [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
+                                                 dcc.Graph(id="bar_graph")],
+                                                className="pretty_container twelve columns",
+                                            ),
+
+                                        ],
+                                        className="pretty_container four columns",
+                                        id="cross-filter-options-tab1",
+                                    ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                 ],
                                 className="row flex-display",
                             ),  # END OF 2ND INCAPSULATION  ############################################
-                            html.Div(  #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                                [
-                                    html.Div(
-                                        [
-                                            html.P("Seleziona una o più regioni italiane da confrontare:",
-                                                   className="control_label"),
-                                            dcc.Dropdown(id='dropdown_region_list_selected',
-                                                         options=get_options(
-                                                             df_regional_data[
-                                                                 'denominazione_regione'].unique()),
-                                                         multi=True,
-                                                         value=new_positive_regions(),
-                                                         className='dcc_control'
-                                                         ),
-                                            dcc.Graph(id="pie_graph")
-                                        ],
-                                        className="pretty_container four columns",
-                                    ),
-                                    html.Div(
-                                        [
-                                            dcc.Graph(id='regional_timeseries_linear'),
-                                        ],
-                                        className="pretty_container eight columns",
-                                    ),
-                                ],
-                                className="row flex-display",
-                            ),  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                            html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
-                                [
-                                    html.Div(
-                                        [
-                                            dcc.Graph(id="table_tab1"),
 
-                                        ],
-                                        className="pretty_container six columns",
-                                    ),
-                                    html.Div(
-                                        [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
-                                         dcc.Graph(id="bar_graph")],
-                                        className="pretty_container six columns",
-                                    ),
-                                ],
-                                className="row flex-display",
-                            ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                            # html.Div(  #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                            #     [
+                            #         html.Div(
+                            #             [
+                            #                 html.P("Seleziona una o più regioni italiane da confrontare:",
+                            #                        className="control_label"),
+                            #                 dcc.Dropdown(id='dropdown_region_list_selected',
+                            #                              options=get_options(
+                            #                                  df_regional_data[
+                            #                                      'denominazione_regione'].unique()),
+                            #                              multi=True,
+                            #                              value=new_positive_regions(),
+                            #                              className='dcc_control'
+                            #                              ),
+                            #                 dcc.Graph(id='regional_timeseries_linear'),
+                            #                 dcc.Graph(id="pie_graph")
+                            #             ],
+                            #             className="pretty_container eight columns",
+                            #         ),
+                            #     ],
+                            #     className="row flex-display",
+                            # ),  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
                             html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                                 [
                                     html.Div(
