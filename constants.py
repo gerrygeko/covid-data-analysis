@@ -1,4 +1,5 @@
 DATA_DICT = dict(
+    denominazione_regione='Regione',
     ricoverati_con_sintomi='Ricoverati con sintomi',
     terapia_intensiva='Terapia intensiva',
     totale_ospedalizzati='Totale ospedalizzati',
