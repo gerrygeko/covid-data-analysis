@@ -189,42 +189,42 @@ table.center {
 
 #total_positive_tab2 {
   flex: 1;
-  background-color: #deecfb;
+  background-color: #e6f2ff;
 }
 
 #total_cases_tab2 {
   flex: 1;
-  background-color: #fce4ee;
+  background-color: #e6f2ff;
 }
 
 #total_recovered_tab2 {
   flex: 1;
-  background-color: #dfffe4;
+  background-color: #e6f2ff;
 }
 
 #total_deaths_tab2 {
   flex: 1;
-  background-color: #d9d9d9;
+  background-color: #e6f2ff;
 }
 
 #total_hospitalized_w_symptoms_tab2 {
   flex: 1;
-  background-color: #fdf0fd;
+  background-color: #e6f2ff;
 }
 
 #total_icu_tab2 {
   flex: 1;
-  background-color: #fbfadc;
+  background-color: #e6f2ff;
 }
 
 #total_isolation_tab2 {
   flex: 1;
-  background-color: #ffe3be;
+  background-color: #e6f2ff;
 }
 
 #total_swabs_tab2 {
   flex: 1;
-  background-color: #cbf2f9;
+  background-color: #e6f2ff;
 }
 
 #tripleContainer {
