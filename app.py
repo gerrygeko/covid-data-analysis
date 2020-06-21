@@ -213,7 +213,7 @@ def update_pie_graph(region_list, data_selected):
                    sort=False,
                    textinfo='label+percent',
                    hole=0.5)]
-    layout_pie['title'] = "{}".format(DATA_DICT[data_selected])
+    #layout_pie['title'] = "{}".format(DATA_DICT[data_selected])
     layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
     figure = dict(data=data, layout=layout_pie)
     log.info('Updating pie graph')
