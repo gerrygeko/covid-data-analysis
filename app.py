@@ -855,7 +855,7 @@ def app_layout():
                                                     html.Div(
                                                         [html.H6(id="total_recovered_text", children=''),
                                                          html.H6(id="total_recovered_variation", children=''),
-                                                         html.P(DATA_DICT['totale_ospedalizzati'])],
+                                                         html.P(DATA_DICT['dimessi_guariti'])],
                                                         id="total_recovered",
                                                         className="mini_container",
                                                     ),
