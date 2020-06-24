@@ -378,6 +378,8 @@ def update_national_cards_color(n):
 def update_data_table(data_selected):
     df = df_regional_data.tail(21)
     df = df.sort_values(by=[data_selected], ascending=False)
+    df[data_selected] = pd.to_numeric(df[data_selected], downcast='float')
+    df[data_selected] = df[data_selected].apply(format_value_string_to_locale)
     figure = go.Figure(data=[go.Table(
         header=dict(values=(DATA_DICT['denominazione_regione'], DATA_DICT[data_selected]),
                     fill_color='paleturquoise',
