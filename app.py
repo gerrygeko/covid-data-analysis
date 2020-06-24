@@ -382,12 +382,14 @@ def update_data_table(data_selected):
     df[data_selected] = df[data_selected].apply(format_value_string_to_locale)
     figure = go.Figure(data=[go.Table(
         header=dict(values=(DATA_DICT['denominazione_regione'], DATA_DICT[data_selected]),
-                    fill_color='paleturquoise',
+                    fill_color='lightskyblue',
+                    font_color='white',
+                    font_size=16,
                     align='left'),
         cells=dict(values=[df['denominazione_regione'], df[data_selected]],
-                   fill_color='lavender',
+                   fill_color='aliceblue',
                    align='left',
-                   font_size=16,
+                   font_size=14,
                    height=27))
     ])
     figure.update_layout(height=500, margin=dict(l=0, r=0, b=0, t=0))
