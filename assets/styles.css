@@ -162,6 +162,16 @@ table.center {
   box-shadow: 2px 2px 2px lightgrey;
 }
 
+.mini_container_mean_max {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  text-align: center;
+  margin: 5px;
+  padding: 10px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
+
 #right-column {
   display: flex;
   flex-direction: column;

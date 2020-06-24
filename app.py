@@ -477,7 +477,7 @@ def update_regional_cards_color(region_selected):
 
 
 @app.callback([Output('mean_total_cases', 'children'),
-               Output('string_max_new_positives', 'children')
+               Output('string_max_new_positives', 'children'),
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_details_card(region_selected):
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
@@ -954,10 +954,22 @@ def app_layout():
                                                 value=df_regional_data['denominazione_regione'].sort_values()[0],
                                                 className='dcc_control'
                                             ),
-                                            html.P("N° medio di contagi al gg"),
-                                            html.P(id="mean_total_cases"),
-                                            html.P("Picco massimo:"),
-                                            html.P(id="string_max_new_positives")
+                                            html.Div(
+                                                [
+                                                    html.Div(
+                                                        [html.H5(id="string_max_new_positives"),
+                                                         html.P("Picco massimo")],
+                                                        className="mini_container_mean_max",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H5(id="mean_total_cases"),
+                                                         html.P("N° medio di contagi al giorno")],
+                                                        className="mini_container_mean_max",
+                                                    ),
+                                                ],
+                                                id="info-container_max_mean_tab2",
+                                                className="row container-display",
+                                            ),
                                         ],
                                         className="pretty_container four columns",
                                     ),  ################################################################################
