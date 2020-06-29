@@ -391,7 +391,7 @@ def update_data_table(data_selected):
                    font_size=14,
                    height=27))
     ])
-    figure.update_layout(height=500, margin=dict(l=0, r=0, b=0, t=0))
+    figure.update_layout(height=600, margin=dict(l=0, r=0, b=0, t=0))
     return figure
 
 
@@ -875,6 +875,15 @@ def app_layout():
                                             ),  # END OF CARDS #
                                             html.Div(
                                                 [
+                                                    html.P("Seleziona il dato da analizzare:",
+                                                           className="control_label"),
+                                                    dcc.Dropdown(
+                                                        id='dropdown_data_selected',
+                                                        options=get_options_from_list(field_list_complete),
+                                                        multi=False,
+                                                        value='nuovi_positivi',
+                                                        className='dcc_control'
+                                                    ),
                                                     html.P("Seleziona una o più regioni italiane da confrontare:",
                                                            className="control_label"),
                                                     dcc.Dropdown(id='dropdown_region_list_selected',
@@ -896,16 +905,9 @@ def app_layout():
                                     ),  # END OF 2ND BLOCK
                                     html.Div(  # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                         [
-                                            html.P("Seleziona il dato da analizzare:", className="control_label"),
-                                            dcc.Dropdown(
-                                                id='dropdown_data_selected',
-                                                options=get_options_from_list(field_list_complete),
-                                                multi=False,
-                                                value='nuovi_positivi',
-                                                className='dcc_control'
-                                            ),
                                             html.Div(
                                                 [
+                                                    html.H5(id='table_tab1_header', children='Dati di dettaglio', className='title'),
                                                     dcc.Graph(id="table_tab1"),
 
                                                 ],
