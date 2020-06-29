@@ -57,14 +57,13 @@ field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                        'totale_ospedalizzati', 'isolamento_domiciliare',
                        'totale_positivi', 'variazione_totale_positivi',
                        'nuovi_positivi', 'dimessi_guariti',
-                       'deceduti', 'totale_casi',
+                       'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                        'tamponi', 'casi_testati']
 
 field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                       'totale_ospedalizzati', 'isolamento_domiciliare',
-                      'totale_positivi', ''
-                                         'nuovi_positivi', 'dimessi_guariti',
-                      'deceduti', 'totale_casi',
+                      'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
+                      'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                       'tamponi', 'casi_testati']
 
 
