@@ -1,3 +1,15 @@
+# 1.1.0
+#### Changed
+* The layout has been streamlined and optimized
+* The second tab component has been converted to shows Regional data analysis
+#### Added
+######National data analysis Tab
+* Table to show data details for each region 
+######Regional data analysis Tab
+* Data Cards for each region
+* Mean and Max New positives Cards
+* Active Cases Graph by region
+
 # 1.0.7
 #### Changed
 * Bar Graph shows the raw data updated to the current day, no longer the rate calculated on the population
