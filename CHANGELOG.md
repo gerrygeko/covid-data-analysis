@@ -1,11 +1,15 @@
+# 1.1.1
+#### Changed
+* National Data Cards has been removed from tabs component and the layout has been optimized for mobile view
+
 # 1.1.0
 #### Changed
 * The layout has been streamlined and optimized
 * The second tab component has been converted to shows Regional data analysis
 #### Added
-#####National data analysis Tab
+##### National data analysis Tab
 * Table to show data details for each region 
-#####Regional data analysis Tab
+##### Regional data analysis Tab
 * Data Cards for each region
 * Mean and Max New positives Cards
 * Active Cases Graph by region
