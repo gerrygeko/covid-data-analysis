@@ -13,6 +13,9 @@ NEW FEATURES AND BUG TO SOLVE
 - Exception when 'X' is pressed on the choropleth map dropdown
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
+- Use same constants everywhere for the different field names
+- Use same color everywhere for all the data cards
+- Bring national data cards from 4 to 6
 
 -------------------------------------------------------------------------------------------------
 
