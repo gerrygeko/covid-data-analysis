@@ -1,21 +1,21 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Check of new csv data uploaded is based on content and not on last date included in the csv (bug) (2)
+- Language selection (3)
+- Scheduler use CET time to not rely on the server time zone (2)
+- Make all Graphs listen the interval
+- LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
+- Region name is showed twice in the hover tooltip in the bar graph of tab 1 (1)
+- Use same constants everywhere for the different field names (1)
+- Use same color everywhere for all the data cards (1)
+- Bring national data cards from 4 to 6 (2)
+- Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
+- Save logs somewhere and somehow
 - Keep track of number of visit
 - Remove date field as index in the DataFrame
 - Reduce amount of logs in PROD
-- Scheduler use CET time to not rely on the server time zone
-- Check of new csv data uploaded is based on content and not on last date included in the csv (bug)
-- Language selection
-- Adjust information displayed in the hover tooltip in the map graph
+- Adjust information displayed in the hover tooltip in the map graph (1)
 - www and http://www point to not secure
-- Save logs somewhere and somehow
-- Make all Graphs listen the interval
-- Exception when 'X' is pressed on the choropleth map dropdown
-- LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project)
-- Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
-- Use same constants everywhere for the different field names
-- Use same color everywhere for all the data cards
-- Bring national data cards from 4 to 6
 
 -------------------------------------------------------------------------------------------------
 
