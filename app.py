@@ -391,7 +391,7 @@ def update_data_table(data_selected):
                    font_size=14,
                    height=27))
     ])
-    figure.update_layout(height=600, margin=dict(l=0, r=0, b=0, t=0))
+    figure.update_layout(height=400, margin=dict(l=0, r=0, b=0, t=0))
     return figure
 
 
@@ -830,6 +830,49 @@ def app_layout():
                 className="row flex-display",
                 style={"margin-bottom": "0px", "margin-top": "0px"},
             ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
+            html.Div(
+                [
+                    html.H5(id='card_header', children='Totale Dati Nazionali',
+                            className='title'),
+                    html.Div(  # START OF CARDS #
+                        [
+                            html.Div(
+                                [html.H6(id="total_positive_text", children=''),
+                                 html.H6(id="total_positive_variation", children=''),
+                                 html.P(DATA_DICT['totale_positivi'])],
+                                id="total_positive",
+                                className="mini_container",
+                            ),
+                            html.Div(
+                                [html.H6(id="total_cases_text", children=''),
+                                 html.H6(id="total_cases_variation", children=''),
+                                 html.P(DATA_DICT['totale_casi'])],
+                                id="total_cases",
+                                className="mini_container",
+                            ),
+                            html.Div(
+                                [html.H6(id="total_recovered_text", children=''),
+                                 html.H6(id="total_recovered_variation", children=''),
+                                 html.P(DATA_DICT['dimessi_guariti'])],
+                                id="total_recovered",
+                                className="mini_container",
+                            ),
+                            html.Div(
+                                [html.H6(id="total_deaths_text", children=''),
+                                 html.H6(id="total_deaths_variation", children=''),
+                                 html.P(DATA_DICT['deceduti'])],
+                                id="total_deaths",
+                                className="mini_container",
+                            ),
+                        ],
+                        id="info-container",
+                        className="row container-display",
+                    ),  # END OF CARDS #
+
+                ],
+                className="pretty_container twelve columns",
+            ),  # END OF 2ND INCAPSULATION  ############################################
+
             dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
                 dcc.Tab(label='Analisi dei dati nazionali', value='tab_national',
                         children=[  # START FIRST TAB
@@ -837,42 +880,7 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 2ND BLOCK
                                         [
-                                            html.H5(id='card_header', children='Totale Dati Nazionali',
-                                                    className='title'),
-                                            html.Div(  # START OF CARDS #
-                                                [
-                                                    html.Div(
-                                                        [html.H6(id="total_positive_text", children=''),
-                                                         html.H6(id="total_positive_variation", children=''),
-                                                         html.P(DATA_DICT['totale_positivi'])],
-                                                        id="total_positive",
-                                                        className="mini_container",
-                                                    ),
-                                                    html.Div(
-                                                        [html.H6(id="total_cases_text", children=''),
-                                                         html.H6(id="total_cases_variation", children=''),
-                                                         html.P(DATA_DICT['totale_casi'])],
-                                                        id="total_cases",
-                                                        className="mini_container",
-                                                    ),
-                                                    html.Div(
-                                                        [html.H6(id="total_recovered_text", children=''),
-                                                         html.H6(id="total_recovered_variation", children=''),
-                                                         html.P(DATA_DICT['dimessi_guariti'])],
-                                                        id="total_recovered",
-                                                        className="mini_container",
-                                                    ),
-                                                    html.Div(
-                                                        [html.H6(id="total_deaths_text", children=''),
-                                                         html.H6(id="total_deaths_variation", children=''),
-                                                         html.P(DATA_DICT['deceduti'])],
-                                                        id="total_deaths",
-                                                        className="mini_container",
-                                                    ),
-                                                ],
-                                                id="info-container",
-                                                className="row container-display",
-                                            ),  # END OF CARDS #
+
                                             html.Div(
                                                 [
                                                     html.P("Seleziona il dato da analizzare:",
@@ -907,7 +915,8 @@ def app_layout():
                                         [
                                             html.Div(
                                                 [
-                                                    html.H5(id='table_tab1_header', children='Dati di dettaglio', className='title'),
+                                                    html.H5(id='table_tab1_header', children='Dati di dettaglio',
+                                                            className='title'),
                                                     dcc.Graph(id="table_tab1"),
 
                                                 ],

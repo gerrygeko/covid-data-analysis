@@ -1,3 +1,7 @@
+# 1.1.1
+#### Changed
+* National Data Cards has been removed from tabs component and the layout has been optimized for mobile view
+
 # 1.1.0
 #### Changed
 * The layout has been streamlined and optimized
