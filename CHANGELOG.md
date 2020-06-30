@@ -3,9 +3,9 @@
 * The layout has been streamlined and optimized
 * The second tab component has been converted to shows Regional data analysis
 #### Added
-#####National data analysis Tab
+##### National data analysis Tab
 * Table to show data details for each region 
-#####Regional data analysis Tab
+##### Regional data analysis Tab
 * Data Cards for each region
 * Mean and Max New positives Cards
 * Active Cases Graph by region
