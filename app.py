@@ -476,7 +476,8 @@ def update_regional_cards_color(region_selected):
 
 
 @app.callback([Output('mean_total_cases', 'children'),
-               Output('string_max_new_positives', 'children'),
+               Output('string_max_date_new_positives', 'children'),
+               Output('string_max_value_new_positives', 'children'),
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_details_card(region_selected):
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
@@ -484,8 +485,11 @@ def update_regional_details_card(region_selected):
     max_value_new_positives = df['nuovi_positivi'].max()
     df_sub = df.loc[df['nuovi_positivi'] == max_value_new_positives]
     date_max_value = df_sub.index.strftime('%d/%m/%Y')
-    string_max = ('il ' + date_max_value + ' con ' + str(max_value_new_positives) + ' contagi')
-    return rounded_mean, string_max
+    string_max_date = ""
+    for date in date_max_value:
+        string_max_date = string_max_date + str(date) +'\n'
+    string_max_value = str(max_value_new_positives)
+    return rounded_mean, string_max_date, string_max_value
 
 
 def create_news():
@@ -967,8 +971,13 @@ def app_layout():
                                             html.Div(
                                                 [
                                                     html.Div(
-                                                        [html.H5(id="string_max_new_positives"),
-                                                         html.P("Picco massimo")],
+                                                        [html.H5(id="string_max_date_new_positives"),
+                                                         html.P("Data/e picco massimo")],
+                                                        className="mini_container_mean_max",
+                                                    ),
+                                                    html.Div(
+                                                        [html.H5(id="string_max_value_new_positives"),
+                                                         html.P("Valore Picco massimo")],
                                                         className="mini_container_mean_max",
                                                     ),
                                                     html.Div(
