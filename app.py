@@ -228,7 +228,7 @@ def update_map_graph(data_selected):
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
                                   color=data_selected,
-                                  color_continuous_scale="Reds",
+                                  color_continuous_scale="Blues",
                                   hover_name='denominazione_regione',
                                   hover_data=['population'],
                                   range_color=(df[data_selected].min(), df[data_selected].max()),
