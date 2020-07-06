@@ -1,7 +1,7 @@
 # 1.1.1
 #### Changed
 * National Data Cards has been removed from tabs component and the layout has been optimized for mobile view
-* Italian Map is now colored blue
+* Italian map now shows the different brackets in different shades of blue
 #### Fixed
 * The data visualization of Max/Average Regional Cards has been made clearer
 
