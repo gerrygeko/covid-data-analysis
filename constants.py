@@ -4,14 +4,14 @@ DATA_DICT = dict(
     terapia_intensiva='Terapia intensiva',
     totale_ospedalizzati='Totale ospedalizzati',
     isolamento_domiciliare='Isolamento domiciliare',
-    totale_positivi='Totale positivi',
+    totale_positivi='Casi attivi',
     variazione_totale_positivi='Variazione totale positivi',
     nuovi_positivi='Nuovi positivi',
-    dimessi_guariti='Dimessi guariti',
+    dimessi_guariti='Dimessi/Guariti',
     deceduti='Decessi',
     casi_da_sospetto_diagnostico='Casi Positivi identificati dal Sospetto Diagnostico',
     casi_da_screening='Casi Positivi accertati da Screening',
     totale_casi='Totale casi',
-    tamponi='Tamponi',
+    tamponi='Tamponi effettuati',
     casi_testati='Casi Testati'
 )
