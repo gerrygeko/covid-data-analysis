@@ -323,16 +323,20 @@ def update_bar_graph_active_cases(region_selected):
                Output('total_cases_text', 'children'),
                Output('total_recovered_text', 'children'),
                Output('total_deaths_text', 'children'),
+               Output('total_icu_text', 'children'),
+               Output('total_swabs_text', 'children'),
                Output('total_positive_variation', 'children'),
                Output('total_cases_variation', 'children'),
                Output('total_recovered_variation', 'children'),
                Output('total_deaths_variation', 'children'),
+               Output('total_icu_variation', 'children'),
+               Output('total_swabs_variation', 'children'),
                Output('subHeader', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(n):
     log.info('update cards')
     sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
-    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
+    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
     for field in field_list:
@@ -350,16 +354,20 @@ def update_national_cards_text(n):
 @app.callback([Output('total_positive_variation', 'style'),
                Output('total_cases_variation', 'style'),
                Output('total_recovered_variation', 'style'),
-               Output('total_deaths_variation', 'style')
+               Output('total_deaths_variation', 'style'),
+               Output('total_icu_variation', 'style'),
+               Output('total_swabs_variation', 'style')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_color(n):
-    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti']
+    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     color_cards_list = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0 and field == 'dimessi_guariti' or \
+                variation_previous_day > 0 and field == 'tamponi' or \
+                variation_previous_day < 0 and field == 'terapia_intensiva' or \
                 variation_previous_day < 0 and field == 'totale_positivi':
             color = 'limegreen'
             color_cards_list.append(color)
@@ -369,7 +377,9 @@ def update_national_cards_color(n):
     dictionary_color = [{'color': color_cards_list[0]},
                         {'color': color_cards_list[1]},
                         {'color': color_cards_list[2]},
-                        {'color': color_cards_list[3]}]
+                        {'color': color_cards_list[3]},
+                        {'color': color_cards_list[4]},
+                        {'color': color_cards_list[5]}]
     return dictionary_color
 
 
@@ -487,7 +497,7 @@ def update_regional_details_card(region_selected):
     date_max_value = df_sub.index.strftime('%d/%m/%Y')
     string_max_date = ""
     for date in date_max_value:
-        string_max_date = string_max_date + str(date) +'\n'
+        string_max_date = string_max_date + str(date) + '\n'
     string_max_value = str(max_value_new_positives)
     return rounded_mean, string_max_date, string_max_value
 
@@ -866,6 +876,20 @@ def app_layout():
                                  html.H6(id="total_deaths_variation", children=''),
                                  html.P(DATA_DICT['deceduti'])],
                                 id="total_deaths",
+                                className="mini_container",
+                            ),
+                            html.Div(
+                                [html.H6(id="total_icu_text", children=''),
+                                 html.H6(id="total_icu_variation", children=''),
+                                 html.P(DATA_DICT['terapia_intensiva'])],
+                                id="total_icu",
+                                className="mini_container",
+                            ),
+                            html.Div(
+                                [html.H6(id="total_swabs_text", children=''),
+                                 html.H6(id="total_swabs_variation", children=''),
+                                 html.P(DATA_DICT['tamponi'])],
+                                id="total_swabs",
                                 className="mini_container",
                             ),
                         ],

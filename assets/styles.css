@@ -197,6 +197,14 @@ table.center {
   flex: 1;
 }
 
+#total_icu {
+  flex: 1;
+}
+
+#total_swabs {
+  flex: 1;
+}
+
 #total_positive_tab2 {
   flex: 1;
   background-color: #f0f8ff;
