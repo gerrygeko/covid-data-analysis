@@ -1,6 +1,5 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Check of new csv data uploaded is based on content and not on last date included in the csv (bug) (2)
 - Language selection (3)
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
@@ -16,11 +15,13 @@ NEW FEATURES AND BUG TO SOLVE
 - Reduce amount of logs in PROD
 - Adjust information displayed in the hover tooltip in the map graph (1)
 - www and http://www point to not secure
+- New recalculating regional rated data, we redownload the regional data. This is not required since we already have it in memory
 
 -------------------------------------------------------------------------------------------------
 
 SOLVED
 
+- Check of new csv data uploaded is based on content and not on last date included in the csv (bug) (2)
 - Introduce MAJOR.MINOR.PATCH in the CHANGELOG
 - Match colors between Pie Graph and Line Graph
 - Show negative data correctly in the pie chart

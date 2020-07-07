@@ -90,9 +90,8 @@ def load_geojson(url):
 
 region_population = load_csv_from_file('assets/region_population.csv')
 geojson_province = load_geojson(url_geojson_regions)
-last_update_date = None
-last_update_size_df_regional = None
-last_update_size_df_national = None
+last_update_content_regional_data = 0
+last_update_content_national_data = 0
 df_regional_data = None
 df_national_data = None
 df_rate_regional = None
@@ -749,35 +748,31 @@ def load_region_rate_data_frame():
     return df_sb
 
 
+def get_content_length(url):
+    req = requests.head(url)
+    size = req.headers["Content-Length"]
+    return size
+
+
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
-    global df_regional_data, df_national_data, df_rate_regional, region_population, \
-        last_update_date, last_update_size_df_regional, last_update_size_df_national
-    df_regional_data = load_csv(url_csv_regional_data)
-    df_regional_data.index = df_regional_data.index.normalize()
-    df_national_data = load_csv(url_csv_italy_data)
-    current_update_date = df_national_data.index[-1]
-    log.info('Current Date', current_update_date)
-    current_update_size_df_regional = sys.getsizeof(df_regional_data)
-    log.info('Current Regional DF size in KB', current_update_size_df_regional)
-    current_update_size_df_national = sys.getsizeof(df_national_data)
-    log.info('Current National DF size in KB', current_update_size_df_national)
-    if df_rate_regional is None or \
-            current_update_date != last_update_date or \
-            current_update_size_df_regional != last_update_size_df_regional or \
-            current_update_size_df_national != last_update_size_df_national:
-        log.info('Update to data required')
-        last_update_date = current_update_date
-        last_update_size_df_regional = current_update_size_df_regional
-        last_update_size_df_national = current_update_size_df_national
-        df_rate_regional = load_region_rate_data_frame()
-        log.info('Last update Date', last_update_date)
-        df_regional_data = load_csv(url_csv_regional_data)
-        log.info('Last update Regional DF size in KB', last_update_size_df_regional)
+    global df_regional_data, df_national_data, df_rate_regional, \
+        last_update_content_regional_data, last_update_content_national_data
+    current_update_content_regional_data = int(get_content_length(url_csv_regional_data))
+    current_update_content_national_data = int(get_content_length(url_csv_italy_data))
+    if current_update_content_national_data != last_update_content_national_data:
+        log.info('National data update required')
         df_national_data = load_csv(url_csv_italy_data)
-        log.info('Last update National DF size in KB', last_update_size_df_national)
-    else:
-        log.info('Update is not needed')
+        log.info("Old Content-length: {} bytes ".format(last_update_content_national_data))
+        log.info("New Content-length: {} bytes ".format(current_update_content_national_data))
+        last_update_content_national_data = current_update_content_national_data
+    if current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
+        log.info('Regional data update required')
+        df_regional_data = load_csv(url_csv_regional_data)
+        df_rate_regional = load_region_rate_data_frame()
+        log.info("Old Content-length: {} bytes ".format(last_update_content_regional_data))
+        log.info("New Content-length: {} bytes ".format(current_update_content_regional_data))
+        last_update_content_regional_data = current_update_content_regional_data
     log.info('Update task completed')
 
 
