@@ -16,6 +16,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import schedule
+import sys
 
 from dash.dependencies import Input, Output, ClientsideFunction
 from pytz import timezone
@@ -89,7 +90,9 @@ def load_geojson(url):
 
 region_population = load_csv_from_file('assets/region_population.csv')
 geojson_province = load_geojson(url_geojson_regions)
-last_update = None
+last_update_date = None
+last_update_size_df_regional = None
+last_update_size_df_national = None
 df_regional_data = None
 df_national_data = None
 df_rate_regional = None
@@ -748,15 +751,31 @@ def load_region_rate_data_frame():
 
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
-    global df_regional_data, df_national_data, df_rate_regional, region_population, last_update
+    global df_regional_data, df_national_data, df_rate_regional, region_population, \
+        last_update_date, last_update_size_df_regional, last_update_size_df_national
     df_regional_data = load_csv(url_csv_regional_data)
     df_regional_data.index = df_regional_data.index.normalize()
     df_national_data = load_csv(url_csv_italy_data)
-    current_update = df_national_data.index[-1]
-    if df_rate_regional is None or current_update != last_update:
+    current_update_date = df_national_data.index[-1]
+    log.info('Current Date', current_update_date)
+    current_update_size_df_regional = sys.getsizeof(df_regional_data)
+    log.info('Current Regional DF size in KB', current_update_size_df_regional)
+    current_update_size_df_national = sys.getsizeof(df_national_data)
+    log.info('Current National DF size in KB', current_update_size_df_national)
+    if df_rate_regional is None or \
+            current_update_date != last_update_date or \
+            current_update_size_df_regional != last_update_size_df_regional or \
+            current_update_size_df_national != last_update_size_df_national:
         log.info('Update to data required')
+        last_update_date = current_update_date
+        last_update_size_df_regional = current_update_size_df_regional
+        last_update_size_df_national = current_update_size_df_national
         df_rate_regional = load_region_rate_data_frame()
-        last_update = current_update
+        log.info('Last update Date', last_update_date)
+        df_regional_data = load_csv(url_csv_regional_data)
+        log.info('Last update Regional DF size in KB', last_update_size_df_regional)
+        df_national_data = load_csv(url_csv_italy_data)
+        log.info('Last update National DF size in KB', last_update_size_df_national)
     else:
         log.info('Update is not needed')
     log.info('Update task completed')
