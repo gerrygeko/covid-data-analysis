@@ -2,7 +2,7 @@
 #### Added
 * ICU and Swabs National Data Cards
 #### Fixed
-* Check of new CSV data uploaded is now based on content and on last date included in the CSV repository
+* Updates for new data showed in the graphs is more reliable
 
 # 1.1.1
 #### Changed
