@@ -16,7 +16,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import schedule
-import sys
 
 from dash.dependencies import Input, Output, ClientsideFunction
 from pytz import timezone
@@ -857,63 +856,77 @@ def app_layout():
                 id="header",
                 className="row flex-display",
                 style={"margin-bottom": "0px", "margin-top": "0px"},
-            ),  # END OF 1ST INCAPSULATION -END OF HEADING############################################
+            ),
+            html.Div([html.H5(id='card_header-1', children='Totale Dati Nazionali', className='title')]),
             html.Div(
                 [
-                    html.H5(id='card_header', children='Totale Dati Nazionali',
-                            className='title'),
-                    html.Div(  # START OF CARDS #
+                    html.Div(
                         [
                             html.Div(
-                                [html.H6(id="total_positive_text", children=''),
-                                 html.H6(id="total_positive_variation", children=''),
-                                 html.P(DATA_DICT['totale_positivi'])],
-                                id="total_positive",
-                                className="mini_container",
-                            ),
-                            html.Div(
-                                [html.H6(id="total_cases_text", children=''),
-                                 html.H6(id="total_cases_variation", children=''),
-                                 html.P(DATA_DICT['totale_casi'])],
-                                id="total_cases",
-                                className="mini_container",
-                            ),
-                            html.Div(
-                                [html.H6(id="total_recovered_text", children=''),
-                                 html.H6(id="total_recovered_variation", children=''),
-                                 html.P(DATA_DICT['dimessi_guariti'])],
-                                id="total_recovered",
-                                className="mini_container",
-                            ),
-                            html.Div(
-                                [html.H6(id="total_deaths_text", children=''),
-                                 html.H6(id="total_deaths_variation", children=''),
-                                 html.P(DATA_DICT['deceduti'])],
-                                id="total_deaths",
-                                className="mini_container",
-                            ),
-                            html.Div(
-                                [html.H6(id="total_icu_text", children=''),
-                                 html.H6(id="total_icu_variation", children=''),
-                                 html.P(DATA_DICT['terapia_intensiva'])],
-                                id="total_icu",
-                                className="mini_container",
-                            ),
-                            html.Div(
-                                [html.H6(id="total_swabs_text", children=''),
-                                 html.H6(id="total_swabs_variation", children=''),
-                                 html.P(DATA_DICT['tamponi'])],
-                                id="total_swabs",
-                                className="mini_container",
+                                [
+                                    html.Div(
+                                        [html.H6(id="total_positive_text", children=''),
+                                         html.H6(id="total_positive_variation", children=''),
+                                         html.P(DATA_DICT['totale_positivi'])],
+                                        id="total_positive",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="total_cases_text", children=''),
+                                         html.H6(id="total_cases_variation", children=''),
+                                         html.P(DATA_DICT['totale_casi'])],
+                                        id="total_cases",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="total_recovered_text", children=''),
+                                         html.H6(id="total_recovered_variation", children=''),
+                                         html.P(DATA_DICT['dimessi_guariti'])],
+                                        id="total_recovered",
+                                        className="mini_container",
+                                    )
+                                ],
+                                id="info-container",
+                                className="row container-display",
                             ),
                         ],
-                        id="info-container",
-                        className="row container-display",
-                    ),  # END OF CARDS #
+                        className="ghosty_container six columns",
+                    ),
+                    html.Div(
+                        [
+                            html.Div(
+                                [
+                                    html.Div(
+                                        [html.H6(id="total_deaths_text", children=''),
+                                         html.H6(id="total_deaths_variation", children=''),
+                                         html.P(DATA_DICT['deceduti'])],
+                                        id="total_deaths",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="total_icu_text", children=''),
+                                         html.H6(id="total_icu_variation", children=''),
+                                         html.P(DATA_DICT['terapia_intensiva'])],
+                                        id="total_icu",
+                                        className="mini_container",
+                                    ),
+                                    html.Div(
+                                        [html.H6(id="total_swabs_text", children=''),
+                                         html.H6(id="total_swabs_variation", children=''),
+                                         html.P(DATA_DICT['tamponi'])],
+                                        id="total_swabs",
+                                        className="mini_container",
+                                    )
+                                ],
+                                id="info-container-2",
+                                className="row container-display",
+                            ),
+                        ],
+                        className="ghosty_container six columns",
+                    ),
                 ],
-                className="pretty_container twelve columns",
-            ),  # END OF 2ND INCAPSULATION  ############################################
-
+                className="row flex-display",
+            ),
             dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
                 dcc.Tab(label='Analisi dei dati nazionali', value='tab_national',
                         children=[  # START FIRST TAB
@@ -921,7 +934,6 @@ def app_layout():
                                 [
                                     html.Div(  # START OF 2ND BLOCK
                                         [
-
                                             html.Div(
                                                 [
                                                     html.P("Seleziona il dato da analizzare:",
