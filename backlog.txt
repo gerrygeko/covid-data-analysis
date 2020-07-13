@@ -4,10 +4,6 @@ NEW FEATURES AND BUG TO SOLVE
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
-- Region name is showed twice in the hover tooltip in the bar graph of tab 1 (1)
-- Use same constants everywhere for the different field names (1)
-- Use same color everywhere for all the data cards (1)
-- Bring national data cards from 4 to 6 (2)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
 - Save logs somewhere and somehow
 - Keep track of number of visit
@@ -21,6 +17,10 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Region name is showed twice in the hover tooltip in the bar graph of tab 1 (1)
+- Use same color everywhere for all the data cards (1)
+- Bring national data cards from 4 to 6 (2)
+- Use same constants everywhere for the different field names (1)
 - Check of new csv data uploaded is based on content and not on last date included in the csv (bug) (2)
 - Introduce MAJOR.MINOR.PATCH in the CHANGELOG
 - Match colors between Pie Graph and Line Graph
