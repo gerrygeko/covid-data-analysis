@@ -5,6 +5,7 @@ NEW FEATURES AND BUG TO SOLVE
 - Make all Graphs listen the interval
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
+- Declare only one class in the css and use the same for all the cards instead of declaring separately (e.g. flex: 1) (1)
 - Save logs somewhere and somehow
 - Keep track of number of visit
 - Remove date field as index in the DataFrame
