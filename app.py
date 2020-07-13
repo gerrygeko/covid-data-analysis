@@ -748,8 +748,11 @@ def load_region_rate_data_frame():
 
 
 def get_content_length(url):
-    req = requests.head(url)
-    size = req.headers["Content-Length"]
+    resp = requests.head(url)
+    if resp.status_code != 200:
+        log.error(f"Request failed trying to contact URL: {url}")
+        return -1
+    size = resp.headers["Content-Length"]
     return size
 
 
@@ -759,19 +762,32 @@ def load_interactive_data():
         last_update_content_regional_data, last_update_content_national_data
     current_update_content_regional_data = int(get_content_length(url_csv_regional_data))
     current_update_content_national_data = int(get_content_length(url_csv_italy_data))
-    if current_update_content_national_data != last_update_content_national_data:
+
+    # Check if updates for National data is required
+    if current_update_content_national_data == -1:
+        log.info("Provider's server for National data is unresponsive, retrying later")
+    elif current_update_content_national_data != last_update_content_national_data:
         log.info('National data update required')
         df_national_data = load_csv(url_csv_italy_data)
-        log.info("Old Content-length: {} bytes ".format(last_update_content_national_data))
-        log.info("New Content-length: {} bytes ".format(current_update_content_national_data))
+        log.info(f"Old Content-length: {last_update_content_national_data} bytes")
+        log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
-    if current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
+    else:
+        log.info('No updates required for National data')
+
+    # Check if updates for Regional data is required
+    if current_update_content_regional_data == -1:
+        log.info("Provider's server for Regional Data is unresponsive, retrying later")
+    elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
         log.info('Regional data update required')
         df_regional_data = load_csv(url_csv_regional_data)
         df_rate_regional = load_region_rate_data_frame()
-        log.info("Old Content-length: {} bytes ".format(last_update_content_regional_data))
-        log.info("New Content-length: {} bytes ".format(current_update_content_regional_data))
+        log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
+        log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data
+    else:
+        log.info('No updates required for Regional data')
+
     log.info('Update task completed')
 
 
