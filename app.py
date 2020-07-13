@@ -256,9 +256,6 @@ def update_map_graph(data_selected):
 
 @app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
 def update_bar_graph(data_selected):
-    layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{}'.format(DATA_DICT[data_selected])
-    layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     df_sub = df_regional_data.tail(21)
     df_sorted = df_sub.sort_values(by=[data_selected])
     df_sorted = df_sorted.tail(10)
@@ -272,6 +269,12 @@ def update_bar_graph(data_selected):
                    orientation='h'
                    )
             ]
+
+    layout_bar = dict(
+        margin=dict(l=10, r=30, b=20, t=40),
+    )
+    layout_bar['title'] = '{}'.format(DATA_DICT[data_selected])
+    layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     figure = dict(data=data, layout=layout_bar)
     log.info('Updating bar graph in Tab 1')
     return figure
