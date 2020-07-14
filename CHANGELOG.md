@@ -1,4 +1,6 @@
 # 1.1.2
+#### Changed
+* Display details of regions in the bar graphs with better format
 #### Added
 * ICU and Swabs National Data Cards
 #### Fixed
