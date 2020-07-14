@@ -5,8 +5,6 @@ NEW FEATURES AND BUG TO SOLVE
 - Make all Graphs listen the interval
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
-- Declare only one class in the css and use the same for all the cards instead of declaring separately (e.g. flex: 1) (1)
-- Delete black arrow on the side of bar graph
 - Save logs somewhere and somehow
 - Keep track of number of visit
 - Remove date field as index in the DataFrame
@@ -19,6 +17,8 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Declare only one class in the css and use the same for all the cards instead of declaring separately (e.g. flex: 1) (1)
+- Delete black arrow on the side of bar graph
 - Region name is showed twice in the hover tooltip in the bar graph of tab 1 (1)
 - Use same color everywhere for all the data cards (1)
 - Bring national data cards from 4 to 6 (2)
