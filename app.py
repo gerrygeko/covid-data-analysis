@@ -170,6 +170,7 @@ def create_figure(data, title):
     layout_figure = copy.deepcopy(layout)
 
     layout_figure['title'] = title
+    layout_figure['hovermode'] = 'x unified'
     figure = dict(data=data, layout=layout_figure)
     return figure
 
@@ -265,14 +266,14 @@ def update_bar_graph(data_selected):
                    y=region_list,
                    text=region_list,
                    textposition='auto',
+                   hovertemplate='<i><b>Regione</b></i>: %{y}'+
+                                '<br><b>N.</b>: %{x}<br>'+
+                                '<extra></extra>',
                    insidetextanchor="start",
                    orientation='h'
                    )
             ]
-
-    layout_bar = dict(
-        margin=dict(l=10, r=30, b=20, t=40),
-    )
+    layout_bar = copy.deepcopy(layout)
     layout_bar['title'] = '{}'.format(DATA_DICT[data_selected])
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     figure = dict(data=data, layout=layout_bar)
