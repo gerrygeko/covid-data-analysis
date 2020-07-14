@@ -159,6 +159,7 @@ table.center {
 }
 
 .mini_container {
+  flex: 1;
   border-radius: 5px;
   background-color: #f9f9f9;
   margin: 5px;
@@ -182,64 +183,8 @@ table.center {
   flex-direction: column;
 }
 
-#total_positive {
-  flex: 1;
-}
-
-#total_cases {
-  flex: 1;
-}
-
 #aggregate_data {
   align-items: center;
-}
-
-#total_recovered {
-  flex: 1;
-}
-
-#total_deaths {
-  flex: 1;
-}
-
-#total_icu {
-  flex: 1;
-}
-
-#total_swabs {
-  flex: 1;
-}
-
-#total_positive_tab2 {
-  flex: 1;
-}
-
-#total_cases_tab2 {
-  flex: 1;
-}
-
-#total_recovered_tab2 {
-  flex: 1;
-}
-
-#total_deaths_tab2 {
-  flex: 1;
-}
-
-#total_hospitalized_w_symptoms_tab2 {
-  flex: 1;
-}
-
-#total_icu_tab2 {
-  flex: 1;
-}
-
-#total_isolation_tab2 {
-  flex: 1;
-}
-
-#total_swabs_tab2 {
-  flex: 1;
 }
 
 #tripleContainer {
