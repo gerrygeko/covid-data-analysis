@@ -1,6 +1,8 @@
 # 1.1.2
 #### Changed
 * Display details of regions in the bar graphs with better format
+* Hovering on any point of the main graph, will display information collected in the same window 
+for all the regions selected instead of just displaying information of a single region
 #### Added
 * ICU and Swabs National Data Cards
 #### Fixed
