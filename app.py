@@ -77,7 +77,7 @@ def load_csv_from_file(path):
 
 
 def load_csv(url):
-    data_loaded = pd.read_csv(url, index_col=[0], parse_dates=['data'])
+    data_loaded = pd.read_csv(url, parse_dates=['data'])
     return data_loaded
 
 
@@ -181,12 +181,12 @@ def create_figure(data, title):
 def update_graph(region_list, data_selected):
     regions_list_mapping = []
     # if no region selected, create empty figure
+    x_axis_data = df_regional_data[df_regional_data['denominazione_regione'] == "Abruzzo"]['data']
     if len(region_list) == 0 or data_selected is None:
-        figure = create_scatter_plot(df_regional_data, '', df_regional_data.index, [])
+        figure = create_scatter_plot(df_regional_data, '', x_axis_data, [])
         return figure
     for region in region_list:
         regions_list_mapping.append((data_selected, region))
-    x_axis_data = df_regional_data.index.drop_duplicates()
     figure = create_scatter_plot_by_region(df_regional_data, DATA_DICT[data_selected],
                                            x_axis_data, regions_list_mapping)
     log.info('Updating main graph')
@@ -206,15 +206,14 @@ def update_pie_graph(region_list, data_selected):
         return figure
     region_list.sort()
     for region in region_list:
-        value = df_regional_data[df_regional_data['denominazione_regione'] == region][data_selected][-1]
-        value_list.append(value)
+        value = df_regional_data[df_regional_data['denominazione_regione'] == region][data_selected].tail(1)
+        value_list.append(int(value))
     data = [go.Pie(labels=region_list,
                    values=value_list,
                    hoverinfo='text+value+percent',
                    sort=False,
                    textinfo='label+percent',
                    hole=0.5)]
-    # layout_pie['title'] = "{}".format(DATA_DICT[data_selected])
     layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
     figure = dict(data=data, layout=layout_pie)
     log.info('Updating pie graph')
@@ -226,7 +225,7 @@ def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
     df['population'] = df['population'].apply(format_value_string_to_locale)
-    date_string = df_national_data.index[-1].strftime('%d/%m/%Y')
+    date_string = df_national_data.iloc[-1]['data'].strftime('%d/%m/%Y')
     figure = px.choropleth_mapbox(df, geojson=url_geojson_regions, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
                                   color=data_selected,
@@ -284,10 +283,13 @@ def update_bar_graph(data_selected):
 @app.callback(Output('bar_graph_tab2', 'figure'), [Input('dropdown_region_selected', 'value')])
 def update_bar_graph_active_cases(region_selected):
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
+    # Since we filter based on the region, our indexes are not sequential anymore
+    # so we reindex to access to specific row easier later
+    df.reset_index(inplace=True)
     y_list_1 = df['terapia_intensiva'].values.tolist()
     y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
-    x_list = df.index.drop_duplicates()
+    x_list = df['data']
     figure = go.Figure(
         go.Bar(x=x_list, y=y_list_1, name=DATA_DICT['terapia_intensiva'], textposition='auto',
                insidetextanchor="start"))
@@ -340,7 +342,7 @@ def update_bar_graph_active_cases(region_selected):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(n):
     log.info('update cards')
-    sub_header_text = (df_national_data.index[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
+    sub_header_text = (df_national_data['data'].iloc[-1]).strftime('Dati Aggiornati al: %d/%m/%Y %H:%M')
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
@@ -499,10 +501,10 @@ def update_regional_details_card(region_selected):
     rounded_mean = round(df['nuovi_positivi'].mean())
     max_value_new_positives = df['nuovi_positivi'].max()
     df_sub = df.loc[df['nuovi_positivi'] == max_value_new_positives]
-    date_max_value = df_sub.index.strftime('%d/%m/%Y')
+    date_max_value = df_sub['data']
     string_max_date = ""
     for date in date_max_value:
-        string_max_date = string_max_date + str(date) + '\n'
+        string_max_date = string_max_date + str(date.strftime('%d/%m/%Y')) + '\n'
     string_max_value = str(max_value_new_positives)
     return rounded_mean, string_max_date, string_max_value
 
@@ -723,6 +725,7 @@ def adjust_region(df_sb):
     trento_row = df_sb.loc[df_sb['codice_regione'] == 22].squeeze()
     bolzano_row = df_sb.loc[df_sb['codice_regione'] == 21].squeeze()
     trentino_row = trento_row
+    df_sb.reindex(list(range(0,21)))
     for field in field_list_to_rate:
         trento_value = trento_row.get(field)
         bolzano_value = bolzano_row.get(field)
@@ -734,8 +737,9 @@ def adjust_region(df_sb):
     return df_sb
 
 
-def load_region_rate_data_frame():
-    df_sb = pd.read_csv(url_csv_regional_data, parse_dates=['data'])
+def load_region_rate_data_frame(df):
+    # We create a copy of the original DataFrame to avoid working on the original DataFrame and to suppress warning
+    df_sb = df.copy()
     df_sb = df_sb.tail(21)
     df_sb = adjust_region(df_sb)
     df_sb['population'] = list(region_population.values())
@@ -785,7 +789,7 @@ def load_interactive_data():
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
         log.info('Regional data update required')
         df_regional_data = load_csv(url_csv_regional_data)
-        df_rate_regional = load_region_rate_data_frame()
+        df_rate_regional = load_region_rate_data_frame(df_regional_data)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data
