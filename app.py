@@ -1176,7 +1176,7 @@ def app_layout():
                 html.P(
                     id="version_text",
                     className="p-version changelog",
-                    children="v1.1.1"
+                    children="v1.1.2"
                 ),
                 href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
             )
