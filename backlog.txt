@@ -1,6 +1,7 @@
 NEW FEATURES AND BUG TO SOLVE
 
 - Language selection (3)
+- Fix a visualization mean/max data card bug for tablet mode(2)
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
