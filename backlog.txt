@@ -1,12 +1,14 @@
 NEW FEATURES AND BUG TO SOLVE
 
 - Language selection (3)
-- Fix a visualization mean/max data card bug for tablet mode(2)
+- Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
 - Have better text layout in the hoverbox of the national map for regional rated data (1)
+- Use Git API to access tag version and update dynamically the version number on the website (2)
+- Refactor the Python code in different files (2)
 - Save logs somewhere and somehow
 - Keep track of number of visit
 - Reduce amount of logs in PROD
