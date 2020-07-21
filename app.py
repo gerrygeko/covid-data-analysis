@@ -1,8 +1,10 @@
 import base64
 import copy
 import csv
+import json
 import json as js
 import locale
+import os
 import time
 from datetime import datetime
 from threading import Thread
@@ -24,8 +26,10 @@ import logger
 from constants import DATA_DICT
 
 SECONDS = 1000
-
 INHABITANT_RATE = 100000
+REPO_NAME = "covid-data-analysis"
+GITHUB_ACCESS_TOKEN_ENV_VAR = "GITHUB_ACCESS_TOKEN"
+GITHUB_USER_ENV_VAR = "GITHUB_USER"
 
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 
@@ -805,6 +809,26 @@ def new_positive_regions():
     return df['denominazione_regione'].tolist()
 
 
+def get_version():
+    user = get_environment_variable(GITHUB_USER_ENV_VAR)
+    token = get_environment_variable(GITHUB_ACCESS_TOKEN_ENV_VAR)
+
+    resp = requests.get(f'https://api.github.com/repos/{user}/{REPO_NAME}/tags', auth=(user, token))
+
+    if resp.status_code == 401:
+        log.info("Unauthorized access to GitHub API, check your credentials")
+        return ""
+    elif resp.status_code != 200:
+        log.info("It was not possible to access GitHub API, retry later")
+        return ""
+
+    data = json.loads(resp.text)
+    version = data[0]['name']
+    log.info(f"Application version: {version}")
+
+    return version
+
+
 def app_layout():
     app.layout = html.Div(
         [  # START OF SUPREME INCAPSULATION ############################################
@@ -1176,7 +1200,7 @@ def app_layout():
                 html.P(
                     id="version_text",
                     className="p-version changelog",
-                    children="v1.1.2"
+                    children=[get_version()]
                 ),
                 href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
             )
@@ -1188,6 +1212,15 @@ def app_layout():
 
 schedule.every(30).minutes.do(load_interactive_data)
 schedule.every().day.at("18:05").do(load_interactive_data)
+
+
+def get_environment_variable(env_var_name):
+    env_var = os.getenv(env_var_name)
+    log.info(f"Loading Environment Variable '{env_var_name}'")
+    if env_var is None:
+        log.info(f"Environment variable {env_var_name} was not found. Returning empty string")
+        return ""
+    return str(env_var)
 
 
 def run_schedule():
