@@ -809,6 +809,8 @@ def new_positive_regions():
     return df['denominazione_regione'].tolist()
 
 
+# Remember to set the environment variables for the GitHub user and token in your IDE to get access to the Git API locally
+# Remember to set these also in Heroku Config Vars
 def get_version():
     user = get_environment_variable(GITHUB_USER_ENV_VAR)
     token = get_environment_variable(GITHUB_ACCESS_TOKEN_ENV_VAR)
