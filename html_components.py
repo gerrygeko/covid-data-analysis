@@ -8,7 +8,7 @@ import requests
 from pytz import timezone
 
 import logger
-from constants import RESOURCES, locale_language
+from constants import locale_language, load_resource
 from utils import get_options_from_list, get_options, new_positive_regions, get_version
 
 SECONDS = 1000
@@ -327,21 +327,21 @@ def create_page_components(app, df_regional_data):
                                 html.Div(
                                     [html.H6(id="total_positive_text", children=''),
                                      html.H6(id="total_positive_variation", children=''),
-                                     html.P(RESOURCES['totale_positivi'])],
+                                     html.P(load_resource('totale_positivi'))],
                                     id="total_positive",
                                     className="mini_container",
                                 ),
                                 html.Div(
                                     [html.H6(id="total_cases_text", children=''),
                                      html.H6(id="total_cases_variation", children=''),
-                                     html.P(RESOURCES['totale_casi'])],
+                                     html.P(load_resource('totale_casi'))],
                                     id="total_cases",
                                     className="mini_container",
                                 ),
                                 html.Div(
                                     [html.H6(id="total_recovered_text", children=''),
                                      html.H6(id="total_recovered_variation", children=''),
-                                     html.P(RESOURCES['dimessi_guariti'])],
+                                     html.P(load_resource('dimessi_guariti'))],
                                     id="total_recovered",
                                     className="mini_container",
                                 )
@@ -359,21 +359,21 @@ def create_page_components(app, df_regional_data):
                                 html.Div(
                                     [html.H6(id="total_deaths_text", children=''),
                                      html.H6(id="total_deaths_variation", children=''),
-                                     html.P(RESOURCES['deceduti'])],
+                                     html.P(load_resource('deceduti'))],
                                     id="total_deaths",
                                     className="mini_container",
                                 ),
                                 html.Div(
                                     [html.H6(id="total_icu_text", children=''),
                                      html.H6(id="total_icu_variation", children=''),
-                                     html.P(RESOURCES['terapia_intensiva'])],
+                                     html.P(load_resource('terapia_intensiva'))],
                                     id="total_icu",
                                     className="mini_container",
                                 ),
                                 html.Div(
                                     [html.H6(id="total_swabs_text", children=''),
                                      html.H6(id="total_swabs_variation", children=''),
-                                     html.P(RESOURCES['tamponi'])],
+                                     html.P(load_resource('tamponi'))],
                                     id="total_swabs",
                                     className="mini_container",
                                 )
@@ -508,28 +508,28 @@ def create_page_components(app, df_regional_data):
                                                 html.Div(
                                                     [html.H6(id="total_cases_text_tab2", children=''),
                                                      html.H6(id="total_cases_variation_tab2", children=''),
-                                                     html.P(RESOURCES['totale_casi'])],
+                                                     html.P(load_resource('totale_casi'))],
                                                     id="total_cases_tab2",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_positive_text_tab2", children=''),
                                                      html.H6(id="total_positive_variation_tab2", children=''),
-                                                     html.P(RESOURCES['totale_positivi'])],
+                                                     html.P(load_resource('totale_positivi'))],
                                                     id="total_positive_tab2",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_recovered_text_tab2", children=''),
                                                      html.H6(id="total_recovered_variation_tab2", children=''),
-                                                     html.P(RESOURCES['dimessi_guariti'])],
+                                                     html.P(load_resource('dimessi_guariti'))],
                                                     id="total_recovered_tab2",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_deaths_text_tab2", children=''),
                                                      html.H6(id="total_deaths_variation_tab2", children=''),
-                                                     html.P(RESOURCES['deceduti'])],
+                                                     html.P(load_resource('deceduti'))],
                                                     id="total_deaths_tab2",
                                                     className="mini_container",
                                                 ),
@@ -544,28 +544,28 @@ def create_page_components(app, df_regional_data):
                                                              children=''),
                                                      html.H6(id="total_hospitalized_w_symptoms_variation_tab2",
                                                              children=''),
-                                                     html.P(RESOURCES['totale_ospedalizzati'])],
+                                                     html.P(load_resource('totale_ospedalizzati'))],
                                                     id="total_hospitalized_w_symptoms_tab2",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_icu_text_tab2", children=''),
                                                      html.H6(id="total_icu_variation_tab2", children=''),
-                                                     html.P(RESOURCES['terapia_intensiva'])],
+                                                     html.P(load_resource('terapia_intensiva'))],
                                                     id="total_icu_tab2",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_isolation_text_tab2", children=''),
                                                      html.H6(id="total_isolation_variation_tab2", children=''),
-                                                     html.P(RESOURCES['isolamento_domiciliare'])],
+                                                     html.P(load_resource('isolamento_domiciliare'))],
                                                     id="total_isolation_tab2",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_swabs_text_tab2", children=''),
                                                      html.H6(id="total_swabs_variation_tab2", children=''),
-                                                     html.P(RESOURCES['tamponi'])],
+                                                     html.P(load_resource('tamponi'))],
                                                     id="total_swabs_tab2",
                                                     className="mini_container",
                                                 ),

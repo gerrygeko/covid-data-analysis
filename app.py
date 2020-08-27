@@ -18,7 +18,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from constants import RESOURCES, load_resource
+from constants import load_resource
 from html_components import create_news, create_page_components, locale_language
 
 INHABITANT_RATE = 100000
@@ -215,7 +215,7 @@ def update_map_graph(data_selected):
             y=0.01,
             xref='paper',
             yref='paper',
-            text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(RESOURCES[data_selected],
+            text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(load_resource(data_selected),
                                                                                          date_string),
             showarrow=False
         )]
@@ -243,7 +243,7 @@ def update_bar_graph(data_selected):
                    )
             ]
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{}'.format(RESOURCES[data_selected])
+    layout_bar['title'] = '{}'.format(load_resource(data_selected))
     layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
     figure = dict(data=data, layout=layout_bar)
     log.info('Updating bar graph in Tab 1')
@@ -261,10 +261,10 @@ def update_bar_graph_active_cases(region_selected):
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df['data']
     figure = go.Figure(
-        go.Bar(x=x_list, y=y_list_1, name=RESOURCES['terapia_intensiva'], textposition='auto',
+        go.Bar(x=x_list, y=y_list_1, name=load_resource('terapia_intensiva'), textposition='auto',
                insidetextanchor="start"))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=RESOURCES['ricoverati_con_sintomi']))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=RESOURCES['isolamento_domiciliare']))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=load_resource('ricoverati_con_sintomi')))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=load_resource('isolamento_domiciliare')))
     figure.add_annotation(
         x=x_list[14],
         y=y_list_3[14],
