@@ -487,7 +487,7 @@ def update_language(language):
         log.info("Preventing language update since no language changes was detected")
         raise PreventUpdate
     locale_language.language = language
-    log.info(f"Drawing components with language {language}")
+    log.info(f"User switching language to: {language}")
     return create_page_components(app, df_regional_data)
 
 

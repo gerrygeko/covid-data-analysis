@@ -13,6 +13,13 @@ GITHUB_USER_ENV_VAR = "GITHUB_USER"
 log = logger.get_logger()
 
 
+class GitApiData:
+
+    def __init__(self, user, token):
+        self.user = user
+        self.token = token
+
+
 def get_options(list_value):
     dict_list = []
     for i in list_value:
@@ -44,13 +51,20 @@ def get_environment_variable(env_var_name):
     return str(env_var)
 
 
-# Remember to set the environment variables for the GitHub user and token in your IDE to get access to the Git API locally
-# Remember to set these also in Heroku Config Vars
-def get_version():
+def load_environment_variables():
     user = get_environment_variable(GITHUB_USER_ENV_VAR)
     token = get_environment_variable(GITHUB_ACCESS_TOKEN_ENV_VAR)
+    return user, token
 
-    resp = requests.get(f'https://api.github.com/repos/{user}/{REPO_NAME}/tags', auth=(user, token))
+
+git_user_data = GitApiData(*load_environment_variables())
+
+
+# TODO Remember to set the environment variables for the GitHub user and token in your IDE to get access to the Git API locally
+# TODO Remember to set these also in Heroku Config Vars
+def get_version():
+    resp = requests.get(f'https://api.github.com/repos/{git_user_data.user}/{REPO_NAME}/tags',
+                        auth=(git_user_data.user, git_user_data.token))
 
     if resp.status_code == 401:
         log.info("Unauthorized access to GitHub API, check your credentials")
