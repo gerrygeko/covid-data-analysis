@@ -51,13 +51,13 @@ def get_environment_variable(env_var_name):
     return str(env_var)
 
 
-def load_environment_variables():
+def load_git_environment_variables():
     user = get_environment_variable(GITHUB_USER_ENV_VAR)
     token = get_environment_variable(GITHUB_ACCESS_TOKEN_ENV_VAR)
     return user, token
 
 
-git_user_data = GitApiData(*load_environment_variables())
+git_user_data = GitApiData(*load_git_environment_variables())
 
 
 # TODO Remember to set the environment variables for the GitHub user and token in your IDE to get access to the Git API locally

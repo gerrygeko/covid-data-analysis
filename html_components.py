@@ -628,8 +628,3 @@ def create_page_components(app, df_regional_data):
         )
     ]
 
-
-class LocaleLanguage:
-
-    def __init__(self, language="IT"):
-        self.language = language
