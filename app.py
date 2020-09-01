@@ -18,10 +18,12 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from constants import load_resource
+from constants import load_resource, RESOURCES_ITA, translate_my_dict
 from html_components import create_news, create_page_components, locale_language
 
+
 INHABITANT_RATE = 100000
+
 
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 
@@ -206,7 +208,7 @@ def update_map_graph(data_selected):
                                   mapbox_style="carto-positron",
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
-                                  labels={data_selected: 'N° Casi'}
+                                  labels={data_selected: (translate_my_dict(RESOURCES_ITA)['label_persone'])}
                                   )
     figure.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
@@ -215,8 +217,11 @@ def update_map_graph(data_selected):
             y=0.01,
             xref='paper',
             yref='paper',
-            text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(load_resource(data_selected),
-                                                                                         date_string),
+            text='*{} <br>'.format(load_resource(data_selected))
+                 + translate_my_dict(RESOURCES_ITA)['label_hover_map']
+                 + '<br> {}'.format(date_string),
+            # text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(load_resource(data_selected),
+            #                                                                              date_string),
             showarrow=False
         )]
     )

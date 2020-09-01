@@ -8,7 +8,7 @@ import requests
 from pytz import timezone
 
 import logger
-from constants import locale_language, load_resource
+from constants import locale_language, load_resource, RESOURCES_ITA, translate_my_dict
 from utils import get_options_from_list, get_options, new_positive_regions, get_version
 
 SECONDS = 1000
@@ -30,6 +30,15 @@ field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                        'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                        'tamponi', 'casi_testati']
 
+language_list = [{'label': 'Italiano', 'value': 'IT'},
+                 {'label': 'English', 'value': 'EN'},
+                 {'label': 'Dutch', 'value': 'NL'},
+                 {'label': 'German', 'value': 'DE'},
+                 {'label': 'French', 'value': 'FR'},
+                 {'label': 'Spanish', 'value': 'ES'},
+                 {'label': 'Portuguese', 'value': 'PT'}
+                 ]
+
 
 def create_news():
     json_data = news_requests.json()["articles"]
@@ -38,10 +47,10 @@ def create_news():
     max_rows = 6
     return html.Div(
         children=[
-            html.H5(className="p-news title", children="Italia News Scienza"),
+            html.H5(className="p-news title", children=translate_my_dict(RESOURCES_ITA)['label_news']),
             html.P(
                 className="p-news title",
-                children="Ultimo Aggiornamento: "
+                children=translate_my_dict(RESOURCES_ITA)['label_last_update']
                          + datetime.now().astimezone(timezone('Europe/Berlin')).strftime("%d/%m/%Y %H:%M"),
             ),
             html.Table(
@@ -82,7 +91,7 @@ def create_news():
 def create_contacts(app):
     return html.Div(
         children=[
-            html.H5(className="p-news title", children="Contattaci"),
+            html.H5(className="p-news title", children=translate_my_dict(RESOURCES_ITA)['label_contact_us']),
             html.Table(
                 className="center",
                 children=[
@@ -299,10 +308,7 @@ def create_page_components(app, df_regional_data):
                                 ),
                                 dcc.Dropdown(
                                     id="dropdown_language_selected",
-                                    options=[
-                                        {'label': 'Italiano', 'value': 'IT'},
-                                        {'label': 'English', 'value': 'EN'}
-                                    ],
+                                    options=language_list,
                                     value=locale_language.language,
                                     searchable=False
                                 )
@@ -317,7 +323,8 @@ def create_page_components(app, df_regional_data):
             className="row flex-display",
             style={"margin-bottom": "0px", "margin-top": "0px"},
         ),
-        html.Div([html.H5(id='card_header-1', children='Totale Dati Nazionali', className='title')]),
+        html.Div([html.H5(id='card_header-1', children=translate_my_dict(RESOURCES_ITA)['label_titolo'],
+                          className='title')]),
         html.Div(
             [
                 html.Div(
@@ -388,7 +395,7 @@ def create_page_components(app, df_regional_data):
             className="row flex-display",
         ),
         dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
-            dcc.Tab(label='Analisi dei dati nazionali', value='tab_national',
+            dcc.Tab(label=translate_my_dict(RESOURCES_ITA)['label_tab_1'], value='tab_national',
                     children=[  # START FIRST TAB
                         html.Div(  # START OF 2ND INCAPSULATION  ############################################
                             [
@@ -396,7 +403,7 @@ def create_page_components(app, df_regional_data):
                                     [
                                         html.Div(
                                             [
-                                                html.P("Seleziona il dato da analizzare:",
+                                                html.P(translate_my_dict(RESOURCES_ITA)['label_select_data'],
                                                        className="control_label"),
                                                 dcc.Dropdown(
                                                     id='dropdown_data_selected',
@@ -405,7 +412,7 @@ def create_page_components(app, df_regional_data):
                                                     value='nuovi_positivi',
                                                     className='dcc_control'
                                                 ),
-                                                html.P("Seleziona una o più regioni italiane da confrontare:",
+                                                html.P(translate_my_dict(RESOURCES_ITA)['label_select_multiregion'],
                                                        className="control_label"),
                                                 dcc.Dropdown(id='dropdown_region_list_selected',
                                                              options=get_options(
@@ -428,7 +435,8 @@ def create_page_components(app, df_regional_data):
                                     [
                                         html.Div(
                                             [
-                                                html.H5(id='table_tab1_header', children='Dati di dettaglio',
+                                                html.H5(id='table_tab1_header',
+                                                        children=translate_my_dict(RESOURCES_ITA)['label_table_details'],
                                                         className='title'),
                                                 dcc.Graph(id="table_tab1"),
 
@@ -436,7 +444,9 @@ def create_page_components(app, df_regional_data):
                                             className="pretty_container twelve columns",
                                         ),
                                         html.Div(
-                                            [html.H5(id='bar_header', children='Top10 Regioni:', className='title'),
+                                            [html.H5(id='bar_header',
+                                                     children=translate_my_dict(RESOURCES_ITA)['label_top_ten'],
+                                                     className='title'),
                                              dcc.Graph(id="bar_graph")],
                                             className="pretty_container twelve columns",
                                         ),
@@ -451,7 +461,7 @@ def create_page_components(app, df_regional_data):
                         html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                             [
                                 html.Div(
-                                    [html.H5(id='map_header', children='N° casi ogni 100.000 abitanti',
+                                    [html.H5(id='map_header', children=translate_my_dict(RESOURCES_ITA)['label_map'],
                                              className='title'),
                                      dcc.Graph(id="map_graph")],
                                     className="pretty_container twelve columns",
@@ -461,14 +471,14 @@ def create_page_components(app, df_regional_data):
                         ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
 
                     ]),  # END OF FIRST TAB
-            dcc.Tab(label='Analisi dei dati regionali', value='tab_regional',
+            dcc.Tab(label=translate_my_dict(RESOURCES_ITA)['label_tab_2'], value='tab_regional',
                     children=[  # START OF SECOND TAB
                         html.Div(  # START OF 2ND INCAPSULATION  ############################################
                             [
                                 html.Div(
                                     ##########################################################################
                                     [
-                                        html.P("Seleziona la regione italiana da analizzare:",
+                                        html.P(translate_my_dict(RESOURCES_ITA)['label_select_region'],
                                                className="control_label"),
                                         dcc.Dropdown(
                                             id='dropdown_region_selected',
@@ -481,17 +491,17 @@ def create_page_components(app, df_regional_data):
                                             [
                                                 html.Div(
                                                     [html.H5(id="string_max_date_new_positives"),
-                                                     html.P("Data/e picco massimo")],
+                                                     html.P(translate_my_dict(RESOURCES_ITA)['label_data_picco_max'])],
                                                     className="mini_container_mean_max",
                                                 ),
                                                 html.Div(
                                                     [html.H5(id="string_max_value_new_positives"),
-                                                     html.P("Valore Picco massimo")],
+                                                     html.P(translate_my_dict(RESOURCES_ITA)['label_valore_picco_max'])],
                                                     className="mini_container_mean_max",
                                                 ),
                                                 html.Div(
                                                     [html.H5(id="mean_total_cases"),
-                                                     html.P("N° medio di contagi al giorno")],
+                                                     html.P(translate_my_dict(RESOURCES_ITA)['label_media_contagi'])],
                                                     className="mini_container_mean_max",
                                                 ),
                                             ],
@@ -584,7 +594,7 @@ def create_page_components(app, df_regional_data):
                         html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                             [
                                 html.Div(
-                                    [html.H5(id='bar_header_tab2', children='Casi Attivi per giorno:',
+                                    [html.H5(id='bar_header_tab2', children=translate_my_dict(RESOURCES_ITA)['label_casi_attivi'],
                                              className='title'),
                                      dcc.Graph(id="bar_graph_tab2")],
                                     className="pretty_container twelve columns",
