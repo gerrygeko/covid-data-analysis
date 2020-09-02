@@ -84,11 +84,11 @@ def start_translation():
     for language in language_list:
         languages_code_list.append(language["value"])
 
-    default_string_value_list = list(resources[DEFAULT_LANGUAGE].values())
+    default_language_string_list = list(resources[DEFAULT_LANGUAGE].values())
 
     for language in languages_code_list:
         if language != DEFAULT_LANGUAGE:
             log.info(f"Loading resources for: {language}")
-            translations = translator.translate(default_string_value_list, src=DEFAULT_LANGUAGE, dest=language)
+            translations = translator.translate(default_language_string_list, src=DEFAULT_LANGUAGE, dest=language)
             add_translations_to_resource_dict(translations, language)
 
