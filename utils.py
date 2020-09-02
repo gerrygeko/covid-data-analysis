@@ -4,7 +4,7 @@ import os
 import requests
 
 import logger
-from constants import load_resource
+from resources import load_resource
 
 REPO_NAME = "covid-data-analysis"
 GITHUB_ACCESS_TOKEN_ENV_VAR = "GITHUB_ACCESS_TOKEN"

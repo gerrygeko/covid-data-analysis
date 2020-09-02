@@ -18,7 +18,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from constants import load_resource, RESOURCES_ITA, translate_my_dict
+from resources import load_resource, start_translation
 from html_components import create_news, create_page_components, locale_language
 
 
@@ -208,7 +208,7 @@ def update_map_graph(data_selected):
                                   mapbox_style="carto-positron",
                                   zoom=4, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
-                                  labels={data_selected: (translate_my_dict(RESOURCES_ITA)['label_persone'])}
+                                  labels={data_selected: (load_resource('label_persone'))}
                                   )
     figure.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
@@ -218,10 +218,8 @@ def update_map_graph(data_selected):
             xref='paper',
             yref='paper',
             text='*{} <br>'.format(load_resource(data_selected))
-                 + translate_my_dict(RESOURCES_ITA)['label_hover_map']
+                 + load_resource('label_hover_map')
                  + '<br> {}'.format(date_string),
-            # text='*Incidenza di {} <br>per regione (ogni 100K abitanti)<br>al {}'.format(load_resource(data_selected),
-            #                                                                              date_string),
             showarrow=False
         )]
     )
@@ -317,7 +315,7 @@ def update_bar_graph_active_cases(region_selected):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(n):
     log.info('update cards')
-    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update'))
+    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update') + "%d/%m/%Y %H:%M")
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
@@ -498,7 +496,7 @@ def update_language(language):
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
 def update_news(input):
-    log.info('update news')
+    log.info('Update news')
     return create_news()
 
 
@@ -615,9 +613,11 @@ app.clientside_callback(
     Output("output-clientside", "children"),
     [Input("regional_timeseries_linear", "figure")],
 )
-app.title = "SARS-CoV-2-Gellex"
-app_layout()
+
 
 if __name__ == '__main__':
+    app.title = "SARS-CoV-2-Gellex"
+    app_layout()
+    start_translation()
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
 
