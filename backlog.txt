@@ -1,6 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Language selection (3)
+
 - Extend the visualization of the data table (Tab 1), i.e. to show all the region (from several users feedback)(1)
 - Introduce a bar graph that renders national active cases (like Regional Analysis) (1)
 - Extend data analysis worldwide (2)
@@ -23,6 +23,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Language selection (3)
 - Use Git API to access tag version and update dynamically the version number on the website (2)
 - Remove date field as index in the DataFrame
 - Declare only one class in the css and use the same for all the cards instead of declaring separately (e.g. flex: 1) (1)

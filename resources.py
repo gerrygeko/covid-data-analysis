@@ -47,7 +47,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_data_picco_max': 'Data Picco massimo',
     'label_valore_picco_max': 'Picco massimo',
     'label_media_contagi': 'Media contagi',
-    'label_casi_attivi': 'Casi Attivi per giorno:',
+    'label_casi_attivi': 'Casi Attivi',
     'label_news': 'News Scienza - Italia',
     'label_contact_us': 'Contattaci',
     'label_last_update': 'Ultimo Aggiornamento:',
