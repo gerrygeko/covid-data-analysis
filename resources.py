@@ -37,7 +37,7 @@ resources = {DEFAULT_LANGUAGE: {
     'tamponi': 'Tamponi effettuati',
     'casi_testati': 'Casi Testati',
     'nazione': 'Italia',
-    'header_last_update': 'Dati Aggiornati al: ',
+    'header_last_update': 'Dati Aggiornati al:',
     'label_titolo': 'Totale Dati Nazionali',
     'label_tab_1': 'Analisi dei dati nazionali',
     'label_tab_2': 'Analisi dei dati regionali',

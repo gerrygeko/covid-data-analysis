@@ -312,7 +312,7 @@ def update_bar_graph_active_cases(region_selected):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(n):
     log.info('update cards')
-    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update') + "%d/%m/%Y %H:%M")
+    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update') + " %d/%m/%Y %H:%M")
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
