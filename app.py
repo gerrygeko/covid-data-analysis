@@ -37,9 +37,6 @@ app = dash.Dash(
 )
 server = app.server
 
-image_filename = 'assets/gerardo.png'  # replace with your own image
-encoded_image = base64.b64encode(open(image_filename, 'rb').read())
-
 url_csv_regional_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 url_csv_italy_data = \
