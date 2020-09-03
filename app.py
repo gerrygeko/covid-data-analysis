@@ -31,7 +31,7 @@ log = logger.get_logger()
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
                          {"property": "og:title", "content": "SARS-CoV-2-Gellex"},
-                         {"property": "og:image", "content": "https://ibb.co/zPwQbTp"},
+                         {"property": "og:image", "content": "https://i.ibb.co/r5JFMRY/splash-metatag.png"},
                          {"property": "og:description", "content": "SARS-CoV-2-Gellex"},
                          {"property": "og:url", "content": "https://www.data-covid.com/"}]
 )
