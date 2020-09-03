@@ -370,15 +370,15 @@ def update_data_table(data_selected):
         header=dict(values=(load_resource('denominazione_regione'), load_resource(data_selected)),
                     fill_color='lightskyblue',
                     font_color='white',
-                    font_size=16,
+                    font_size=15,
                     align='left'),
         cells=dict(values=[df['denominazione_regione'], df[data_selected]],
                    fill_color='aliceblue',
-                   align='left',
-                   font_size=14,
-                   height=27))
+                   align='center',
+                   font_size=13,
+                   height=20))
     ])
-    figure.update_layout(height=400, margin=dict(l=0, r=0, b=0, t=0))
+    figure.update_layout(height=470, margin=dict(l=0, r=0, b=0, t=0))
     return figure
 
 

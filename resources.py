@@ -54,7 +54,6 @@ resources = {DEFAULT_LANGUAGE: {
     'label_map': 'N° casi ogni 100K abitanti',
     'label_top_ten': 'Top 10 Regioni:',
     'label_hover_map': 'per regione (ogni cento mila abitanti)',
-    'label_table_details': 'Dati di dettaglio',
     'label_persone': 'Persone'
     }
 }

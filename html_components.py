@@ -428,11 +428,7 @@ def create_page_components(app, df_regional_data):
                                     [
                                         html.Div(
                                             [
-                                                html.H5(id='table_tab1_header',
-                                                        children=load_resource('label_table_details'),
-                                                        className='title'),
                                                 dcc.Graph(id="table_tab1"),
-
                                             ],
                                             className="pretty_container twelve columns",
                                         ),
