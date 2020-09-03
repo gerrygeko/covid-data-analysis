@@ -18,6 +18,7 @@ NEW FEATURES AND BUG TO SOLVE
 - www and http://www point to not secure
 - New recalculating regional rated data, we redownload the regional data. This is not required since we already have it in memory
 - Add http security headers (check internet.nl for diagnosis)
+- Make header title (and image) of the website hyperlink to the root of the website
 
 -------------------------------------------------------------------------------------------------
 
