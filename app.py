@@ -268,15 +268,15 @@ def update_bar_graph_active_cases(region_selected):
     figure.add_annotation(
         x=x_list[14],
         y=y_list_3[14],
-        text="Fase-1")
+        text=load_resource('fase_1'))
     figure.add_annotation(
         x=x_list[70],
         y=y_list_3[70],
-        text="Fase-2")
+        text=load_resource('fase_2'))
     figure.add_annotation(
         x=x_list[112],
         y=y_list_3[112],
-        text="Fase-3")
+        text=load_resource('fase_3'))
     figure.update_annotations(dict(
         xref="x",
         yref="y",
