@@ -610,11 +610,11 @@ app.clientside_callback(
     Output("output-clientside", "children"),
     [Input("regional_timeseries_linear", "figure")],
 )
+app.title = "SARS-CoV-2-Gellex"
+app_layout()
 
 
 if __name__ == '__main__':
-    app.title = "SARS-CoV-2-Gellex"
-    app_layout()
     start_translation()
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
 
