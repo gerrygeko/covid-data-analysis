@@ -1,3 +1,8 @@
+# 2.0.0
+#### Added
+* Multilingual is now available
+#### Fixed
+* Visualization of region data table
 # 1.1.2
 #### Changed
 * Display details of regions in the bar graphs with better format
