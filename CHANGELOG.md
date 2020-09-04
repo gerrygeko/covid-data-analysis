@@ -9,7 +9,7 @@
     * Dutch
     * Portoguese 
 #### Fixed
-* Improved (mobile) navigation while scrolling through the different graphs
+* Improved (mobile) navigation while scrolling through the different graphs 
 
 # 1.1.2
 #### Changed
