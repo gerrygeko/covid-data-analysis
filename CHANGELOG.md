@@ -1,8 +1,16 @@
 # 2.0.0
 #### Added
-* Multilingual is now available
+* Localization is now available and the following languages are supported:
+    * Italian
+    * English
+    * French
+    * German
+    * Spanish
+    * Dutch
+    * Portoguese 
 #### Fixed
-* Visualization of region data table
+* Improved (mobile) navigation while scrolling through the different graphs
+
 # 1.1.2
 #### Changed
 * Display details of regions in the bar graphs with better format
