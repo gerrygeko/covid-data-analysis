@@ -201,3 +201,14 @@ table.center {
   pointer-events: all;
   transform: translate(30px, 349px);
 }
+
+#dropdown_language_selected {
+  width: 40%;
+  margin-right: 12px;
+  margin-left:auto;
+  display:block;
+  height: 100%;
+  text-transform: none;
+  margin-top: 30px;
+}
+

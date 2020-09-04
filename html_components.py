@@ -31,8 +31,6 @@ field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                        'tamponi', 'casi_testati']
 
 
-
-
 def create_news():
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
@@ -299,11 +297,15 @@ def create_page_components(app, df_regional_data):
                                     ),
                                     href="https://github.com/gerrygeko/covid-data-analysis",
                                 ),
-                                dcc.Dropdown(
-                                    id="dropdown_language_selected",
-                                    options=language_list,
-                                    value=locale_language.language,
-                                    searchable=False
+                                html.Div(
+                                    [
+                                        dcc.Dropdown(
+                                            id="dropdown_language_selected",
+                                            options=language_list,
+                                            value=locale_language.language,
+                                            searchable=False
+                                        )
+                                    ]
                                 )
                             ]
                         )
@@ -616,4 +618,3 @@ def create_page_components(app, df_regional_data):
             href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
         )
     ]
-
