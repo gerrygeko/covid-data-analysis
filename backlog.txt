@@ -20,6 +20,7 @@ NEW FEATURES AND BUG TO SOLVE
 - Make header title (and image) of the website hyperlink to the root of the website
 - Localize also the date format if language has changed
 - Translate all the keys used in the resource dict from Italian to English
+- Introduce debug mode (to avoid to load all the languages at startup)
 
 -------------------------------------------------------------------------------------------------
 
