@@ -612,9 +612,9 @@ app.clientside_callback(
 )
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
+start_translation()
 
 
 if __name__ == '__main__':
-    start_translation()
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
 
