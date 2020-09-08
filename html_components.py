@@ -32,6 +32,7 @@ field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
 
 
 def create_news():
+    log.info(f"Loading news in {locale_language.language}")
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
     df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
