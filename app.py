@@ -157,7 +157,9 @@ def update_graph(region_list, data_selected):
         return figure
     for region in region_list:
         regions_list_mapping.append((data_selected, region))
-    figure = create_scatter_plot_by_region(df_regional_data, load_resource(data_selected),
+    title = load_resource(data_selected)
+    log.info(f"Title loaded for the main graph:{title}")
+    figure = create_scatter_plot_by_region(df_regional_data, title,
                                            x_axis_data, regions_list_mapping)
     log.info('Updating main graph')
     return figure
@@ -310,8 +312,8 @@ def update_bar_graph_active_cases(region_selected):
                Output('total_icu_variation', 'children'),
                Output('total_swabs_variation', 'children'),
                Output('subHeader', 'children')
-               ], [Input("i_news", "n_intervals")])
-def update_national_cards_text(n):
+               ], [Input("i_news", "n_intervals"), Input("dropdown_language_selected", "value")])
+def update_national_cards_text(n, m):
     log.info('update cards')
     sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update') + " %d/%m/%Y %H:%M")
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
