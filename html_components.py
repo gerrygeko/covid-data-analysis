@@ -32,6 +32,7 @@ field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
 
 
 def create_news():
+    log.info(f"Loading news in {locale_language.language}")
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
     df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
@@ -82,6 +83,7 @@ def create_news():
 
 
 def create_contacts(app):
+    log.info(f"Loading contacts in {locale_language.language}")
     return html.Div(
         children=[
             html.H5(className="p-news title", children=load_resource('label_contact_us')),
@@ -234,7 +236,7 @@ def create_contacts(app):
 
 
 def create_page_components(app, df_regional_data):
-    log.info("Loading all the components")
+    log.info(f"Loading all the components in {locale_language.language}")
     global PAGE_TITLE
     return [  # START OF SUPREME INCAPSULATION ############################################
         dcc.Store(id="aggregate_data"),
