@@ -8,7 +8,7 @@ import requests
 from pytz import timezone
 
 import logger
-from resources import locale_language, language_list, load_resource
+from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, new_positive_regions, get_version
 
 SECONDS = 1000
@@ -32,7 +32,6 @@ field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
 
 
 def create_news():
-    log.info(f"Loading news in {locale_language.language}")
     json_data = news_requests.json()["articles"]
     df_news = pd.DataFrame(json_data)
     df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
