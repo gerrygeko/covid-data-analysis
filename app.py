@@ -20,12 +20,13 @@ from dash.exceptions import PreventUpdate
 import logger
 from resources import load_resource, start_translation
 from html_components import create_news, create_page_components, locale_language
-
+from utils import is_debug_mode_enabled
 
 INHABITANT_RATE = 100000
 
 
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
+debug_mode_enabled = is_debug_mode_enabled()
 
 log = logger.get_logger()
 app = dash.Dash(
@@ -612,7 +613,8 @@ app.clientside_callback(
 )
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
-start_translation()
+if not debug_mode_enabled:
+    start_translation()
 
 
 if __name__ == '__main__':

@@ -25,6 +25,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Introduce debug mode
 - Language selection (3)
 - Use Git API to access tag version and update dynamically the version number on the website (2)
 - Remove date field as index in the DataFrame
