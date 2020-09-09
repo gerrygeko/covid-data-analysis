@@ -37,7 +37,6 @@ def create_news():
     df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
     max_rows = 6
     news_title = load_resource('label_news')
-    log.info(f"News title loaded for the news container {news_title}, with language {locale_language.language}")
     return html.Div(
         children=[
             html.H5(className="p-news title", children=news_title),
