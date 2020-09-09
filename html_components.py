@@ -243,18 +243,19 @@ def create_page_components(app, df_regional_data):
         html.Div(id="output-clientside"),
         html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
             [
-                html.Div(  # START OF LOGO
+                html.Div(
                     [
                         html.Img(
                             src=app.get_asset_url("dash-logo.png"),
                             id="plotly-image",
                             style={
-                                "height": "180px",
+                                "height": "120px",
                                 "width": "auto",
-                            },
+                                "margin-bottom": "0px",
+                            }
                         )
                     ],
-                    className="one-third column",
+                    className="one-half column",
                 ),  # END OF LOGO
                 html.Div(  # START OF HEADING
                     [
@@ -274,30 +275,6 @@ def create_page_components(app, df_regional_data):
                     [
                         html.Div(
                             [
-                                html.A(
-                                    html.Img(
-                                        src=app.get_asset_url("protezione-civile.png"),
-                                        id="protezione-civile-image",
-                                        style={
-                                            "height": "48px",
-                                            "width": "auto",
-                                            "margin-bottom": "10px",
-                                        },
-                                    ),
-                                    href="https://github.com/pcm-dpc",
-                                ),
-                                html.A(
-                                    html.Img(
-                                        src=app.get_asset_url("github.svg"),
-                                        id="github-image",
-                                        style={
-                                            "height": "48px",
-                                            "width": "auto",
-                                            "margin-bottom": "10px",
-                                        },
-                                    ),
-                                    href="https://github.com/gerrygeko/covid-data-analysis",
-                                ),
                                 html.Div(
                                     [
                                         dcc.Dropdown(
@@ -311,16 +288,49 @@ def create_page_components(app, df_regional_data):
                             ]
                         )
                     ],
-                    className="one-third column",
-                    id="logos",
+                    className="one-half column",
+                    id="logos"
                 ),  # END OF GITHUB LOGOS
             ],
             id="header",
-            className="row flex-display",
-            style={"margin-bottom": "0px", "margin-top": "0px"},
+            className="row flex-display"
         ),
-        html.Div([html.H5(id='card_header-1', children=load_resource('label_titolo'),
-                          className='title')]),
+        html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
+            [
+                html.A(
+                    html.Img(
+                        src=app.get_asset_url("github.svg"),
+                        id="github-image",
+                        style={
+                            "height": "40px",
+                            "width": "auto",
+                            "margin-bottom": "0px",
+                            "margin-top": "5px"
+                        }
+                    ),
+                    href="https://github.com/gerrygeko/covid-data-analysis",
+                ),
+                html.A(
+                    html.Img(
+                        src=app.get_asset_url("protezione-civile.png"),
+                        id="protezione-civile-image",
+                        style={
+                            "height": "40px",
+                            "width": "auto",
+                            "margin-bottom": "0px",
+                            "margin-top": "5px"
+                        }
+                    ),
+                    href="https://github.com/pcm-dpc",
+                )
+            ],
+            className="one-second column"
+        ),
+        html.Div(
+            [
+                html.H5(id='card_header-1', children=load_resource('label_titolo'), className='title')
+            ]
+        ),
         html.Div(
             [
                 html.Div(
