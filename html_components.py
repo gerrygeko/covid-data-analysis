@@ -12,7 +12,7 @@ from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, new_positive_regions, get_version
 
 SECONDS = 1000
-PAGE_TITLE = "Coronavirus (SARS-CoV-2) Italia"
+PAGE_TITLE = "Coronavirus (SARS-CoV-2)"
 
 # API Requests for news
 news_requests = requests.get(
