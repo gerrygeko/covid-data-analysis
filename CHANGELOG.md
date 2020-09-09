@@ -1,3 +1,7 @@
+# 2.0.1
+#### Fixed
+* Fixed a bug that in specific cases, did not perform a correct translation
+
 # 2.0.0
 #### Added
 * Localization is now available and the following languages are supported:
