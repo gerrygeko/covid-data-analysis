@@ -60,7 +60,8 @@ resources = {DEFAULT_LANGUAGE: {
     'label_persone': 'Persone',
     'fase_1': 'Fase 1',
     'fase_2': 'Fase 2',
-    'fase_3': 'Fase 3'
+    'fase_3': 'Fase 3',
+    'label_credits': 'Crediti'
     }
 }
 
