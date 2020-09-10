@@ -1,3 +1,8 @@
+# 2.0.2
+#### Changed
+* Improvement of application layout
+* Update of Italian Population Data by ISTAT (last official update 01/01/2020)
+
 # 2.0.1
 #### Fixed
 * Fixed a bug that in specific cases, did not perform a correct translation
