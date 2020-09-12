@@ -20,12 +20,13 @@ from dash.exceptions import PreventUpdate
 import logger
 from resources import load_resource, start_translation
 from html_components import create_news, create_page_components, locale_language
-
+from utils import is_debug_mode_enabled
 
 INHABITANT_RATE = 100000
 
 
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
+debug_mode_enabled = is_debug_mode_enabled()
 
 log = logger.get_logger()
 app = dash.Dash(
@@ -156,7 +157,8 @@ def update_graph(region_list, data_selected):
         return figure
     for region in region_list:
         regions_list_mapping.append((data_selected, region))
-    figure = create_scatter_plot_by_region(df_regional_data, load_resource(data_selected),
+    title = load_resource(data_selected)
+    figure = create_scatter_plot_by_region(df_regional_data, title,
                                            x_axis_data, regions_list_mapping)
     log.info('Updating main graph')
     return figure
@@ -610,11 +612,12 @@ app.clientside_callback(
     Output("output-clientside", "children"),
     [Input("regional_timeseries_linear", "figure")],
 )
+app.title = "SARS-CoV-2-Gellex"
+app_layout()
+if not debug_mode_enabled:
+    start_translation()
 
 
 if __name__ == '__main__':
-    app.title = "SARS-CoV-2-Gellex"
-    app_layout()
-    start_translation()
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
 

@@ -8,11 +8,11 @@ import requests
 from pytz import timezone
 
 import logger
-from resources import locale_language, language_list, load_resource
+from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, new_positive_regions, get_version
 
 SECONDS = 1000
-PAGE_TITLE = "Coronavirus (SARS-CoV-2) Italia"
+PAGE_TITLE = "Coronavirus (SARS-CoV-2)"
 
 # API Requests for news
 news_requests = requests.get(
@@ -36,9 +36,10 @@ def create_news():
     df_news = pd.DataFrame(json_data)
     df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
     max_rows = 6
+    news_title = load_resource('label_news')
     return html.Div(
         children=[
-            html.H5(className="p-news title", children=load_resource('label_news')),
+            html.H5(className="p-news title", children=news_title),
             html.P(
                 className="p-news title",
                 children=load_resource('label_last_update')
@@ -242,18 +243,19 @@ def create_page_components(app, df_regional_data):
         html.Div(id="output-clientside"),
         html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
             [
-                html.Div(  # START OF LOGO
+                html.Div(
                     [
                         html.Img(
                             src=app.get_asset_url("dash-logo.png"),
                             id="plotly-image",
                             style={
-                                "height": "180px",
+                                "height": "120px",
                                 "width": "auto",
-                            },
+                                "margin-bottom": "0px",
+                            }
                         )
                     ],
-                    className="one-third column",
+                    className="one-half column",
                 ),  # END OF LOGO
                 html.Div(  # START OF HEADING
                     [
@@ -273,30 +275,6 @@ def create_page_components(app, df_regional_data):
                     [
                         html.Div(
                             [
-                                html.A(
-                                    html.Img(
-                                        src=app.get_asset_url("protezione-civile.png"),
-                                        id="protezione-civile-image",
-                                        style={
-                                            "height": "48px",
-                                            "width": "auto",
-                                            "margin-bottom": "10px",
-                                        },
-                                    ),
-                                    href="https://github.com/pcm-dpc",
-                                ),
-                                html.A(
-                                    html.Img(
-                                        src=app.get_asset_url("github.svg"),
-                                        id="github-image",
-                                        style={
-                                            "height": "48px",
-                                            "width": "auto",
-                                            "margin-bottom": "10px",
-                                        },
-                                    ),
-                                    href="https://github.com/gerrygeko/covid-data-analysis",
-                                ),
                                 html.Div(
                                     [
                                         dcc.Dropdown(
@@ -310,16 +288,49 @@ def create_page_components(app, df_regional_data):
                             ]
                         )
                     ],
-                    className="one-third column",
-                    id="logos",
+                    className="one-half column",
+                    id="logos"
                 ),  # END OF GITHUB LOGOS
             ],
             id="header",
-            className="row flex-display",
-            style={"margin-bottom": "0px", "margin-top": "0px"},
+            className="row flex-display"
         ),
-        html.Div([html.H5(id='card_header-1', children=load_resource('label_titolo'),
-                          className='title')]),
+        html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
+            [
+                html.A(
+                    html.Img(
+                        src=app.get_asset_url("github.svg"),
+                        id="github-image",
+                        style={
+                            "height": "40px",
+                            "width": "auto",
+                            "margin-bottom": "0px",
+                            "margin-top": "5px"
+                        }
+                    ),
+                    href="https://github.com/gerrygeko/covid-data-analysis",
+                ),
+                html.A(
+                    html.Img(
+                        src=app.get_asset_url("protezione-civile.png"),
+                        id="protezione-civile-image",
+                        style={
+                            "height": "40px",
+                            "width": "auto",
+                            "margin-bottom": "0px",
+                            "margin-top": "5px"
+                        }
+                    ),
+                    href="https://github.com/pcm-dpc",
+                )
+            ],
+            className="one-second column"
+        ),
+        html.Div(
+            [
+                html.H5(id='card_header-1', children=load_resource('label_titolo'), className='title')
+            ]
+        ),
         html.Div(
             [
                 html.Div(

@@ -108,6 +108,10 @@
     margin-left: 0;
   }
 
+  .one-second.column {
+    width: 18.6666666667%;
+  }
+
   .one-third.column {
     width: 30.6666666667%;
   }

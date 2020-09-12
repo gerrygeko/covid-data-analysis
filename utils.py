@@ -6,6 +6,8 @@ import requests
 import logger
 from resources import load_resource
 
+DEBUG_MODE_ENV_VAR = "DEBUG_MODE"
+
 REPO_NAME = "covid-data-analysis"
 GITHUB_ACCESS_TOKEN_ENV_VAR = "GITHUB_ACCESS_TOKEN"
 GITHUB_USER_ENV_VAR = "GITHUB_USER"
@@ -55,6 +57,21 @@ def load_git_environment_variables():
     user = get_environment_variable(GITHUB_USER_ENV_VAR)
     token = get_environment_variable(GITHUB_ACCESS_TOKEN_ENV_VAR)
     return user, token
+
+
+def is_debug_mode_enabled():
+    debug_mode = get_environment_variable(DEBUG_MODE_ENV_VAR)
+    if debug_mode.lower() == 'true':
+        log.info(f"{DEBUG_MODE_ENV_VAR} is enabled. Never do this in production")
+        return True
+    elif debug_mode.lower() == 'false':
+        return False
+    elif debug_mode == "":
+        log.info(f"{DEBUG_MODE_ENV_VAR} is not set in your Environment Configuration. Setting False as default")
+        return False
+    else:
+        log.error(f"{DEBUG_MODE_ENV_VAR} was not set correctly, it expect True or False as value. Setting False as default")
+        return False
 
 
 git_user_data = GitApiData(*load_git_environment_variables())

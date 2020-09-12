@@ -19,6 +19,9 @@ class LocaleLanguage:
     def __init__(self, language):
         self.language = language
 
+    def __str__(self):
+        return f"ID: {id(self)} and language {self.language}"
+
 
 resources = {DEFAULT_LANGUAGE: {
     'denominazione_regione': 'Regione',
@@ -38,7 +41,7 @@ resources = {DEFAULT_LANGUAGE: {
     'casi_testati': 'Casi Testati',
     'nazione': 'Italia',
     'header_last_update': 'Dati Aggiornati al:',
-    'label_titolo': 'Totale Dati Nazionali',
+    'label_titolo': 'Totale Dati - Italia',
     'label_tab_1': 'Analisi dei dati nazionali',
     'label_tab_2': 'Analisi dei dati regionali',
     'label_select_data': 'Seleziona il dato da analizzare:',
@@ -66,6 +69,7 @@ locale_language = LocaleLanguage(DEFAULT_LANGUAGE)
 
 
 def load_resource(name):
+    log.info(locale_language)
     if name not in resources[locale_language.language].keys():
         raise KeyError(f"The resource you are trying to load is not present. Resource: {name}")
     return resources[locale_language.language][name]
