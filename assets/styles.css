@@ -143,6 +143,12 @@ table.center {
   height: auto;
 }
 
+.credits_icon {
+  height: 80px;
+  width: auto;
+  float: center;
+}
+
 .mini_container {
   flex: 1;
   border-radius: 5px;

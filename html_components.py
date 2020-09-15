@@ -594,39 +594,24 @@ def create_page_components(app, df_regional_data):
                                 html.A(
                                     children=html.Img(
                                         src=app.get_asset_url("github_gellex.png"),
-                                        className='responsive',
+                                        className='credits_icon',
                                         id="github-image",
-                                        style={
-                                            "height": "80px",
-                                            "width": "auto",
-                                            "float": "center"
-                                        }
                                     ),
                                     href="https://github.com/gerrygeko/covid-data-analysis",
                                 ),
                                 html.A(
                                     children=html.Img(
                                         src=app.get_asset_url("protezione_civile.png"),
-                                        className='responsive',
+                                        className='credits_icon',
                                         id="protezione-civile-image",
-                                        style={
-                                            "height": "70px",
-                                            "width": "auto",
-                                            "float": "center"
-                                        }
                                     ),
                                     href="https://github.com/pcm-dpc",
                                 ),
                                 html.A(
                                     children=html.Img(
                                         src=app.get_asset_url("istat.png"),
-                                        className='responsive',
+                                        className='credits_icon',
                                         id="istat-image",
-                                        style={
-                                            "height": "60px",
-                                            "width": "auto",
-                                            "float": "center"
-                                        }
                                     ),
                                     href="http://dati.istat.it/",
                                 )
