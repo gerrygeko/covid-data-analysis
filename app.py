@@ -289,6 +289,7 @@ def update_bar_graph_active_cases(region_selected):
     ))
     figure.update_layout(barmode='stack',
                          title=region_selected,
+                         title_x=0.5,
                          xaxis={'categoryorder': 'total descending'},
                          autosize=True,
                          margin=dict(l=30, r=30, b=20, t=40),

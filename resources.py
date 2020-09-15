@@ -60,7 +60,8 @@ resources = {DEFAULT_LANGUAGE: {
     'label_persone': 'Persone',
     'fase_1': 'Fase 1',
     'fase_2': 'Fase 2',
-    'fase_3': 'Fase 3'
+    'fase_3': 'Fase 3',
+    'label_credits': 'Crediti'
     }
 }
 
@@ -69,7 +70,6 @@ locale_language = LocaleLanguage(DEFAULT_LANGUAGE)
 
 
 def load_resource(name):
-    log.info(locale_language)
     if name not in resources[locale_language.language].keys():
         raise KeyError(f"The resource you are trying to load is not present. Resource: {name}")
     return resources[locale_language.language][name]

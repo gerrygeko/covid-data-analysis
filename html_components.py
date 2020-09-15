@@ -252,10 +252,15 @@ def create_page_components(app, df_regional_data):
                                 "height": "120px",
                                 "width": "auto",
                                 "margin-bottom": "0px",
+                                "display": "block",
+                                "margin-left": "auto",
+                                "margin-right": "auto"
                             }
-                        )
+                        ),
+
                     ],
-                    className="one-half column",
+                    id="href-logos",
+                    className="four columns",
                 ),  # END OF LOGO
                 html.Div(  # START OF HEADING
                     [
@@ -268,7 +273,7 @@ def create_page_components(app, df_regional_data):
                             ]
                         )
                     ],
-                    className="one-half column",
+                    className="four columns",
                     id="title",
                 ),  # END OF HEADING
                 html.Div(  # START OF GITHUB LOGOS
@@ -288,49 +293,16 @@ def create_page_components(app, df_regional_data):
                             ]
                         )
                     ],
-                    className="one-half column",
+                    className="four columns",
                     id="logos"
                 ),  # END OF GITHUB LOGOS
             ],
             id="header",
             className="row flex-display"
-        ),
-        html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
-            [
-                html.A(
-                    html.Img(
-                        src=app.get_asset_url("github.svg"),
-                        id="github-image",
-                        style={
-                            "height": "40px",
-                            "width": "auto",
-                            "margin-bottom": "0px",
-                            "margin-top": "5px"
-                        }
-                    ),
-                    href="https://github.com/gerrygeko/covid-data-analysis",
-                ),
-                html.A(
-                    html.Img(
-                        src=app.get_asset_url("protezione-civile.png"),
-                        id="protezione-civile-image",
-                        style={
-                            "height": "40px",
-                            "width": "auto",
-                            "margin-bottom": "0px",
-                            "margin-top": "5px"
-                        }
-                    ),
-                    href="https://github.com/pcm-dpc",
-                )
-            ],
-            className="one-second column"
-        ),
+        ),  ################################################################################
         html.Div(
-            [
-                html.H5(id='card_header-1', children=load_resource('label_titolo'), className='title')
-            ]
-        ),
+            [html.H5(id='card_header-1', children=load_resource('label_titolo'), className='title')]
+                 ),
         html.Div(
             [
                 html.Div(
@@ -614,7 +586,53 @@ def create_page_components(app, df_regional_data):
                     className="pretty_container six columns",
                 ),  # END OF NEWS FEEDER
                 html.Div(  # START OF NEWS FEEDER
-                    children=[html.Div(id="contacts", children=create_contacts(app))],
+                    children=[
+                        html.Div(id="contacts", children=create_contacts(app)),
+                        html.Div(
+                            [
+                                html.H5(className='p-news title', children=load_resource('label_credits')),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("github_gellex.png"),
+                                        className='responsive',
+                                        id="github-image",
+                                        style={
+                                            "height": "80px",
+                                            "width": "auto",
+                                            "float": "center"
+                                        }
+                                    ),
+                                    href="https://github.com/gerrygeko/covid-data-analysis",
+                                ),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("protezione_civile.png"),
+                                        className='responsive',
+                                        id="protezione-civile-image",
+                                        style={
+                                            "height": "70px",
+                                            "width": "auto",
+                                            "float": "center"
+                                        }
+                                    ),
+                                    href="https://github.com/pcm-dpc",
+                                ),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("istat.png"),
+                                        className='responsive',
+                                        id="istat-image",
+                                        style={
+                                            "height": "60px",
+                                            "width": "auto",
+                                            "float": "center"
+                                        }
+                                    ),
+                                    href="http://dati.istat.it/",
+                                )
+                            ]
+                        )
+                    ],
                     className="pretty_container six columns",
                 ),
             ],

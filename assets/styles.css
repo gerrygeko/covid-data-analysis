@@ -59,6 +59,11 @@ body {
   display: flex;
 }
 
+.justy-display {
+  justify-content: center;
+}
+
+
 .container-display {
   display: flex;
 }
@@ -84,6 +89,7 @@ body {
   align-items: center;
 }
 
+
 #learn-more-button {
   text-align: center;
   height: 100%;
@@ -95,27 +101,6 @@ body {
   margin-top: 30px;
 }
 
-#github-image {
-  text-align: center;
-  height: 100%;
-  padding: 0 2px;
-  text-transform: none;
-  font-size: 15px;
-  float: right;
-  margin-right: 10px;
-  margin-top: 30px;
-}
-
-#protezione-civile-image {
-  text-align: center;
-  height: 100%;
-  padding: 0 5px;
-  text-transform: none;
-  font-size: 15px;
-  float: right;
-  margin-right: 10px;
-  margin-top: 30px;
-}
 
 #title {
   text-align: center;
