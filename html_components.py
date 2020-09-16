@@ -375,6 +375,18 @@ def create_page_components(app, df_regional_data):
         dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
             dcc.Tab(label=load_resource('label_tab_1'), value='tab_national',
                     children=[  # START FIRST TAB
+                        html.Div(
+                            [
+                                html.Div(
+                                    [html.H5(id='italian_active_cases_bar_graph_header',
+                                             children=load_resource('label_casi_attivi'),
+                                             className='title'),
+                                     dcc.Graph(id="italian_active_cases_bar_graph")],
+                                    className="pretty_container twelve columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        ),
                         html.Div(  # START OF 2ND INCAPSULATION  ############################################
                             [
                                 html.Div(  # START OF 2ND BLOCK

@@ -252,6 +252,50 @@ def update_bar_graph(data_selected):
     return figure
 
 
+@app.callback(Output('italian_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
+def update_bar_graph_italian_active_cases(self):
+    df = df_national_data
+    df.reset_index(inplace=True)
+    y_list_1 = df['terapia_intensiva'].values.tolist()
+    y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
+    y_list_3 = df['isolamento_domiciliare'].values.tolist()
+    x_list = df['data']
+    figure = go.Figure(
+        go.Bar(x=x_list, y=y_list_1, name=load_resource('terapia_intensiva'), textposition='auto',
+               insidetextanchor="start", marker_color='red'))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=load_resource('ricoverati_con_sintomi'), marker_color='lightslategrey'))
+    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=load_resource('isolamento_domiciliare'), marker_color='deepskyblue'))
+    figure.add_annotation(
+        x=x_list[14],
+        y=y_list_3[14],
+        text=load_resource('fase_1'))
+    figure.add_annotation(
+        x=x_list[70],
+        y=y_list_3[70],
+        text=load_resource('fase_2'))
+    figure.add_annotation(
+        x=x_list[112],
+        y=y_list_3[112],
+        text=load_resource('fase_3'))
+    figure.update_annotations(dict(
+        xref="x",
+        yref="y",
+        showarrow=True,
+        arrowhead=7,
+        ax=0,
+        ay=-60
+    ))
+    figure.update_layout(barmode='stack',
+                         title_x=0.5,
+                         xaxis={'categoryorder': 'total descending'},
+                         autosize=True,
+                         margin=dict(l=30, r=30, b=20, t=40),
+                         legend=dict(font=dict(size=10), orientation="h")
+                         )
+    log.info('Updating Italian Active Cases Bar Graph')
+    return figure
+
+
 @app.callback(Output('bar_graph_tab2', 'figure'), [Input('dropdown_region_selected', 'value')])
 def update_bar_graph_active_cases(region_selected):
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
@@ -313,7 +357,7 @@ def update_bar_graph_active_cases(region_selected):
                Output('total_swabs_variation', 'children'),
                Output('subHeader', 'children')
                ], [Input("i_news", "n_intervals")])
-def update_national_cards_text(n):
+def update_national_cards_text(self):
     log.info('update cards')
     sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update') + " %d/%m/%Y %H:%M")
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']

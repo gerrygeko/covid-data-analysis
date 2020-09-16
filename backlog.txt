@@ -1,7 +1,5 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Extend the visualization of the data table (Tab 1), i.e. to show all the region (from several users feedback)(1)
-- Introduce a bar graph that renders national active cases (like Regional Analysis) (1)
 - Extend data analysis worldwide (2)
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
 - Scheduler use CET time to not rely on the server time zone (2)
@@ -9,7 +7,6 @@ NEW FEATURES AND BUG TO SOLVE
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
 - Have better text layout in the hoverbox of the national map for regional rated data (1)
-- Refactor the Python code in different files (2)
 - Save logs somewhere and somehow
 - Keep track of number of visit
 - Reduce amount of logs in PROD
@@ -26,8 +23,11 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Introduce a bar graph that renders national active cases (like Regional Analysis) (1)
+- Extend the visualization of the data table (Tab 1), i.e. to show all the region (from several users feedback)(1)
 - Introduce debug mode
 - Language selection (3)
+- Refactor the Python code in different files (2)
 - Use Git API to access tag version and update dynamically the version number on the website (2)
 - Remove date field as index in the DataFrame
 - Declare only one class in the css and use the same for all the cards instead of declaring separately (e.g. flex: 1) (1)
