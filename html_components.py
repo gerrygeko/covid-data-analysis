@@ -378,10 +378,9 @@ def create_page_components(app, df_regional_data):
                         html.Div(
                             [
                                 html.Div(
-                                    [html.H5(id='italian_active_cases_bar_graph_header',
-                                             children=load_resource('label_casi_attivi'),
-                                             className='title'),
-                                     dcc.Graph(id="italian_active_cases_bar_graph")],
+                                    [
+                                        dcc.Graph(id="italian_active_cases_bar_graph")
+                                     ],
                                     className="pretty_container twelve columns",
                                 ),
                             ],
@@ -425,7 +424,7 @@ def create_page_components(app, df_regional_data):
                                     [
                                         html.Div(
                                             [
-                                                dcc.Graph(id="table_tab1"),
+                                                dcc.Graph(id="table_tab1")
                                             ],
                                             className="pretty_container twelve columns",
                                         ),
@@ -580,9 +579,9 @@ def create_page_components(app, df_regional_data):
                         html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
                             [
                                 html.Div(
-                                    [html.H5(id='bar_header_tab2', children=load_resource('label_casi_attivi'),
-                                             className='title'),
-                                     dcc.Graph(id="bar_graph_tab2")],
+                                    [
+                                        dcc.Graph(id="bar_graph_tab2")
+                                    ],
                                     className="pretty_container twelve columns",
                                 ),
                             ],

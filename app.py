@@ -286,12 +286,16 @@ def update_bar_graph_italian_active_cases(self):
         ay=-60
     ))
     figure.update_layout(barmode='stack',
+                         title=load_resource('label_casi_attivi'),
                          title_x=0.5,
                          xaxis={'categoryorder': 'total descending'},
                          autosize=True,
                          margin=dict(l=30, r=30, b=20, t=40),
-                         legend=dict(font=dict(size=10), orientation="h")
+                         legend=dict(font=dict(size=10), orientation="h"),
+                         plot_bgcolor='rgba(250, 250, 250, 1)'
                          )
+    figure.update_xaxes(showline=True, linewidth=3, gridcolor='gainsboro')
+    figure.update_yaxes(showline=True, linewidth=3, gridcolor='gainsboro')
     log.info('Updating Italian Active Cases Bar Graph')
     return figure
 
@@ -332,13 +336,16 @@ def update_bar_graph_active_cases(region_selected):
         ay=-60
     ))
     figure.update_layout(barmode='stack',
-                         title=region_selected,
+                         title=load_resource('label_casi_attivi') +' in '+ region_selected,
                          title_x=0.5,
                          xaxis={'categoryorder': 'total descending'},
                          autosize=True,
                          margin=dict(l=30, r=30, b=20, t=40),
-                         legend=dict(font=dict(size=10), orientation="h")
+                         legend=dict(font=dict(size=10), orientation="h"),
+                         plot_bgcolor='rgba(250, 250, 250, 1)'
                          )
+    figure.update_xaxes(showline=True, linewidth=3, gridcolor='gainsboro')
+    figure.update_yaxes(showline=True, linewidth=3, gridcolor='gainsboro')
     log.info('Updating bar graph in Tab 2')
     return figure
 
@@ -420,7 +427,7 @@ def update_data_table(data_selected):
                     font_size=15,
                     align='left'),
         cells=dict(values=[df['denominazione_regione'], df[data_selected]],
-                   fill_color='aliceblue',
+                   fill_color='whitesmoke',
                    align='center',
                    font_size=13,
                    height=20))
