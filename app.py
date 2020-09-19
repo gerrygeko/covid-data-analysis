@@ -24,7 +24,6 @@ from utils import is_debug_mode_enabled
 
 INHABITANT_RATE = 100000
 
-
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 debug_mode_enabled = is_debug_mode_enabled()
 
@@ -237,9 +236,9 @@ def update_bar_graph(data_selected):
                    y=region_list,
                    text=region_list,
                    textposition='auto',
-                   hovertemplate='<i><b>Regione</b></i>: %{y}'+
-                                '<br><b>N.</b>: %{x}<br>'+
-                                '<extra></extra>',
+                   hovertemplate='<i><b>Regione</b></i>: %{y}' +
+                                 '<br><b>N.</b>: %{x}<br>' +
+                                 '<extra></extra>',
                    insidetextanchor="start",
                    orientation='h'
                    )
@@ -253,55 +252,54 @@ def update_bar_graph(data_selected):
 
 
 @app.callback(Output('italian_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
-def update_bar_graph_italian_active_cases(self):
+def update_italian_graph_active_cases(self):
+    layout_italian_active_cases = copy.deepcopy(layout)
     df = df_national_data
     df.reset_index(inplace=True)
     y_list_1 = df['terapia_intensiva'].values.tolist()
     y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df['data']
-    figure = go.Figure(
-        go.Bar(x=x_list, y=y_list_1, name=load_resource('terapia_intensiva'), textposition='auto',
-               insidetextanchor="start", marker_color='red'))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=load_resource('ricoverati_con_sintomi'), marker_color='lightslategrey'))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=load_resource('isolamento_domiciliare'), marker_color='deepskyblue'))
-    figure.add_annotation(
-        x=x_list[14],
-        y=y_list_3[14],
-        text=load_resource('fase_1'))
-    figure.add_annotation(
-        x=x_list[70],
-        y=y_list_3[70],
-        text=load_resource('fase_2'))
-    figure.add_annotation(
-        x=x_list[112],
-        y=y_list_3[112],
-        text=load_resource('fase_3'))
-    figure.update_annotations(dict(
-        xref="x",
-        yref="y",
-        showarrow=True,
-        arrowhead=7,
-        ax=0,
-        ay=-60
-    ))
-    figure.update_layout(barmode='stack',
-                         title=load_resource('label_casi_attivi'),
-                         title_x=0.5,
-                         xaxis={'categoryorder': 'total descending'},
-                         autosize=True,
-                         margin=dict(l=30, r=30, b=20, t=40),
-                         legend=dict(font=dict(size=10), orientation="h"),
-                         plot_bgcolor='rgba(250, 250, 250, 1)'
-                         )
-    figure.update_xaxes(showline=True, linewidth=3, gridcolor='gainsboro')
-    figure.update_yaxes(showline=True, linewidth=3, gridcolor='gainsboro')
+    colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
+    data = [
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_3,
+            name=load_resource('isolamento_domiciliare'),
+            fill='tozeroy',
+            marker=dict(color=colors[2]),
+        ),
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_2,
+            name=load_resource('ricoverati_con_sintomi'),
+            fill='tozeroy',
+            marker=dict(color=colors[1])
+        ),
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_1,
+            name=load_resource('terapia_intensiva'),
+            fill='tozeroy',
+            marker=dict(color=colors[0]),
+        )
+    ]
+
+    layout_italian_active_cases["title"] = load_resource('label_casi_attivi')
+    layout_italian_active_cases["showlegend"] = True
+    layout_italian_active_cases["autosize"] = True
+
+    figure = dict(data=data, layout=layout_italian_active_cases)
     log.info('Updating Italian Active Cases Bar Graph')
     return figure
 
 
 @app.callback(Output('bar_graph_tab2', 'figure'), [Input('dropdown_region_selected', 'value')])
-def update_bar_graph_active_cases(region_selected):
+def update_regional_graph_active_cases(region_selected):
+    layout_italian_active_cases = copy.deepcopy(layout)
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
     # Since we filter based on the region, our indexes are not sequential anymore
     # so we reindex to access to specific row easier later
@@ -310,42 +308,39 @@ def update_bar_graph_active_cases(region_selected):
     y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df['data']
-    figure = go.Figure(
-        go.Bar(x=x_list, y=y_list_1, name=load_resource('terapia_intensiva'), textposition='auto',
-               insidetextanchor="start"))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_2, name=load_resource('ricoverati_con_sintomi')))
-    figure.add_trace(go.Bar(x=x_list, y=y_list_3, name=load_resource('isolamento_domiciliare')))
-    figure.add_annotation(
-        x=x_list[14],
-        y=y_list_3[14],
-        text=load_resource('fase_1'))
-    figure.add_annotation(
-        x=x_list[70],
-        y=y_list_3[70],
-        text=load_resource('fase_2'))
-    figure.add_annotation(
-        x=x_list[112],
-        y=y_list_3[112],
-        text=load_resource('fase_3'))
-    figure.update_annotations(dict(
-        xref="x",
-        yref="y",
-        showarrow=True,
-        arrowhead=7,
-        ax=0,
-        ay=-60
-    ))
-    figure.update_layout(barmode='stack',
-                         title=load_resource('label_casi_attivi') +' in '+ region_selected,
-                         title_x=0.5,
-                         xaxis={'categoryorder': 'total descending'},
-                         autosize=True,
-                         margin=dict(l=30, r=30, b=20, t=40),
-                         legend=dict(font=dict(size=10), orientation="h"),
-                         plot_bgcolor='rgba(250, 250, 250, 1)'
-                         )
-    figure.update_xaxes(showline=True, linewidth=3, gridcolor='gainsboro')
-    figure.update_yaxes(showline=True, linewidth=3, gridcolor='gainsboro')
+    colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
+    data = [
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_3,
+            name=load_resource('isolamento_domiciliare'),
+            fill='tozeroy',
+            marker=dict(color=colors[2]),
+        ),
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_2,
+            name=load_resource('ricoverati_con_sintomi'),
+            fill='tozeroy',
+            marker=dict(color=colors[1])
+        ),
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_1,
+            name=load_resource('terapia_intensiva'),
+            fill='tozeroy',
+            marker=dict(color=colors[0]),
+        )
+    ]
+
+    layout_italian_active_cases["title"] = load_resource('label_casi_attivi')
+    layout_italian_active_cases["showlegend"] = True
+    layout_italian_active_cases["autosize"] = True
+
+    figure = dict(data=data, layout=layout_italian_active_cases)
     log.info('Updating bar graph in Tab 2')
     return figure
 
@@ -366,7 +361,8 @@ def update_bar_graph_active_cases(region_selected):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(self):
     log.info('update cards')
-    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(
+        load_resource('header_last_update') + " %d/%m/%Y %H:%M")
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
@@ -534,7 +530,7 @@ def update_regional_details_card(region_selected):
 
 
 @app.callback(Output('mainContainer', 'children'),
-           [Input('dropdown_language_selected', 'value')])
+              [Input('dropdown_language_selected', 'value')])
 def update_language(language):
     if language == locale_language.language:
         # Check required otherwise during startup the page is loaded twice
@@ -557,7 +553,7 @@ def adjust_region(df_sb):
     trento_row = df_sb.loc[df_sb['codice_regione'] == 22].squeeze()
     bolzano_row = df_sb.loc[df_sb['codice_regione'] == 21].squeeze()
     trentino_row = trento_row
-    df_sb.reindex(list(range(0,21)))
+    df_sb.reindex(list(range(0, 21)))
     for field in field_list_to_rate:
         trento_value = trento_row.get(field)
         bolzano_value = bolzano_row.get(field)
@@ -669,7 +665,5 @@ app_layout()
 if not debug_mode_enabled:
     start_translation()
 
-
 if __name__ == '__main__':
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
-
