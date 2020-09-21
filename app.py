@@ -42,6 +42,8 @@ url_csv_regional_data = \
 url_csv_italy_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
     "/dpc-covid19-ita-andamento-nazionale.csv"
+url_csv_world_data = \
+    "https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"
 url_geojson_regions = \
     "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
 
@@ -50,6 +52,9 @@ field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                       'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
                       'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                       'tamponi', 'casi_testati']
+
+data_string_ita_format = 'data'
+data_string_world_format = 'Date'
 
 
 def load_csv_from_file(path):
@@ -61,8 +66,8 @@ def load_csv_from_file(path):
     return d
 
 
-def load_csv(url):
-    data_loaded = pd.read_csv(url, parse_dates=['data'])
+def load_csv(url, data_string):
+    data_loaded = pd.read_csv(url, parse_dates=[data_string])
     return data_loaded
 
 
@@ -72,12 +77,14 @@ def load_geojson(url):
     return json
 
 
-region_population = load_csv_from_file('assets/region_population.csv')
+italy_regional_population = load_csv_from_file('assets/region_population.csv')
 geojson_province = load_geojson(url_geojson_regions)
 last_update_content_regional_data = 0
 last_update_content_national_data = 0
+last_update_content_world_data = 0
 df_regional_data = None
 df_national_data = None
+df_world_data = None
 df_rate_regional = None
 
 layout = dict(
@@ -570,7 +577,7 @@ def load_region_rate_data_frame(df):
     df_sb = df.copy()
     df_sb = df_sb.tail(21)
     df_sb = adjust_region(df_sb)
-    df_sb['population'] = list(region_population.values())
+    df_sb['population'] = list(italy_regional_population.values())
     # Convert field to float
     for field in field_list_to_rate:
         df_sb[field] = pd.to_numeric(df_sb[field], downcast='float')
@@ -594,17 +601,30 @@ def get_content_length(url):
 
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
-    global df_regional_data, df_national_data, df_rate_regional, \
-        last_update_content_regional_data, last_update_content_national_data
+    global df_regional_data, df_national_data, df_world_data, df_rate_regional, \
+        last_update_content_regional_data, last_update_content_national_data, last_update_content_world_data
     current_update_content_regional_data = int(get_content_length(url_csv_regional_data))
     current_update_content_national_data = int(get_content_length(url_csv_italy_data))
+    current_update_content_world_data = int(get_content_length(url_csv_world_data))
+
+    # Check if updates for World data is required
+    if current_update_content_world_data == -1:
+        log.info("Provider's server for World data is unresponsive, retrying later")
+    elif current_update_content_world_data != last_update_content_world_data:
+        log.info('World data update required')
+        df_world_data = load_csv(url_csv_world_data, data_string_world_format)
+        log.info(f"Old Content-length: {last_update_content_world_data} bytes")
+        log.info(f"New Content-length: {current_update_content_world_data} bytes")
+        last_update_content_world_data = current_update_content_world_data
+    else:
+        log.info('No updates required for World data')
 
     # Check if updates for National data is required
     if current_update_content_national_data == -1:
         log.info("Provider's server for National data is unresponsive, retrying later")
     elif current_update_content_national_data != last_update_content_national_data:
         log.info('National data update required')
-        df_national_data = load_csv(url_csv_italy_data)
+        df_national_data = load_csv(url_csv_italy_data, data_string_ita_format)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
@@ -616,7 +636,7 @@ def load_interactive_data():
         log.info("Provider's server for Regional Data is unresponsive, retrying later")
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
         log.info('Regional data update required')
-        df_regional_data = load_csv(url_csv_regional_data)
+        df_regional_data = load_csv(url_csv_regional_data, data_string_ita_format)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
