@@ -42,8 +42,10 @@ url_csv_regional_data = \
 url_csv_italy_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
     "/dpc-covid19-ita-andamento-nazionale.csv"
-url_csv_world_data = \
+url_csv_country_world_data = \
     "https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"
+url_csv_worldwide_aggregate_data = \
+    "https://raw.githubusercontent.com/datasets/covid-19/master/data/worldwide-aggregate.csv"
 url_geojson_regions = \
     "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
 
@@ -81,10 +83,10 @@ italy_regional_population = load_csv_from_file('assets/region_population.csv')
 geojson_province = load_geojson(url_geojson_regions)
 last_update_content_regional_data = 0
 last_update_content_national_data = 0
-last_update_content_world_data = 0
+last_update_content_worldwide_aggregate_data = 0
 df_regional_data = None
 df_national_data = None
-df_world_data = None
+df_worldwide_aggregate_data = None
 df_rate_regional = None
 
 layout = dict(
@@ -392,7 +394,7 @@ def update_national_cards_text(self):
                Output('total_icu_variation', 'style'),
                Output('total_swabs_variation', 'style')
                ], [Input("i_news", "n_intervals")])
-def update_national_cards_color(n):
+def update_national_cards_color(self):
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     color_cards_list = []
     for field in field_list:
@@ -414,6 +416,60 @@ def update_national_cards_color(n):
                         {'color': color_cards_list[3]},
                         {'color': color_cards_list[4]},
                         {'color': color_cards_list[5]}]
+    return dictionary_color
+
+
+@app.callback([Output('confirmed_text_worldwide_aggregate', 'children'),
+               Output('recovered_text_worldwide_aggregate', 'children'),
+               Output('deaths_text_worldwide_aggregate', 'children'),
+               Output('increase_rate_text_worldwide_aggregate', 'children'),
+               Output('confirmed_variation_worldwide_aggregate', 'children'),
+               Output('recovered_variation_worldwide_aggregate', 'children'),
+               Output('deaths_variation_worldwide_aggregate', 'children'),
+               Output('increase_rate_variation_worldwide_aggregate', 'children')
+               ], [Input("i_news", "n_intervals")])
+def update_world_cards_text(self):
+    log.info('Update World Cards')
+    sub_header_text = (df_worldwide_aggregate_data[data_string_world_format].iloc[-1]).strftime(
+        load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
+    total_text_values = []
+    variation_text_values = []
+    for field in field_list:
+        card_value = df_worldwide_aggregate_data[field].iloc[-1]
+        card_value_previous_day = df_worldwide_aggregate_data[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        total_text = f'{card_value:n}'
+        total_text_values.append(total_text)
+        sign = '+' if variation_previous_day > 0 else ''
+        variation_text = f'{sign}{variation_previous_day:n}'
+        variation_text_values.append(variation_text)
+    return (*total_text_values), (*variation_text_values)
+
+
+@app.callback([Output('confirmed_variation_worldwide_aggregate', 'style'),
+               Output('recovered_variation_worldwide_aggregate', 'style'),
+               Output('deaths_variation_worldwide_aggregate', 'style'),
+               Output('increase_rate_variation_worldwide_aggregate', 'style')
+               ], [Input("i_news", "n_intervals")])
+def update_world_cards_color(self):
+    field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
+    color_cards_list = []
+    for field in field_list:
+        card_value = df_worldwide_aggregate_data[field].iloc[-1]
+        card_value_previous_day = df_worldwide_aggregate_data[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        if variation_previous_day <= 0 and field == 'Confirmed' or \
+                variation_previous_day > 0 and field == 'Recovered':
+            color = 'limegreen'
+            color_cards_list.append(color)
+        else:
+            color = 'red'
+            color_cards_list.append(color)
+    dictionary_color = [{'color': color_cards_list[0]},
+                        {'color': color_cards_list[1]},
+                        {'color': color_cards_list[2]},
+                        {'color': color_cards_list[3]}]
     return dictionary_color
 
 
@@ -601,21 +657,21 @@ def get_content_length(url):
 
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
-    global df_regional_data, df_national_data, df_world_data, df_rate_regional, \
-        last_update_content_regional_data, last_update_content_national_data, last_update_content_world_data
+    global df_regional_data, df_national_data, df_worldwide_aggregate_data, df_rate_regional, \
+        last_update_content_regional_data, last_update_content_national_data, last_update_content_worldwide_aggregate_data
     current_update_content_regional_data = int(get_content_length(url_csv_regional_data))
     current_update_content_national_data = int(get_content_length(url_csv_italy_data))
-    current_update_content_world_data = int(get_content_length(url_csv_world_data))
+    current_update_content_world_data = int(get_content_length(url_csv_worldwide_aggregate_data))
 
     # Check if updates for World data is required
     if current_update_content_world_data == -1:
         log.info("Provider's server for World data is unresponsive, retrying later")
-    elif current_update_content_world_data != last_update_content_world_data:
+    elif current_update_content_world_data != last_update_content_worldwide_aggregate_data:
         log.info('World data update required')
-        df_world_data = load_csv(url_csv_world_data, data_string_world_format)
-        log.info(f"Old Content-length: {last_update_content_world_data} bytes")
+        df_worldwide_aggregate_data = load_csv(url_csv_worldwide_aggregate_data, data_string_world_format)
+        log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_world_data} bytes")
-        last_update_content_world_data = current_update_content_world_data
+        last_update_content_worldwide_aggregate_data = current_update_content_world_data
     else:
         log.info('No updates required for World data')
 
@@ -649,7 +705,7 @@ def load_interactive_data():
 
 def app_layout():
     app.layout = html.Div(
-        children=create_page_components(app, df_regional_data),
+        children=create_page_components(app, df_regional_data, df_worldwide_aggregate_data),
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
     )

@@ -23,12 +23,17 @@ encoded_image_nicola = base64.b64encode(open('assets/nicola.png', 'rb').read()).
 
 log = logger.get_logger()
 
-field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
-                       'totale_ospedalizzati', 'isolamento_domiciliare',
-                       'totale_positivi', 'variazione_totale_positivi',
-                       'nuovi_positivi', 'dimessi_guariti',
-                       'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
-                       'tamponi', 'casi_testati']
+italian_field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
+                               'totale_ospedalizzati', 'isolamento_domiciliare',
+                               'totale_positivi', 'variazione_totale_positivi',
+                               'nuovi_positivi', 'dimessi_guariti',
+                               'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
+                               'tamponi', 'casi_testati']
+
+world_field_list_complete = ['Date', 'Country/Region', 'Province/State',
+                             'Lat', 'Long', 'Confirmed', 'Recovered', 'Deaths']
+
+worldwide_aggregate_list_complete = ['Date', 'Confirmed', 'Recovered', 'Deaths', 'Increase rate']
 
 
 def create_news():
@@ -232,7 +237,7 @@ def create_contacts(app):
     )
 
 
-def create_page_components(app, df_regional_data):
+def create_page_components(app, df_regional_data, df_world_data):
     log.info("Loading all the components")
     global PAGE_TITLE
     return [  # START OF SUPREME INCAPSULATION ############################################
@@ -305,7 +310,8 @@ def create_page_components(app, df_regional_data):
             dcc.Tab(label=load_resource('label_tab_master_1'), value='tab_master_1',
                     children=[
                         html.Div(
-                            [html.H5(id='card_header-1', children=load_resource('label_titolo'), className='title')]
+                            [html.H5(id='card_header-1', children=load_resource('label_dati_italia'),
+                                     className='title')]
                         ),
                         html.Div(
                             [
@@ -401,7 +407,8 @@ def create_page_components(app, df_regional_data):
                                                                        className="control_label"),
                                                                 dcc.Dropdown(
                                                                     id='dropdown_data_selected',
-                                                                    options=get_options_from_list(field_list_complete),
+                                                                    options=get_options_from_list(
+                                                                        italian_field_list_complete),
                                                                     multi=False,
                                                                     value='nuovi_positivi',
                                                                     className='dcc_control'
@@ -609,63 +616,123 @@ def create_page_components(app, df_regional_data):
                                                 ),
                                             ],
                                             className="row flex-display",
-                                        ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
-
-                                    ]),  # END OF SECOND TAB
-                        ]),  # END OF TABS COMPONENT CREATOR
-                        html.Div(  # START 4TH INCAPS
+                                        )  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                                    ])  # END OF SECOND TAB
+                        ])  # END OF TABS COMPONENT CREATOR
+                    ]),
+            # ==========================================================================================
+            dcc.Tab(label=load_resource('label_tab_master_2'), value='tab_master_2',
+                    children=[
+                        html.Div(
                             [
-                                html.Div(  # START OF NEWS FEEDER
-                                    children=[html.Div(id="news", children=create_news())],
-                                    className="pretty_container six columns",
-                                ),  # END OF NEWS FEEDER
-                                html.Div(  # START OF NEWS FEEDER
-                                    children=[
-                                        html.Div(id="contacts", children=create_contacts(app)),
+                                html.H5(id='card_header_world', children=load_resource('label_dati_mondo'),
+                                        className='title')
+                            ]
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
                                         html.Div(
                                             [
-                                                html.H5(className='p-news title',
-                                                        children=load_resource('label_credits')),
-                                                html.A(
-                                                    children=html.Img(
-                                                        src=app.get_asset_url("github_gellex.png"),
-                                                        className='credits_icon',
-                                                        id="github-image",
-                                                    ),
-                                                    href="https://github.com/gerrygeko/covid-data-analysis",
+                                                html.Div(
+                                                    [html.H6(id="confirmed_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="confirmed_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('confirmed_worldwide_aggregate'))],
+                                                    id="total_confirmed_worldwide_aggregate",
+                                                    className="mini_container",
                                                 ),
-                                                html.A(
-                                                    children=html.Img(
-                                                        src=app.get_asset_url("protezione_civile.png"),
-                                                        className='credits_icon',
-                                                        id="protezione-civile-image",
-                                                    ),
-                                                    href="https://github.com/pcm-dpc",
-                                                ),
-                                                html.A(
-                                                    children=html.Img(
-                                                        src=app.get_asset_url("istat.png"),
-                                                        className='credits_icon',
-                                                        id="istat-image",
-                                                    ),
-                                                    href="http://dati.istat.it/",
+                                                html.Div(
+                                                    [html.H6(id="recovered_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="recovered_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('recovered_worldwide_aggregate'))],
+                                                    id="total_recovered_worldwide_aggregate",
+                                                    className="mini_container",
                                                 )
-                                            ]
-                                        )
+                                            ],
+                                            id="world-container-1",
+                                            className="row container-display",
+                                        ),
                                     ],
-                                    className="pretty_container six columns",
+                                    className="ghosty_container six columns",
+                                ),
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [html.H6(id="deaths_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="deaths_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('deaths_worldwide_aggregate'))],
+                                                    id="total_deaths_worldwide_aggregate",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="increase_rate_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="increase_rate_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('increase_rate_worldwide_aggregate'))],
+                                                    id="increase_rate_worldwide_aggregate",
+                                                    className="mini_container",
+                                                )
+                                            ],
+                                            id="world-container-2",
+                                            className="row container-display",
+                                        ),
+                                    ],
+                                    className="ghosty_container six columns",
                                 ),
                             ],
                             className="row flex-display",
-                        )  # END OF 4TH INCAPSULATION
-                    ]),
-            #==========================================================================================
-            dcc.Tab(label=load_resource('label_tab_master_2'), value='tab_world_data',
-                    children=[
+                        ),
 
                     ])
         ]),
         # ==========================================================================================
+        html.Div(  # START 4TH INCAPS
+            [
+                html.Div(  # START OF NEWS FEEDER
+                    children=[html.Div(id="news", children=create_news())],
+                    className="pretty_container six columns",
+                ),  # END OF NEWS FEEDER
+                html.Div(  # START OF NEWS FEEDER
+                    children=[
+                        html.Div(id="contacts", children=create_contacts(app)),
+                        html.Div(
+                            [
+                                html.H5(className='p-news title',
+                                        children=load_resource('label_credits')),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("github_gellex.png"),
+                                        className='credits_icon',
+                                        id="github-image",
+                                    ),
+                                    href="https://github.com/gerrygeko/covid-data-analysis",
+                                ),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("protezione_civile.png"),
+                                        className='credits_icon',
+                                        id="protezione-civile-image",
+                                    ),
+                                    href="https://github.com/pcm-dpc",
+                                ),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("istat.png"),
+                                        className='credits_icon',
+                                        id="istat-image",
+                                    ),
+                                    href="http://dati.istat.it/",
+                                )
+                            ]
+                        )
+                    ],
+                    className="pretty_container six columns",
+                ),
+            ],
+            className="row flex-display",
+        ),  # END OF 4TH INCAPSULATION
         html.A(
             html.P(
                 id="version_text",

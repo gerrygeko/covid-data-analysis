@@ -41,7 +41,8 @@ resources = {DEFAULT_LANGUAGE: {
     'casi_testati': 'Casi Testati',
     'nazione': 'Italia',
     'header_last_update': 'Dati Aggiornati al:',
-    'label_titolo': 'Totale Dati - Italia',
+    'label_dati_italia': 'Totale Dati - Italia',
+    'label_dati_mondo': 'Totale Dati - Mondo',
     'label_tab_1': 'Analisi dei dati nazionali',
     'label_tab_2': 'Analisi dei dati regionali',
     'label_tab_master_1': 'Italia',
@@ -49,6 +50,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_select_data': 'Seleziona il dato da analizzare:',
     'label_select_multiregion': 'Seleziona una o più regioni italiane da confrontare:',
     'label_select_region': 'Seleziona la regione italiana da analizzare:',
+    'label_select_country': 'Paese:',
     'label_data_picco_max': 'Data Picco massimo',
     'label_valore_picco_max': 'Picco massimo',
     'label_media_contagi': 'Media contagi',
@@ -63,7 +65,11 @@ resources = {DEFAULT_LANGUAGE: {
     'fase_1': 'Fase 1',
     'fase_2': 'Fase 2',
     'fase_3': 'Fase 3',
-    'label_credits': 'Crediti'
+    'label_credits': 'Crediti',
+    'confirmed_worldwide_aggregate': 'Totale Casi',
+    'recovered_worldwide_aggregate': 'Guariti',
+    'deaths_worldwide_aggregate': 'Decessi',
+    'increase_rate_worldwide_aggregate': 'Tasso di Crescita'
     }
 }
 
