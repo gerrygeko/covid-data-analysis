@@ -659,7 +659,8 @@ def get_content_length(url):
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
     global df_regional_data, df_national_data, df_worldwide_aggregate_data, df_rate_regional, \
-        last_update_content_regional_data, last_update_content_national_data, last_update_content_worldwide_aggregate_data
+        last_update_content_regional_data, last_update_content_national_data, \
+        last_update_content_worldwide_aggregate_data
     current_update_content_regional_data = int(get_content_length(url_csv_regional_data))
     current_update_content_national_data = int(get_content_length(url_csv_italy_data))
     current_update_content_world_data = int(get_content_length(url_csv_worldwide_aggregate_data))
@@ -713,6 +714,7 @@ def app_layout():
 
 
 schedule.every(30).minutes.do(load_interactive_data)
+schedule.every().day.at("08:15").do(load_interactive_data)
 schedule.every().day.at("18:05").do(load_interactive_data)
 
 
