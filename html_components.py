@@ -669,7 +669,8 @@ def create_page_components(app, df_regional_data, df_world_data):
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="increase_rate_text_worldwide_aggregate", children=''),
-                                                     html.H6(id="increase_rate_variation_worldwide_aggregate", children=''),
+                                                     html.H6(id="increase_rate_variation_worldwide_aggregate",
+                                                             children=''),
                                                      html.P(load_resource('increase_rate_worldwide_aggregate'))],
                                                     id="increase_rate_worldwide_aggregate",
                                                     className="mini_container",
@@ -708,6 +709,14 @@ def create_page_components(app, df_regional_data, df_world_data):
                                         id="github-image",
                                     ),
                                     href="https://github.com/gerrygeko/covid-data-analysis",
+                                ),
+                                html.A(
+                                    children=html.Img(
+                                        src=app.get_asset_url("jh.png"),
+                                        className='credits_icon',
+                                        id="jh-image",
+                                    ),
+                                    href="systems.jhu.edu /"
                                 ),
                                 html.A(
                                     children=html.Img(

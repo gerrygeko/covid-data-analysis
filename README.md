@@ -19,7 +19,9 @@ every 30 minutes a new attempt for check the presence of new data will be made
 (PaaS - Platform as a Service)
 
 ## Credits
-- The data is offered by [Department of Civil Protection](http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus).
+- Italian data is offered by [Department of Civil Protection](http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus).
+- Worldwide data is offered by [Johns Hopkins University Center for Systems Science and Engineering ](https://github.com/CSSEGISandData) and normalized by [Data Packaged Core Datasets
+](https://github.com/datasets/covid-19)
 - The news feed is offered by [News API](https://newsapi.org/).
 - Resident Population data is offered by [I.Stat](http://dati.istat.it/)
 
