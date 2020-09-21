@@ -44,6 +44,8 @@ resources = {DEFAULT_LANGUAGE: {
     'label_titolo': 'Totale Dati - Italia',
     'label_tab_1': 'Analisi dei dati nazionali',
     'label_tab_2': 'Analisi dei dati regionali',
+    'label_tab_master_1': 'Italia',
+    'label_tab_master_2': 'Mondo',
     'label_select_data': 'Seleziona il dato da analizzare:',
     'label_select_multiregion': 'Seleziona una o più regioni italiane da confrontare:',
     'label_select_region': 'Seleziona la regione italiana da analizzare:',
