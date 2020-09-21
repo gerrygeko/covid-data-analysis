@@ -116,6 +116,11 @@ body {
   text-align: center;
 }
 
+.sub_title {
+  text-align: center;
+  font-size: 15px;
+}
+
 .title-email {
   text-align: center;
   font-size: 90%;

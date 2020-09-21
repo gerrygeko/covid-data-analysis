@@ -366,11 +366,11 @@ def update_regional_graph_active_cases(region_selected):
                Output('total_deaths_variation', 'children'),
                Output('total_icu_variation', 'children'),
                Output('total_swabs_variation', 'children'),
-               Output('subHeader', 'children')
+               Output('sub_header_italian_update', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(self):
     log.info('update cards')
-    sub_header_text = (df_national_data['data'].iloc[-1]).strftime(
+    sub_header_italian_text = (df_national_data[data_string_ita_format].iloc[-1]).strftime(
         load_resource('header_last_update') + " %d/%m/%Y %H:%M")
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
@@ -384,7 +384,7 @@ def update_national_cards_text(self):
         sign = '+' if variation_previous_day > 0 else ''
         variation_text = f'{sign}{variation_previous_day:n}'
         variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values), sub_header_text
+    return (*total_text_values), (*variation_text_values), sub_header_italian_text
 
 
 @app.callback([Output('total_positive_variation', 'style'),
@@ -426,12 +426,13 @@ def update_national_cards_color(self):
                Output('confirmed_variation_worldwide_aggregate', 'children'),
                Output('recovered_variation_worldwide_aggregate', 'children'),
                Output('deaths_variation_worldwide_aggregate', 'children'),
-               Output('increase_rate_variation_worldwide_aggregate', 'children')
+               Output('increase_rate_variation_worldwide_aggregate', 'children'),
+               Output('sub_header_worldwide_update', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_world_cards_text(self):
     log.info('Update World Cards')
-    sub_header_text = (df_worldwide_aggregate_data[data_string_world_format].iloc[-1]).strftime(
-        load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    sub_header_worldwide_text = (df_worldwide_aggregate_data[data_string_world_format].iloc[-1]).strftime(
+        load_resource('header_last_update') + " %d/%m/%Y")
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     total_text_values = []
     variation_text_values = []
@@ -444,7 +445,7 @@ def update_world_cards_text(self):
         sign = '+' if variation_previous_day > 0 else ''
         variation_text = f'{sign}{variation_previous_day:n}'
         variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values)
+    return (*total_text_values), (*variation_text_values), sub_header_worldwide_text
 
 
 @app.callback([Output('confirmed_variation_worldwide_aggregate', 'style'),

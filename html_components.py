@@ -273,8 +273,7 @@ def create_page_components(app, df_regional_data, df_world_data):
                             [
                                 html.H3(
                                     PAGE_TITLE
-                                ),
-                                html.H5(id="subHeader", children='')
+                                )
                             ]
                         )
                     ],
@@ -310,8 +309,7 @@ def create_page_components(app, df_regional_data, df_world_data):
             dcc.Tab(label=load_resource('label_tab_master_1'), value='tab_master_1',
                     children=[
                         html.Div(
-                            [html.H5(id='card_header-1', children=load_resource('label_dati_italia'),
-                                     className='title')]
+                            [html.H5(id="sub_header_italian_update", children='', className='sub_title')]
                         ),
                         html.Div(
                             [
@@ -624,10 +622,7 @@ def create_page_components(app, df_regional_data, df_world_data):
             dcc.Tab(label=load_resource('label_tab_master_2'), value='tab_master_2',
                     children=[
                         html.Div(
-                            [
-                                html.H5(id='card_header_world', children=load_resource('label_dati_mondo'),
-                                        className='title')
-                            ]
+                            [html.H5(id="sub_header_worldwide_update", children='', className='sub_title')]
                         ),
                         html.Div(
                             [
