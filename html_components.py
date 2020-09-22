@@ -240,7 +240,7 @@ def create_contacts(app):
 def create_page_components(app, df_regional_data, df_world_data):
     log.info("Loading all the components")
     global PAGE_TITLE
-    return [  # START OF SUPREME INCAPSULATION ############################################
+    return [
         dcc.Store(id="aggregate_data"),
         # Interval component for updating news list
         dcc.Interval(id="i_news", interval=900 * SECONDS, n_intervals=0),
@@ -266,8 +266,8 @@ def create_page_components(app, df_regional_data, df_world_data):
                     ],
                     id="href-logos",
                     className="four columns",
-                ),  # END OF LOGO
-                html.Div(  # START OF HEADING
+                ),
+                html.Div(
                     [
                         html.Div(
                             [
@@ -279,8 +279,8 @@ def create_page_components(app, df_regional_data, df_world_data):
                     ],
                     className="four columns",
                     id="title",
-                ),  # END OF HEADING
-                html.Div(  # START OF GITHUB LOGOS
+                ),
+                html.Div(
                     [
                         html.Div(
                             [
@@ -299,7 +299,7 @@ def create_page_components(app, df_regional_data, df_world_data):
                     ],
                     className="four columns",
                     id="logos"
-                ),  # END OF GITHUB LOGOS
+                ),
             ],
             id="header",
             className="row flex-display"
@@ -456,9 +456,8 @@ def create_page_components(app, df_regional_data, df_world_data):
                             className="row flex-display",
                         ),
                         html.Div(
-                            # START OF 2ND INCAPSULATION  ############################################
                             [
-                                html.Div(  # START OF 2ND BLOCK
+                                html.Div(
                                     [
                                         html.Div(
                                             [
@@ -491,9 +490,8 @@ def create_page_components(app, df_regional_data, df_world_data):
                                     ],
                                     id="right-column",
                                     className="eight columns",
-                                ),  # END OF 2ND BLOCK
+                                ),
                                 html.Div(
-                                    # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
                                     [
                                         html.Div(
                                             [
@@ -512,11 +510,11 @@ def create_page_components(app, df_regional_data, df_world_data):
                                     ],
                                     className="pretty_container four columns",
                                     id="cross-filter-options-tab1",
-                                ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                ),
                             ],
                             className="row flex-display",
-                        ),  # END OF 2ND INCAPSULATION  ############################################
-                        html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                        ),
+                        html.Div(
                             [
                                 html.Div(
                                     [html.H5(id='map_header', children=load_resource('label_map'),
@@ -526,16 +524,14 @@ def create_page_components(app, df_regional_data, df_world_data):
                                 ),
                             ],
                             className="row flex-display",
-                        ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                        ),
                     ]),
             # ==========================================================================================
             dcc.Tab(label=load_resource('label_tab_master_ita_regions'), value='tab_master_ita_regions',
                     children=[
                         html.Div(
-                            # START OF 2ND INCAPSULATION  ############################################
                             [
                                 html.Div(
-                                    ##########################################################################
                                     [
                                         html.P(load_resource('label_select_region'),
                                                className="control_label"),
@@ -572,10 +568,9 @@ def create_page_components(app, df_regional_data, df_world_data):
                                     ],
                                     className="pretty_container four columns",
                                 ),
-                                ################################################################################
-                                html.Div(  # START OF 2ND BLOCK
+                                html.Div(
                                     [
-                                        html.Div(  # START OF CARDS #
+                                        html.Div(
                                             [
                                                 html.Div(
                                                     [html.H6(id="total_cases_text_tab2", children=''),
@@ -615,7 +610,7 @@ def create_page_components(app, df_regional_data, df_world_data):
                                             id="info-container_1_tab2",
                                             className="row container-display",
                                         ),
-                                        html.Div(  # START OF CARDS #
+                                        html.Div(
                                             [
                                                 html.Div(
                                                     [html.H6(
@@ -661,11 +656,11 @@ def create_page_components(app, df_regional_data, df_world_data):
                                     ],
                                     id="right-column_tab2",
                                     className="eight columns",
-                                ),  # END OF 2ND BLOCK
+                                ),
                             ],
                             className="row flex-display",
-                        ),  # END OF 2ND INCAPSULATION  ############################################
-                        html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                        ),
+                        html.Div(
                             [
                                 html.Div(
                                     [
@@ -675,17 +670,17 @@ def create_page_components(app, df_regional_data, df_world_data):
                                 ),
                             ],
                             className="row flex-display",
-                        )  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                        )
                     ]),
         ]),
         # ==========================================================================================
-        html.Div(  # START 4TH INCAPS
+        html.Div(
             [
-                html.Div(  # START OF NEWS FEEDER
+                html.Div(
                     children=[html.Div(id="news", children=create_news())],
                     className="pretty_container six columns",
-                ),  # END OF NEWS FEEDER
-                html.Div(  # START OF NEWS FEEDER
+                ),
+                html.Div(
                     children=[
                         html.Div(id="contacts", children=create_contacts(app)),
                         html.Div(
@@ -731,7 +726,7 @@ def create_page_components(app, df_regional_data, df_world_data):
                 ),
             ],
             className="row flex-display",
-        ),  # END OF 4TH INCAPSULATION
+        ),
         html.A(
             html.P(
                 id="version_text",
