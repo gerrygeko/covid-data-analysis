@@ -511,10 +511,13 @@ def update_data_table(data_selected):
                Output('total_hospitalized_w_symptoms_variation_tab2', 'children'),
                Output('total_icu_variation_tab2', 'children'),
                Output('total_isolation_variation_tab2', 'children'),
-               Output('total_swabs_variation_tab2', 'children')
+               Output('total_swabs_variation_tab2', 'children'),
+               Output('sub_header_ita_regions_update', 'children'),
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
     log.info('Update regional cards')
+    sub_header_ita_regions_text = (df_national_data[data_string_ita_format].iloc[-1]).strftime(
+        load_resource('header_last_update') + " %d/%m/%Y %H:%M")
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
@@ -529,7 +532,7 @@ def update_regional_cards_text(region_selected):
         sign = '+' if variation_previous_day > 0 else ''
         variation_text = f'{sign}{variation_previous_day:n}'
         variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values),
+    return (*total_text_values), (*variation_text_values), sub_header_ita_regions_text
 
 
 @app.callback([Output('total_cases_variation_tab2', 'style'),

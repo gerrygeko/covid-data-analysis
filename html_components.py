@@ -530,6 +530,9 @@ def create_page_components(app, df_regional_data, df_world_data):
             dcc.Tab(label=load_resource('label_tab_master_ita_regions'), value='tab_master_ita_regions',
                     children=[
                         html.Div(
+                            [html.H5(id="sub_header_ita_regions_update", children='', className='sub_title')]
+                        ),
+                        html.Div(
                             [
                                 html.Div(
                                     [
