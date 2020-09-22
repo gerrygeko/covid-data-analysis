@@ -305,8 +305,72 @@ def create_page_components(app, df_regional_data, df_world_data):
             className="row flex-display"
         ),
         # =========================================================================================================
-        dcc.Tabs(id='tabs_master', value='tab_master_1', children=[
-            dcc.Tab(label=load_resource('label_tab_master_1'), value='tab_master_1',
+        dcc.Tabs(id='tabs_master', value='tab_master_worldwide', children=[
+            dcc.Tab(label=load_resource('label_tab_master_worldwide'), value='tab_master_worldwide',
+                    children=[
+                        html.Div(
+                            [html.H5(id="sub_header_worldwide_update", children='', className='sub_title')]
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [html.H6(id="confirmed_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="confirmed_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('confirmed_worldwide_aggregate'))],
+                                                    id="total_confirmed_worldwide_aggregate",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="recovered_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="recovered_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('recovered_worldwide_aggregate'))],
+                                                    id="total_recovered_worldwide_aggregate",
+                                                    className="mini_container",
+                                                )
+                                            ],
+                                            id="world-container-1",
+                                            className="row container-display",
+                                        ),
+                                    ],
+                                    className="ghosty_container six columns",
+                                ),
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [html.H6(id="deaths_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="deaths_variation_worldwide_aggregate", children=''),
+                                                     html.P(load_resource('deaths_worldwide_aggregate'))],
+                                                    id="total_deaths_worldwide_aggregate",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="increase_rate_text_worldwide_aggregate", children=''),
+                                                     html.H6(id="increase_rate_variation_worldwide_aggregate",
+                                                             children=''),
+                                                     html.P(load_resource('increase_rate_worldwide_aggregate'))],
+                                                    id="increase_rate_worldwide_aggregate",
+                                                    className="mini_container",
+                                                )
+                                            ],
+                                            id="world-container-2",
+                                            className="row container-display",
+                                        ),
+                                    ],
+                                    className="ghosty_container six columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        ),
+
+                    ]),
+            # ==========================================================================================
+            dcc.Tab(label=load_resource('label_tab_master_ita'), value='tab_master_ita',
                     children=[
                         html.Div(
                             [html.H5(id="sub_header_italian_update", children='', className='sub_title')]
@@ -380,308 +444,239 @@ def create_page_components(app, df_regional_data, df_world_data):
                             ],
                             className="row flex-display",
                         ),
-                        dcc.Tabs(id='tabs', value='tab_national', children=[  # START OF TABS COMPONENT CREATOR
-                            dcc.Tab(label=load_resource('label_tab_1'), value='tab_national',
-                                    children=[  # START FIRST TAB
-                                        html.Div(
-                                            [
-                                                html.Div(
-                                                    [
-                                                        dcc.Graph(id="italian_active_cases_bar_graph")
-                                                    ],
-                                                    className="pretty_container twelve columns",
-                                                ),
-                                            ],
-                                            className="row flex-display",
-                                        ),
-                                        html.Div(
-                                            # START OF 2ND INCAPSULATION  ############################################
-                                            [
-                                                html.Div(  # START OF 2ND BLOCK
-                                                    [
-                                                        html.Div(
-                                                            [
-                                                                html.P(load_resource('label_select_data'),
-                                                                       className="control_label"),
-                                                                dcc.Dropdown(
-                                                                    id='dropdown_data_selected',
-                                                                    options=get_options_from_list(
-                                                                        italian_field_list_complete),
-                                                                    multi=False,
-                                                                    value='nuovi_positivi',
-                                                                    className='dcc_control'
-                                                                ),
-                                                                html.P(load_resource('label_select_multiregion'),
-                                                                       className="control_label"),
-                                                                dcc.Dropdown(id='dropdown_region_list_selected',
-                                                                             options=get_options(
-                                                                                 df_regional_data[
-                                                                                     'denominazione_regione'].unique()),
-                                                                             multi=True,
-                                                                             value=new_positive_regions(
-                                                                                 df_regional_data),
-                                                                             className='dcc_control'
-                                                                             ),
-                                                                dcc.Graph(id='regional_timeseries_linear'),
-                                                                dcc.Graph(id="pie_graph")
-                                                            ],
-                                                            className="pretty_container",
-                                                        ),
-                                                    ],
-                                                    id="right-column",
-                                                    className="eight columns",
-                                                ),  # END OF 2ND BLOCK
-                                                html.Div(
-                                                    # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
-                                                    [
-                                                        html.Div(
-                                                            [
-                                                                dcc.Graph(id="table_tab1")
-                                                            ],
-                                                            className="pretty_container twelve columns",
-                                                        ),
-                                                        html.Div(
-                                                            [html.H5(id='bar_header',
-                                                                     children=load_resource('label_top_ten'),
-                                                                     className='title'),
-                                                             dcc.Graph(id="bar_graph")],
-                                                            className="pretty_container twelve columns",
-                                                        ),
-
-                                                    ],
-                                                    className="pretty_container four columns",
-                                                    id="cross-filter-options-tab1",
-                                                ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
-                                            ],
-                                            className="row flex-display",
-                                        ),  # END OF 2ND INCAPSULATION  ############################################
-                                        html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
-                                            [
-                                                html.Div(
-                                                    [html.H5(id='map_header', children=load_resource('label_map'),
-                                                             className='title'),
-                                                     dcc.Graph(id="map_graph")],
-                                                    className="pretty_container twelve columns",
-                                                ),
-                                            ],
-                                            className="row flex-display",
-                                        ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
-
-                                    ]),  # END OF FIRST TAB
-                            dcc.Tab(label=load_resource('label_tab_2'), value='tab_regional',
-                                    children=[  # START OF SECOND TAB
-                                        html.Div(
-                                            # START OF 2ND INCAPSULATION  ############################################
-                                            [
-                                                html.Div(
-                                                    ##########################################################################
-                                                    [
-                                                        html.P(load_resource('label_select_region'),
-                                                               className="control_label"),
-                                                        dcc.Dropdown(
-                                                            id='dropdown_region_selected',
-                                                            options=get_options(
-                                                                df_regional_data['denominazione_regione'].unique()),
-                                                            multi=False,
-                                                            value=
-                                                            df_regional_data['denominazione_regione'].sort_values()[0],
-                                                            className='dcc_control'
-                                                        ),
-                                                        html.Div(
-                                                            [
-                                                                html.Div(
-                                                                    [html.H5(id="string_max_date_new_positives"),
-                                                                     html.P(load_resource('label_data_picco_max'))],
-                                                                    className="mini_container_mean_max",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H5(id="string_max_value_new_positives"),
-                                                                     html.P(load_resource('label_valore_picco_max'))],
-                                                                    className="mini_container_mean_max",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H5(id="mean_total_cases"),
-                                                                     html.P(load_resource('label_media_contagi'))],
-                                                                    className="mini_container_mean_max",
-                                                                ),
-                                                            ],
-                                                            id="info-container_max_mean_tab2",
-                                                            className="row container-display",
-                                                        ),
-                                                    ],
-                                                    className="pretty_container four columns",
-                                                ),
-                                                ################################################################################
-                                                html.Div(  # START OF 2ND BLOCK
-                                                    [
-                                                        html.Div(  # START OF CARDS #
-                                                            [
-                                                                html.Div(
-                                                                    [html.H6(id="total_cases_text_tab2", children=''),
-                                                                     html.H6(id="total_cases_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('totale_casi'))],
-                                                                    id="total_cases_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H6(id="total_positive_text_tab2",
-                                                                             children=''),
-                                                                     html.H6(id="total_positive_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('totale_positivi'))],
-                                                                    id="total_positive_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H6(id="total_recovered_text_tab2",
-                                                                             children=''),
-                                                                     html.H6(id="total_recovered_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('dimessi_guariti'))],
-                                                                    id="total_recovered_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H6(id="total_deaths_text_tab2", children=''),
-                                                                     html.H6(id="total_deaths_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('deceduti'))],
-                                                                    id="total_deaths_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                            ],
-                                                            id="info-container_1_tab2",
-                                                            className="row container-display",
-                                                        ),
-                                                        html.Div(  # START OF CARDS #
-                                                            [
-                                                                html.Div(
-                                                                    [html.H6(
-                                                                        id="total_hospitalized_w_symptoms_text_tab2",
-                                                                        children=''),
-                                                                        html.H6(
-                                                                            id="total_hospitalized_w_symptoms_variation_tab2",
-                                                                            children=''),
-                                                                        html.P(load_resource('totale_ospedalizzati'))],
-                                                                    id="total_hospitalized_w_symptoms_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H6(id="total_icu_text_tab2", children=''),
-                                                                     html.H6(id="total_icu_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('terapia_intensiva'))],
-                                                                    id="total_icu_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H6(id="total_isolation_text_tab2",
-                                                                             children=''),
-                                                                     html.H6(id="total_isolation_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('isolamento_domiciliare'))],
-                                                                    id="total_isolation_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                                html.Div(
-                                                                    [html.H6(id="total_swabs_text_tab2", children=''),
-                                                                     html.H6(id="total_swabs_variation_tab2",
-                                                                             children=''),
-                                                                     html.P(load_resource('tamponi'))],
-                                                                    id="total_swabs_tab2",
-                                                                    className="mini_container",
-                                                                ),
-                                                            ],
-                                                            id="info-container_2_tab2",
-                                                            className="row container-display",
-                                                        ),
-
-                                                    ],
-                                                    id="right-column_tab2",
-                                                    className="eight columns",
-                                                ),  # END OF 2ND BLOCK
-                                            ],
-                                            className="row flex-display",
-                                        ),  # END OF 2ND INCAPSULATION  ############################################
-                                        html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
-                                            [
-                                                html.Div(
-                                                    [
-                                                        dcc.Graph(id="bar_graph_tab2")
-                                                    ],
-                                                    className="pretty_container twelve columns",
-                                                ),
-                                            ],
-                                            className="row flex-display",
-                                        )  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
-                                    ])  # END OF SECOND TAB
-                        ])  # END OF TABS COMPONENT CREATOR
-                    ]),
-            # ==========================================================================================
-            dcc.Tab(label=load_resource('label_tab_master_2'), value='tab_master_2',
-                    children=[
-                        html.Div(
-                            [html.H5(id="sub_header_worldwide_update", children='', className='sub_title')]
-                        ),
                         html.Div(
                             [
                                 html.Div(
                                     [
-                                        html.Div(
-                                            [
-                                                html.Div(
-                                                    [html.H6(id="confirmed_text_worldwide_aggregate", children=''),
-                                                     html.H6(id="confirmed_variation_worldwide_aggregate", children=''),
-                                                     html.P(load_resource('confirmed_worldwide_aggregate'))],
-                                                    id="total_confirmed_worldwide_aggregate",
-                                                    className="mini_container",
-                                                ),
-                                                html.Div(
-                                                    [html.H6(id="recovered_text_worldwide_aggregate", children=''),
-                                                     html.H6(id="recovered_variation_worldwide_aggregate", children=''),
-                                                     html.P(load_resource('recovered_worldwide_aggregate'))],
-                                                    id="total_recovered_worldwide_aggregate",
-                                                    className="mini_container",
-                                                )
-                                            ],
-                                            id="world-container-1",
-                                            className="row container-display",
-                                        ),
+                                        dcc.Graph(id="italian_active_cases_bar_graph")
                                     ],
-                                    className="ghosty_container six columns",
-                                ),
-                                html.Div(
-                                    [
-                                        html.Div(
-                                            [
-                                                html.Div(
-                                                    [html.H6(id="deaths_text_worldwide_aggregate", children=''),
-                                                     html.H6(id="deaths_variation_worldwide_aggregate", children=''),
-                                                     html.P(load_resource('deaths_worldwide_aggregate'))],
-                                                    id="total_deaths_worldwide_aggregate",
-                                                    className="mini_container",
-                                                ),
-                                                html.Div(
-                                                    [html.H6(id="increase_rate_text_worldwide_aggregate", children=''),
-                                                     html.H6(id="increase_rate_variation_worldwide_aggregate",
-                                                             children=''),
-                                                     html.P(load_resource('increase_rate_worldwide_aggregate'))],
-                                                    id="increase_rate_worldwide_aggregate",
-                                                    className="mini_container",
-                                                )
-                                            ],
-                                            id="world-container-2",
-                                            className="row container-display",
-                                        ),
-                                    ],
-                                    className="ghosty_container six columns",
+                                    className="pretty_container twelve columns",
                                 ),
                             ],
                             className="row flex-display",
                         ),
+                        html.Div(
+                            # START OF 2ND INCAPSULATION  ############################################
+                            [
+                                html.Div(  # START OF 2ND BLOCK
+                                    [
+                                        html.Div(
+                                            [
+                                                html.P(load_resource('label_select_data'),
+                                                       className="control_label"),
+                                                dcc.Dropdown(
+                                                    id='dropdown_data_selected',
+                                                    options=get_options_from_list(
+                                                        italian_field_list_complete),
+                                                    multi=False,
+                                                    value='nuovi_positivi',
+                                                    className='dcc_control'
+                                                ),
+                                                html.P(load_resource('label_select_multiregion'),
+                                                       className="control_label"),
+                                                dcc.Dropdown(id='dropdown_region_list_selected',
+                                                             options=get_options(
+                                                                 df_regional_data[
+                                                                     'denominazione_regione'].unique()),
+                                                             multi=True,
+                                                             value=new_positive_regions(
+                                                                 df_regional_data),
+                                                             className='dcc_control'
+                                                             ),
+                                                dcc.Graph(id='regional_timeseries_linear'),
+                                                dcc.Graph(id="pie_graph")
+                                            ],
+                                            className="pretty_container",
+                                        ),
+                                    ],
+                                    id="right-column",
+                                    className="eight columns",
+                                ),  # END OF 2ND BLOCK
+                                html.Div(
+                                    # START OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                                    [
+                                        html.Div(
+                                            [
+                                                dcc.Graph(id="table_tab1")
+                                            ],
+                                            className="pretty_container twelve columns",
+                                        ),
+                                        html.Div(
+                                            [html.H5(id='bar_header',
+                                                     children=load_resource('label_top_ten'),
+                                                     className='title'),
+                                             dcc.Graph(id="bar_graph")],
+                                            className="pretty_container twelve columns",
+                                        ),
 
-                    ])
+                                    ],
+                                    className="pretty_container four columns",
+                                    id="cross-filter-options-tab1",
+                                ),  # END OF 1ST BLOCK (INCLUDE DROPDOWN, CHECK , RADIO CONTROLS)
+                            ],
+                            className="row flex-display",
+                        ),  # END OF 2ND INCAPSULATION  ############################################
+                        html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                            [
+                                html.Div(
+                                    [html.H5(id='map_header', children=load_resource('label_map'),
+                                             className='title'),
+                                     dcc.Graph(id="map_graph")],
+                                    className="pretty_container twelve columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        ),  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                    ]),
+            # ==========================================================================================
+            dcc.Tab(label=load_resource('label_tab_master_ita_regions'), value='tab_master_ita_regions',
+                    children=[
+                        html.Div(
+                            # START OF 2ND INCAPSULATION  ############################################
+                            [
+                                html.Div(
+                                    ##########################################################################
+                                    [
+                                        html.P(load_resource('label_select_region'),
+                                               className="control_label"),
+                                        dcc.Dropdown(
+                                            id='dropdown_region_selected',
+                                            options=get_options(
+                                                df_regional_data['denominazione_regione'].unique()),
+                                            multi=False,
+                                            value=
+                                            df_regional_data['denominazione_regione'].sort_values()[0],
+                                            className='dcc_control'
+                                        ),
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [html.H5(id="string_max_date_new_positives"),
+                                                     html.P(load_resource('label_data_picco_max'))],
+                                                    className="mini_container_mean_max",
+                                                ),
+                                                html.Div(
+                                                    [html.H5(id="string_max_value_new_positives"),
+                                                     html.P(load_resource('label_valore_picco_max'))],
+                                                    className="mini_container_mean_max",
+                                                ),
+                                                html.Div(
+                                                    [html.H5(id="mean_total_cases"),
+                                                     html.P(load_resource('label_media_contagi'))],
+                                                    className="mini_container_mean_max",
+                                                ),
+                                            ],
+                                            id="info-container_max_mean_tab2",
+                                            className="row container-display",
+                                        ),
+                                    ],
+                                    className="pretty_container four columns",
+                                ),
+                                ################################################################################
+                                html.Div(  # START OF 2ND BLOCK
+                                    [
+                                        html.Div(  # START OF CARDS #
+                                            [
+                                                html.Div(
+                                                    [html.H6(id="total_cases_text_tab2", children=''),
+                                                     html.H6(id="total_cases_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('totale_casi'))],
+                                                    id="total_cases_tab2",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_positive_text_tab2",
+                                                             children=''),
+                                                     html.H6(id="total_positive_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('totale_positivi'))],
+                                                    id="total_positive_tab2",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_recovered_text_tab2",
+                                                             children=''),
+                                                     html.H6(id="total_recovered_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('dimessi_guariti'))],
+                                                    id="total_recovered_tab2",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_deaths_text_tab2", children=''),
+                                                     html.H6(id="total_deaths_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('deceduti'))],
+                                                    id="total_deaths_tab2",
+                                                    className="mini_container",
+                                                ),
+                                            ],
+                                            id="info-container_1_tab2",
+                                            className="row container-display",
+                                        ),
+                                        html.Div(  # START OF CARDS #
+                                            [
+                                                html.Div(
+                                                    [html.H6(
+                                                        id="total_hospitalized_w_symptoms_text_tab2",
+                                                        children=''),
+                                                        html.H6(
+                                                            id="total_hospitalized_w_symptoms_variation_tab2",
+                                                            children=''),
+                                                        html.P(load_resource('totale_ospedalizzati'))],
+                                                    id="total_hospitalized_w_symptoms_tab2",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_icu_text_tab2", children=''),
+                                                     html.H6(id="total_icu_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('terapia_intensiva'))],
+                                                    id="total_icu_tab2",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_isolation_text_tab2",
+                                                             children=''),
+                                                     html.H6(id="total_isolation_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('isolamento_domiciliare'))],
+                                                    id="total_isolation_tab2",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_swabs_text_tab2", children=''),
+                                                     html.H6(id="total_swabs_variation_tab2",
+                                                             children=''),
+                                                     html.P(load_resource('tamponi'))],
+                                                    id="total_swabs_tab2",
+                                                    className="mini_container",
+                                                ),
+                                            ],
+                                            id="info-container_2_tab2",
+                                            className="row container-display",
+                                        ),
+
+                                    ],
+                                    id="right-column_tab2",
+                                    className="eight columns",
+                                ),  # END OF 2ND BLOCK
+                            ],
+                            className="row flex-display",
+                        ),  # END OF 2ND INCAPSULATION  ############################################
+                        html.Div(  # START OF 3RD INCAPSULATION THAT INCLUDE BLOCK - 2 GRAPH component
+                            [
+                                html.Div(
+                                    [
+                                        dcc.Graph(id="bar_graph_tab2")
+                                    ],
+                                    className="pretty_container twelve columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        )  # END OF 3RD INCAPSULATION THAT INCLUDE 2 GRAPH component
+                    ]),
         ]),
         # ==========================================================================================
         html.Div(  # START 4TH INCAPS
