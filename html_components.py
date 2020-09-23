@@ -30,8 +30,7 @@ italian_field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                                'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                                'tamponi', 'casi_testati']
 
-world_field_list_complete = ['Date', 'Country/Region', 'Province/State',
-                             'Lat', 'Long', 'Confirmed', 'Recovered', 'Deaths']
+world_field_list_complete = ['Date', 'Country', 'Confirmed', 'Recovered', 'Deaths']
 
 worldwide_aggregate_list_complete = ['Date', 'Confirmed', 'Recovered', 'Deaths', 'Increase rate']
 
@@ -237,7 +236,7 @@ def create_contacts(app):
     )
 
 
-def create_page_components(app, df_regional_data, df_world_data):
+def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, df_country_world_data):
     log.info("Loading all the components")
     global PAGE_TITLE
     return [
@@ -363,6 +362,86 @@ def create_page_components(app, df_regional_data, df_world_data):
                                         ),
                                     ],
                                     className="ghosty_container six columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        html.P(load_resource('label_select_country'),
+                                               className="control_label"),
+                                        dcc.Dropdown(
+                                            id='dropdown_country_selected',
+                                            options=get_options(
+                                                df_country_world_data['Country'].unique()),
+                                            multi=False,
+                                            value=
+                                            df_country_world_data['Country'].sort_values()[0],
+                                            className='dcc_control'
+                                        ),
+                                    ],
+                                    className="pretty_container four columns",
+                                ),
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [html.H6(id="total_confirmed_text_world", children=''),
+                                                     html.H6(id="total_confirmed_variation_world",
+                                                             children=''),
+                                                     html.P(load_resource('totale_casi'))],
+                                                    id="total_cases_world",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_recovered_text_world",
+                                                             children=''),
+                                                     html.H6(id="total_recovered_variation_world",
+                                                             children=''),
+                                                     html.P(load_resource('dimessi_guariti'))],
+                                                    id="total_recovered_world",
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_deaths_text_world", children=''),
+                                                     html.H6(id="total_deaths_variation_world",
+                                                             children=''),
+                                                     html.P(load_resource('deceduti'))],
+                                                    id="total_deaths_world",
+                                                    className="mini_container",
+                                                ),
+                                            ],
+                                            id="info-container_cards_countries_world",
+                                            className="row container-display",
+                                        ),
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [html.H5(id="string_max_date_new_positives_world"),
+                                                     html.P(load_resource('label_data_picco_max'))],
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H5(id="string_max_value_new_positives_world"),
+                                                     html.P(load_resource('label_valore_picco_max'))],
+                                                    className="mini_container",
+                                                ),
+                                                html.Div(
+                                                    [html.H5(id="mean_total_cases_world"),
+                                                     html.P(load_resource('label_media_contagi'))],
+                                                    className="mini_container",
+                                                ),
+
+                                            ],
+                                            id="info-container_2_world",
+                                            className="row container-display",
+                                        ),
+                                    ],
+                                    id="right-column-world",
+                                    className="eight columns",
                                 ),
                             ],
                             className="row flex-display",
@@ -550,19 +629,19 @@ def create_page_components(app, df_regional_data, df_world_data):
                                         html.Div(
                                             [
                                                 html.Div(
-                                                    [html.H5(id="string_max_date_new_positives"),
+                                                    [html.H6(id="string_max_date_new_positives"),
                                                      html.P(load_resource('label_data_picco_max'))],
-                                                    className="mini_container_mean_max",
+                                                    className="mini_container",
                                                 ),
                                                 html.Div(
-                                                    [html.H5(id="string_max_value_new_positives"),
+                                                    [html.H6(id="string_max_value_new_positives"),
                                                      html.P(load_resource('label_valore_picco_max'))],
-                                                    className="mini_container_mean_max",
+                                                    className="mini_container",
                                                 ),
                                                 html.Div(
-                                                    [html.H5(id="mean_total_cases"),
+                                                    [html.H6(id="mean_total_cases"),
                                                      html.P(load_resource('label_media_contagi'))],
-                                                    className="mini_container_mean_max",
+                                                    className="mini_container",
                                                 ),
                                             ],
                                             id="info-container_max_mean_tab2",

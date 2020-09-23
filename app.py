@@ -43,7 +43,7 @@ url_csv_italy_data = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
     "/dpc-covid19-ita-andamento-nazionale.csv"
 url_csv_country_world_data = \
-    "https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"
+    "https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv"
 url_csv_worldwide_aggregate_data = \
     "https://raw.githubusercontent.com/datasets/covid-19/master/data/worldwide-aggregate.csv"
 url_geojson_regions = \
@@ -84,9 +84,11 @@ geojson_province = load_geojson(url_geojson_regions)
 last_update_content_regional_data = 0
 last_update_content_national_data = 0
 last_update_content_worldwide_aggregate_data = 0
+last_update_content_country_world_data = 0
 df_regional_data = None
 df_national_data = None
 df_worldwide_aggregate_data = None
+df_country_world_data = None
 df_rate_regional = None
 
 layout = dict(
@@ -596,6 +598,50 @@ def update_regional_details_card(region_selected):
     return rounded_mean, string_max_date, string_max_value
 
 
+@app.callback([Output('total_confirmed_text_world', 'children'),
+               Output('total_recovered_text_world', 'children'),
+               Output('total_deaths_text_world', 'children'),
+               Output('total_confirmed_variation_world', 'children'),
+               Output('total_recovered_variation_world', 'children'),
+               Output('total_deaths_variation_world', 'children'),
+               ], [Input("dropdown_country_selected", "value")])
+def update_country_world_cards_text(country_selected):
+    log.info('Update Country cards')
+    field_list = ['Confirmed', 'Recovered', 'Deaths']
+    total_text_values = []
+    variation_text_values = []
+    df = df_country_world_data[df_country_world_data['Country'] == country_selected]
+    df_sorted = df.sort_values(by=[data_string_world_format])
+    df_sorted = df_sorted.tail(188)
+    for field in field_list:
+        card_value = df_sorted[field].iloc[-1]
+        card_value_previous_day = df_sorted[field].iloc[-2]
+        variation_previous_day = card_value - card_value_previous_day
+        total_text = f'{card_value:n}'
+        total_text_values.append(total_text)
+        sign = '+' if variation_previous_day > 0 else ''
+        variation_text = f'{sign}{variation_previous_day:n}'
+        variation_text_values.append(variation_text)
+    return (*total_text_values), (*variation_text_values),
+
+
+# @app.callback([Output('mean_total_cases_world', 'children'),
+#                Output('string_max_value_new_positives_world', 'children'),
+#                Output('string_max_date_new_positives_world', 'children'),
+#                ], [Input("dropdown_country_selected", "value")])
+# def update_country_world_details_card(country_selected):
+#     df = df_country_world_data[df_country_world_data['Country/Region'] == country_selected]
+#     rounded_mean = round(df['Confirmed'].mean())
+#     max_value_new_positives = df['Confirmed'].max()
+#     df_sub = df.loc[df['Confirmed'] == max_value_new_positives]
+#     date_max_value = df_sub[data_string_world_format]
+#     string_max_date = ""
+#     for date in date_max_value:
+#         string_max_date = string_max_date + str(date.strftime('%d/%m/%Y')) + '\n'
+#     string_max_value = str(max_value_new_positives)
+#     return rounded_mean, string_max_value, string_max_date
+
+
 @app.callback(Output('mainContainer', 'children'),
               [Input('dropdown_language_selected', 'value')])
 def update_language(language):
@@ -661,24 +707,39 @@ def get_content_length(url):
 
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
-    global df_regional_data, df_national_data, df_worldwide_aggregate_data, df_rate_regional, \
+    global df_regional_data, df_national_data, df_country_world_data, df_worldwide_aggregate_data, df_rate_regional, \
         last_update_content_regional_data, last_update_content_national_data, \
-        last_update_content_worldwide_aggregate_data
+        last_update_content_worldwide_aggregate_data, last_update_content_country_world_data
     current_update_content_regional_data = int(get_content_length(url_csv_regional_data))
     current_update_content_national_data = int(get_content_length(url_csv_italy_data))
-    current_update_content_world_data = int(get_content_length(url_csv_worldwide_aggregate_data))
+    current_update_content_worldwide_aggregate_data = int(get_content_length(url_csv_worldwide_aggregate_data))
+    current_update_content_country_world_data = int(get_content_length(url_csv_country_world_data))
 
-    # Check if updates for World data is required
-    if current_update_content_world_data == -1:
-        log.info("Provider's server for World data is unresponsive, retrying later")
-    elif current_update_content_world_data != last_update_content_worldwide_aggregate_data:
-        log.info('World data update required')
+    # Check if updates for Worldwide Aggregate data is required
+    if current_update_content_worldwide_aggregate_data == -1:
+        log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
+    elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
+        log.info('Worldwide Aggregate data update required')
         df_worldwide_aggregate_data = load_csv(url_csv_worldwide_aggregate_data, data_string_world_format)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
-        log.info(f"New Content-length: {current_update_content_world_data} bytes")
-        last_update_content_worldwide_aggregate_data = current_update_content_world_data
+        log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
+        last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
     else:
-        log.info('No updates required for World data')
+        log.info('No updates required for Worldwide Aggregate data')
+
+    # Check if updates for World data is required
+    if current_update_content_country_world_data == -1:
+        log.info("Provider's server for Country World data is unresponsive, retrying later")
+    elif current_update_content_country_world_data != last_update_content_country_world_data:
+        log.info('Country World data update required')
+        df_country_world_data = load_csv(url_csv_country_world_data, data_string_world_format)
+        #df = df_country_world_data['Country'].unique()
+        #print(len(df))
+        log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
+        log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
+        last_update_content_country_world_data = current_update_content_country_world_data
+    else:
+        log.info('No updates required for Country World data')
 
     # Check if updates for National data is required
     if current_update_content_national_data == -1:
@@ -710,7 +771,7 @@ def load_interactive_data():
 
 def app_layout():
     app.layout = html.Div(
-        children=create_page_components(app, df_regional_data, df_worldwide_aggregate_data),
+        children=create_page_components(app, df_regional_data, df_worldwide_aggregate_data, df_country_world_data),
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
     )
