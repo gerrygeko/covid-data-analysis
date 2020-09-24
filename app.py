@@ -48,6 +48,8 @@ url_csv_worldwide_aggregate_data = \
     "https://raw.githubusercontent.com/datasets/covid-19/master/data/worldwide-aggregate.csv"
 url_geojson_regions = \
     "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
+url_geojson_country_world = \
+    "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
 
 field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                       'totale_ospedalizzati', 'isolamento_domiciliare',
@@ -274,7 +276,7 @@ def update_world_graph_active_cases(self):
     df_sorted.reset_index(inplace=True)
     df_sorted.sort_values(by=[field_list[0]], ascending=False, inplace=True)
     df_sorted = df_sorted.head(20)
-    print(df_sorted)
+    #print(df_sorted)
     y_list_1 = df_sorted['Active_cases'].values.tolist()
     x_list = df_sorted['Country']
     color_bar = "rgb(123, 199, 255)"
@@ -294,6 +296,38 @@ def update_world_graph_active_cases(self):
 
     figure = dict(data=data, layout=layout_world_active_cases)
     log.info('Updating World Active Cases Bar Graph')
+    return figure
+
+
+@app.callback(Output('world_map', 'figure'), [Input('i_news', 'n_intervals')])
+def update_world_map(self):
+    df = df_country_world_data.copy()
+    df.sort_values(by=[data_string_world_format], inplace=True)
+    df = df.tail(188)
+    for index, row in df.iterrows():
+        if df.loc[index, 'Country'] == 'US':
+            df.loc[index, 'Country'] = "United States of America"
+    figure = px.choropleth_mapbox(df, geojson=url_geojson_country_world, locations='Country',
+                                  featureidkey="properties.ADMIN",
+                                  color=df['Confirmed'],
+                                  color_continuous_scale=[(0.00, "lightskyblue"), (0.33, "lightskyblue"),
+                                                          (0.66, "MidnightBlue"), (1.00, "MidnightBlue")],
+                                  range_color=(df['Confirmed'].min(), df['Confirmed'].max()),
+                                  mapbox_style="carto-positron",
+                                  zoom=0.5, center={"lat": 42.0902, "lon": 11.7129},
+                                  opacity=0.5
+                                  )
+    figure.update_layout(
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        annotations=[dict(
+            x=0.0,
+            y=0.01,
+            xref='paper',
+            yref='paper',
+            showarrow=False
+        )]
+    )
+    log.info('Updating World Cloropleth Map')
     return figure
 
 
