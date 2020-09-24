@@ -447,6 +447,12 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                         dcc.Graph(id="world_active_cases_bar_graph")
                                     ],
                                     className="pretty_container six columns",
+                                ),
+                                html.Div(
+                                    [
+                                        dcc.Graph(id="world_deaths_bar_graph")
+                                    ],
+                                    className="pretty_container six columns",
                                 )
                             ],
                             className="row flex-display",
