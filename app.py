@@ -262,6 +262,41 @@ def update_bar_graph(data_selected):
     return figure
 
 
+@app.callback(Output('world_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
+def update_world_graph_active_cases(self):
+    layout_world_active_cases = copy.deepcopy(layout)
+    field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
+    df_sub = df_country_world_data
+    df = df_sub.copy()
+    df['Active_cases'] = df[field_list[1]] - (df[field_list[2]] + df[field_list[3]])
+    df_sorted = df.sort_values(by=[data_string_world_format])
+    df_sorted = df_sorted.tail(188)
+    df_sorted.reset_index(inplace=True)
+    df_sorted.sort_values(by=[field_list[0]], ascending=False, inplace=True)
+    df_sorted = df_sorted.head(20)
+    print(df_sorted)
+    y_list_1 = df_sorted['Active_cases'].values.tolist()
+    x_list = df_sorted['Country']
+    color_bar = "rgb(123, 199, 255)"
+    data = [
+        dict(
+            type="bar",
+            x=x_list,
+            y=y_list_1,
+            name='Top 20 ' + load_resource('terapia_intensiva'),
+            marker=dict(color=color_bar),
+        )
+    ]
+
+    layout_world_active_cases["title"] = 'Top 20 ' + load_resource('label_casi_attivi')
+    layout_world_active_cases["showlegend"] = True
+    layout_world_active_cases["autosize"] = True
+
+    figure = dict(data=data, layout=layout_world_active_cases)
+    log.info('Updating World Active Cases Bar Graph')
+    return figure
+
+
 @app.callback(Output('italian_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
 def update_italian_graph_active_cases(self):
     layout_italian_active_cases = copy.deepcopy(layout)
