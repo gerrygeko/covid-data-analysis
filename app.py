@@ -314,7 +314,7 @@ def update_world_map(self):
                                                           (0.66, "MidnightBlue"), (1.00, "MidnightBlue")],
                                   range_color=(df['Confirmed'].min(), df['Confirmed'].max()),
                                   mapbox_style="carto-positron",
-                                  zoom=0.5, center={"lat": 42.0902, "lon": 11.7129},
+                                  zoom=1, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5
                                   )
     figure.update_layout(

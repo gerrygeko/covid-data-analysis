@@ -370,24 +370,6 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                             [
                                 html.Div(
                                     [
-                                        dcc.Graph(id="world_active_cases_bar_graph")
-                                    ],
-                                    className="pretty_container three columns",
-                                ),
-                                html.Div(
-                                    [
-                                        dcc.Graph(id="world_map")
-                                    ],
-                                    className="pretty_container nine columns",
-                                ),
-
-                            ],
-                            className="row flex-display",
-                        ),
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
                                         html.P(load_resource('label_select_country'),
                                                className="control_label"),
                                         dcc.Dropdown(
@@ -447,7 +429,28 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                             ],
                             className="row flex-display",
                         ),
-
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dcc.Graph(id="world_map")
+                                    ],
+                                    className="pretty_container twelve columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dcc.Graph(id="world_active_cases_bar_graph")
+                                    ],
+                                    className="pretty_container six columns",
+                                )
+                            ],
+                            className="row flex-display",
+                        )
                     ]),
             # ==========================================================================================
             dcc.Tab(label=load_resource('label_tab_master_ita'), value='tab_master_ita',
