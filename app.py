@@ -612,7 +612,7 @@ def update_country_world_cards_text(country_selected):
     field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
     total_text_values = []
     variation_text_values = []
-    df_sub= df_country_world_data[df_country_world_data['Country'] == country_selected]
+    df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     df['Active_cases'] = df[field_list[1]] - (df[field_list[2]]+df[field_list[3]])
     df_sorted = df.sort_values(by=[data_string_world_format])
@@ -629,19 +629,23 @@ def update_country_world_cards_text(country_selected):
     return (*total_text_values), (*variation_text_values),
 
 
-@app.callback([Output('total_confirmed_variation_world', 'style'),
+@app.callback([Output('total_active_cases_variation_world', 'style'),
+               Output('total_confirmed_variation_world', 'style'),
                Output('total_recovered_variation_world', 'style'),
                Output('total_deaths_variation_world', 'style'),
                ], [Input("dropdown_country_selected", "value")])
 def update_country_world_cards_color(country_selected):
-    field_list = ['Confirmed', 'Recovered', 'Deaths']
+    field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
     color_cards_list = []
-    df = df_country_world_data[df_country_world_data['Country'] == country_selected]
+    df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
+    df = df_sub.copy()
+    df['Active_cases'] = df[field_list[1]] - (df[field_list[2]] + df[field_list[3]])
     for field in field_list:
         card_value = df[field].iloc[-1]
         card_value_previous_day = df[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
         if variation_previous_day > 0 and field == 'Recovered' or \
+                variation_previous_day <= 0 and field == 'Active_cases' or \
                 variation_previous_day == 0 and field == 'Confirmed' or \
                 variation_previous_day == 0 and field == 'Deaths':
             color = 'limegreen'
@@ -651,7 +655,8 @@ def update_country_world_cards_color(country_selected):
             color_cards_list.append(color)
     dictionary_color = [{'color': color_cards_list[0]},
                         {'color': color_cards_list[1]},
-                        {'color': color_cards_list[2]}]
+                        {'color': color_cards_list[2]},
+                        {'color': color_cards_list[3]}]
     return dictionary_color
 
 

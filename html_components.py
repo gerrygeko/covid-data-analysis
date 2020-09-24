@@ -389,18 +389,18 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                         html.Div(
                                             [
                                                 html.Div(
-                                                    [html.H6(id="total_confirmed_text_world", children=''),
-                                                     html.H6(id="total_confirmed_variation_world", children=''),
-                                                     html.P(load_resource('totale_casi'))],
-                                                    id="total_cases_world",
-                                                    className="mini_container",
-
-                                                ),
-                                                html.Div(
                                                     [html.H6(id="total_active_cases_text_world", children=''),
                                                      html.H6(id="total_active_cases_variation_world", children=''),
                                                      html.P(load_resource('totale_positivi'))],
                                                     id="total_positives_world",
+                                                    className="mini_container",
+
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_confirmed_text_world", children=''),
+                                                     html.H6(id="total_confirmed_variation_world", children=''),
+                                                     html.P(load_resource('totale_casi'))],
+                                                    id="total_cases_world",
                                                     className="mini_container",
 
                                                 ),
