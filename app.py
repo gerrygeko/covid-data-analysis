@@ -598,19 +598,23 @@ def update_regional_details_card(region_selected):
     return rounded_mean, string_max_date, string_max_value
 
 
-@app.callback([Output('total_confirmed_text_world', 'children'),
+@app.callback([Output('total_active_cases_text_world', 'children'),
+               Output('total_confirmed_text_world', 'children'),
                Output('total_recovered_text_world', 'children'),
                Output('total_deaths_text_world', 'children'),
+               Output('total_active_cases_variation_world', 'children'),
                Output('total_confirmed_variation_world', 'children'),
                Output('total_recovered_variation_world', 'children'),
                Output('total_deaths_variation_world', 'children'),
                ], [Input("dropdown_country_selected", "value")])
 def update_country_world_cards_text(country_selected):
     log.info('Update Country cards')
-    field_list = ['Confirmed', 'Recovered', 'Deaths']
+    field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
     total_text_values = []
     variation_text_values = []
-    df = df_country_world_data[df_country_world_data['Country'] == country_selected]
+    df_sub= df_country_world_data[df_country_world_data['Country'] == country_selected]
+    df = df_sub.copy()
+    df['Active_cases'] = df[field_list[1]] - (df[field_list[2]]+df[field_list[3]])
     df_sorted = df.sort_values(by=[data_string_world_format])
     df_sorted = df_sorted.tail(188)
     for field in field_list:
@@ -649,23 +653,6 @@ def update_country_world_cards_color(country_selected):
                         {'color': color_cards_list[1]},
                         {'color': color_cards_list[2]}]
     return dictionary_color
-
-
-# @app.callback([Output('mean_total_cases_world', 'children'),
-#                Output('string_max_value_new_positives_world', 'children'),
-#                Output('string_max_date_new_positives_world', 'children'),
-#                ], [Input("dropdown_country_selected", "value")])
-# def update_country_world_details_card(country_selected):
-#     df = df_country_world_data[df_country_world_data['Country/Region'] == country_selected]
-#     rounded_mean = round(df['Confirmed'].mean())
-#     max_value_new_positives = df['Confirmed'].max()
-#     df_sub = df.loc[df['Confirmed'] == max_value_new_positives]
-#     date_max_value = df_sub[data_string_world_format]
-#     string_max_date = ""
-#     for date in date_max_value:
-#         string_max_date = string_max_date + str(date.strftime('%d/%m/%Y')) + '\n'
-#     string_max_value = str(max_value_new_positives)
-#     return rounded_mean, string_max_value, string_max_date
 
 
 @app.callback(Output('mainContainer', 'children'),

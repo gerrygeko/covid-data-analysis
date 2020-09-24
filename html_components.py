@@ -390,25 +390,30 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                             [
                                                 html.Div(
                                                     [html.H6(id="total_confirmed_text_world", children=''),
-                                                     html.H6(id="total_confirmed_variation_world",
-                                                             children=''),
+                                                     html.H6(id="total_confirmed_variation_world", children=''),
                                                      html.P(load_resource('totale_casi'))],
                                                     id="total_cases_world",
                                                     className="mini_container",
+
                                                 ),
                                                 html.Div(
-                                                    [html.H6(id="total_recovered_text_world",
-                                                             children=''),
-                                                     html.H6(id="total_recovered_variation_world",
-                                                             children=''),
+                                                    [html.H6(id="total_active_cases_text_world", children=''),
+                                                     html.H6(id="total_active_cases_variation_world", children=''),
+                                                     html.P(load_resource('totale_positivi'))],
+                                                    id="total_positives_world",
+                                                    className="mini_container",
+
+                                                ),
+                                                html.Div(
+                                                    [html.H6(id="total_recovered_text_world", children=''),
+                                                     html.H6(id="total_recovered_variation_world", children=''),
                                                      html.P(load_resource('dimessi_guariti'))],
                                                     id="total_recovered_world",
                                                     className="mini_container",
                                                 ),
                                                 html.Div(
                                                     [html.H6(id="total_deaths_text_world", children=''),
-                                                     html.H6(id="total_deaths_variation_world",
-                                                             children=''),
+                                                     html.H6(id="total_deaths_variation_world", children=''),
                                                      html.P(load_resource('deceduti'))],
                                                     id="total_deaths_world",
                                                     className="mini_container",
@@ -416,29 +421,7 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                             ],
                                             id="info-container_cards_countries_world",
                                             className="row container-display",
-                                        ),
-                                        html.Div(
-                                            [
-                                                html.Div(
-                                                    [html.H5(id="string_max_date_new_positives_world"),
-                                                     html.P(load_resource('label_data_picco_max'))],
-                                                    className="mini_container",
-                                                ),
-                                                html.Div(
-                                                    [html.H5(id="string_max_value_new_positives_world"),
-                                                     html.P(load_resource('label_valore_picco_max'))],
-                                                    className="mini_container",
-                                                ),
-                                                html.Div(
-                                                    [html.H5(id="mean_total_cases_world"),
-                                                     html.P(load_resource('label_media_contagi'))],
-                                                    className="mini_container",
-                                                ),
-
-                                            ],
-                                            id="info-container_2_world",
-                                            className="row container-display",
-                                        ),
+                                        )
                                     ],
                                     id="right-column-world",
                                     className="eight columns",
