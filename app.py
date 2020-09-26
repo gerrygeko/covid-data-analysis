@@ -270,7 +270,6 @@ def update_world_graph_active_cases(self):
     field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
     df_sub = df_country_world_data
     df = df_sub.copy()
-    df['Active_cases'] = df[field_list[1]] - (df[field_list[2]] + df[field_list[3]])
     df_sorted = df.sort_values(by=[data_string_world_format])
     df_sorted = df_sorted.tail(188)
     df_sorted.reset_index(inplace=True)
@@ -713,7 +712,6 @@ def update_country_world_cards_text(country_selected):
     variation_text_values = []
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
-    df['Active_cases'] = df[field_list[1]] - (df[field_list[2]]+df[field_list[3]])
     df_sorted = df.sort_values(by=[data_string_world_format])
     df_sorted = df_sorted.tail(188)
     for field in field_list:
@@ -738,7 +736,6 @@ def update_country_world_cards_color(country_selected):
     color_cards_list = []
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
-    df['Active_cases'] = df[field_list[1]] - (df[field_list[2]] + df[field_list[3]])
     for field in field_list:
         card_value = df[field].iloc[-1]
         card_value_previous_day = df[field].iloc[-2]
@@ -850,8 +847,8 @@ def load_interactive_data():
     elif current_update_content_country_world_data != last_update_content_country_world_data:
         log.info('Country World data update required')
         df_country_world_data = load_csv(url_csv_country_world_data, data_string_world_format)
-        #df = df_country_world_data['Country'].unique()
-        #print(len(df))
+        df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
+            (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
         last_update_content_country_world_data = current_update_content_country_world_data
