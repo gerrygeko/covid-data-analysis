@@ -18,7 +18,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from resources import load_resource, start_translation
+from resources import load_resource, start_translation, list_country_without_data, NUMBER_OF_COUNTRY_WORLD
 from html_components import create_news, create_page_components, locale_language
 from utils import is_debug_mode_enabled
 
@@ -92,6 +92,7 @@ df_national_data = None
 df_worldwide_aggregate_data = None
 df_country_world_data = None
 df_rate_regional = None
+
 
 layout = dict(
     autosize=True,
@@ -271,11 +272,11 @@ def update_world_graph_active_cases(self):
     df_sub = df_country_world_data
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(188)
+    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD)
     df_sorted.reset_index(inplace=True)
     df_sorted.sort_values(by=[field_list[0]], ascending=False, inplace=True)
     df_sorted = df_sorted.head(20)
-    #print(df_sorted)
+    # print(df_sorted)
     y_list_1 = df_sorted['Active_cases'].values.tolist()
     x_list = df_sorted['Country']
     color_bar = "rgb(123, 199, 255)"
@@ -304,7 +305,7 @@ def update_world_graph_deaths(self):
     df_sub = df_country_world_data
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(188)
+    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD)
     df_sorted.reset_index(inplace=True)
     df_sorted.sort_values(by=['Deaths'], ascending=False, inplace=True)
     df_sorted = df_sorted.head(20)
@@ -332,10 +333,11 @@ def update_world_graph_deaths(self):
 def update_world_map(self):
     df = df_country_world_data.copy()
     df.sort_values(by=[data_string_world_format], inplace=True)
-    df = df.tail(188)
-    for index, row in df.iterrows():
-        if df.loc[index, 'Country'] == 'US':
-            df.loc[index, 'Country'] = "United States of America"
+    df = df.tail(NUMBER_OF_COUNTRY_WORLD + len(list_country_without_data))
+    df.sort_values(by=['Country'], inplace=True)
+    #df.reset_index(inplace=True)
+    print(df.head())
+    print(df.tail())
     figure = px.choropleth_mapbox(df, geojson=url_geojson_country_world, locations='Country',
                                   featureidkey="properties.ADMIN",
                                   color=df['Confirmed'],
@@ -713,16 +715,20 @@ def update_country_world_cards_text(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(188)
+    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD+ len(list_country_without_data))
     for field in field_list:
-        card_value = df_sorted[field].iloc[-1]
-        card_value_previous_day = df_sorted[field].iloc[-2]
-        variation_previous_day = card_value - card_value_previous_day
-        total_text = f'{card_value:n}'
-        total_text_values.append(total_text)
-        sign = '+' if variation_previous_day > 0 else ''
-        variation_text = f'{sign}{variation_previous_day:n}'
-        variation_text_values.append(variation_text)
+        if country_selected in list_country_without_data:
+            total_text_values = ['N/D'] * 4
+            variation_text_values = ['N/D'] * 4
+        else:
+            card_value = df_sorted[field].iloc[-1]
+            card_value_previous_day = df_sorted[field].iloc[-2]
+            variation_previous_day = card_value - card_value_previous_day
+            total_text = f'{card_value:n}'
+            total_text_values.append(total_text)
+            sign = '+' if variation_previous_day > 0 else ''
+            variation_text = f'{sign}{variation_previous_day:n}'
+            variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values),
 
 
@@ -737,18 +743,22 @@ def update_country_world_cards_color(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     for field in field_list:
-        card_value = df[field].iloc[-1]
-        card_value_previous_day = df[field].iloc[-2]
-        variation_previous_day = card_value - card_value_previous_day
-        if variation_previous_day > 0 and field == 'Recovered' or \
-                variation_previous_day <= 0 and field == 'Active_cases' or \
-                variation_previous_day == 0 and field == 'Confirmed' or \
-                variation_previous_day == 0 and field == 'Deaths':
-            color = 'limegreen'
+        if country_selected in list_country_without_data:
+            color = 'grey'
             color_cards_list.append(color)
         else:
-            color = 'red'
-            color_cards_list.append(color)
+            card_value = df[field].iloc[-1]
+            card_value_previous_day = df[field].iloc[-2]
+            variation_previous_day = card_value - card_value_previous_day
+            if variation_previous_day > 0 and field == 'Recovered' or \
+                    variation_previous_day <= 0 and field == 'Active_cases' or \
+                    variation_previous_day == 0 and field == 'Confirmed' or \
+                    variation_previous_day == 0 and field == 'Deaths':
+                color = 'limegreen'
+                color_cards_list.append(color)
+            else:
+                color = 'red'
+                color_cards_list.append(color)
     dictionary_color = [{'color': color_cards_list[0]},
                         {'color': color_cards_list[1]},
                         {'color': color_cards_list[2]},
@@ -810,6 +820,58 @@ def load_region_rate_data_frame(df):
     return df_sb
 
 
+def adjust_df_world_to_geojson(df):
+    origin_country_string = ['US', 'Congo (Kinshasa)', 'Congo (Brazzaville)', 'Korea, South', 'Cote d\'Ivoire',
+                             'Czechia', 'Serbia', 'Taiwan*', 'Tanzania', 'North Macedonia']
+    new_country_string = ['United States of America', 'Democratic Republic of the Congo', 'Republic of Congo',
+                          'South Korea', 'Ivory Coast', 'Czech Republic', 'Republic of Serbia', 'Taiwan',
+                          'United Republic of Tanzania', 'Macedonia']
+
+    for row_index, row in df.iterrows():
+        if df.loc[row_index, 'Country'] == origin_country_string[0]:
+            df.loc[row_index, 'Country'] = new_country_string[0]
+        elif df.loc[row_index, 'Country'] == origin_country_string[1]:
+            df.loc[row_index, 'Country'] = new_country_string[1]
+        elif df.loc[row_index, 'Country'] == origin_country_string[2]:
+            df.loc[row_index, 'Country'] = new_country_string[2]
+        elif df.loc[row_index, 'Country'] == origin_country_string[3]:
+            df.loc[row_index, 'Country'] = new_country_string[3]
+        elif df.loc[row_index, 'Country'] == origin_country_string[4]:
+            df.loc[row_index, 'Country'] = new_country_string[4]
+        elif df.loc[row_index, 'Country'] == origin_country_string[5]:
+            df.loc[row_index, 'Country'] = new_country_string[5]
+        elif df.loc[row_index, 'Country'] == origin_country_string[6]:
+            df.loc[row_index, 'Country'] = new_country_string[6]
+        elif df.loc[row_index, 'Country'] == origin_country_string[7]:
+            df.loc[row_index, 'Country'] = new_country_string[7]
+        elif df.loc[row_index, 'Country'] == origin_country_string[8]:
+            df.loc[row_index, 'Country'] = new_country_string[8]
+        elif df.loc[row_index, 'Country'] == origin_country_string[9]:
+            df.loc[row_index, 'Country'] = new_country_string[9]
+    return df
+
+
+# for adding country not included in the df_country wolrd source
+# useful for mapping countries with geojson data
+def add_excluded_country_world(df):
+    last_date_df = df.iloc[-1][data_string_world_format]
+    list_of_row = [{'Date': last_date_df, 'Country': list_country_without_data[0],
+                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0},
+                   {'Date': last_date_df, 'Country': list_country_without_data[1],
+                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0},
+                   {'Date': last_date_df, 'Country': list_country_without_data[2],
+                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0},
+                   {'Date': last_date_df, 'Country': list_country_without_data[3],
+                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0}
+                   ]
+
+    list_of_row_copy = list_of_row.copy()
+
+    for row in list_of_row_copy:
+        df = df.append(row, ignore_index=True)
+    return df
+
+
 def get_content_length(url):
     resp = requests.head(url)
     if resp.status_code != 200:
@@ -848,7 +910,10 @@ def load_interactive_data():
         log.info('Country World data update required')
         df_country_world_data = load_csv(url_csv_country_world_data, data_string_world_format)
         df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
-            (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
+                                                (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
+        df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
+        df_country_world_data = add_excluded_country_world(df_country_world_data)
+        print(df_country_world_data)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
         last_update_content_country_world_data = current_update_content_country_world_data

@@ -14,6 +14,9 @@ language_list = [{'label': 'Italiano', 'value': 'IT'},
                  ]
 
 
+list_country_without_data = ['Turkmenistan', 'Myanmar', 'North Korea', 'Greenland']
+NUMBER_OF_COUNTRY_WORLD = 188
+
 class LocaleLanguage:
 
     def __init__(self, language):
