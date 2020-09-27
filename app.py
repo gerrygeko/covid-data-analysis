@@ -93,7 +93,6 @@ df_worldwide_aggregate_data = None
 df_country_world_data = None
 df_rate_regional = None
 
-
 layout = dict(
     autosize=True,
     automargin=True,
@@ -335,7 +334,7 @@ def update_world_map(self):
     df.sort_values(by=[data_string_world_format], inplace=True)
     df = df.tail(NUMBER_OF_COUNTRY_WORLD + len(list_country_without_data))
     df.sort_values(by=['Country'], inplace=True)
-    #df.reset_index(inplace=True)
+    # df.reset_index(inplace=True)
     print(df.head())
     print(df.tail())
     figure = px.choropleth_mapbox(df, geojson=url_geojson_country_world, locations='Country',
@@ -715,7 +714,7 @@ def update_country_world_cards_text(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD+ len(list_country_without_data))
+    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD + len(list_country_without_data))
     for field in field_list:
         if country_selected in list_country_without_data:
             total_text_values = ['N/D'] * 4
@@ -821,53 +820,32 @@ def load_region_rate_data_frame(df):
 
 
 def adjust_df_world_to_geojson(df):
-    origin_country_string = ['US', 'Congo (Kinshasa)', 'Congo (Brazzaville)', 'Korea, South', 'Cote d\'Ivoire',
-                             'Czechia', 'Serbia', 'Taiwan*', 'Tanzania', 'North Macedonia']
-    new_country_string = ['United States of America', 'Democratic Republic of the Congo', 'Republic of Congo',
-                          'South Korea', 'Ivory Coast', 'Czech Republic', 'Republic of Serbia', 'Taiwan',
-                          'United Republic of Tanzania', 'Macedonia']
-
-    for row_index, row in df.iterrows():
-        if df.loc[row_index, 'Country'] == origin_country_string[0]:
-            df.loc[row_index, 'Country'] = new_country_string[0]
-        elif df.loc[row_index, 'Country'] == origin_country_string[1]:
-            df.loc[row_index, 'Country'] = new_country_string[1]
-        elif df.loc[row_index, 'Country'] == origin_country_string[2]:
-            df.loc[row_index, 'Country'] = new_country_string[2]
-        elif df.loc[row_index, 'Country'] == origin_country_string[3]:
-            df.loc[row_index, 'Country'] = new_country_string[3]
-        elif df.loc[row_index, 'Country'] == origin_country_string[4]:
-            df.loc[row_index, 'Country'] = new_country_string[4]
-        elif df.loc[row_index, 'Country'] == origin_country_string[5]:
-            df.loc[row_index, 'Country'] = new_country_string[5]
-        elif df.loc[row_index, 'Country'] == origin_country_string[6]:
-            df.loc[row_index, 'Country'] = new_country_string[6]
-        elif df.loc[row_index, 'Country'] == origin_country_string[7]:
-            df.loc[row_index, 'Country'] = new_country_string[7]
-        elif df.loc[row_index, 'Country'] == origin_country_string[8]:
-            df.loc[row_index, 'Country'] = new_country_string[8]
-        elif df.loc[row_index, 'Country'] == origin_country_string[9]:
-            df.loc[row_index, 'Country'] = new_country_string[9]
+    df['Country'] = df['Country'].replace(['US', 'Congo (Kinshasa)', 'Congo (Brazzaville)', 'Korea, South',
+                                           'Cote d\'Ivoire', 'Czechia', 'Serbia', 'Taiwan*', 'Tanzania',
+                                           'North Macedonia'],
+                                          ['United States of America', 'Democratic Republic of the Congo',
+                                           'Republic of Congo', 'South Korea',
+                                           'Ivory Coast', 'Czech Republic', 'Republic of Serbia', 'Taiwan',
+                                           'United Republic of Tanzania', 'Macedonia']
+                                          )
     return df
 
 
-# for adding country not included in the df_country wolrd source
+# for adding country not included in the df_country world source
 # useful for mapping countries with geojson data
 def add_excluded_country_world(df):
     last_date_df = df.iloc[-1][data_string_world_format]
-    list_of_row = [{'Date': last_date_df, 'Country': list_country_without_data[0],
-                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0},
-                   {'Date': last_date_df, 'Country': list_country_without_data[1],
-                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0},
-                   {'Date': last_date_df, 'Country': list_country_without_data[2],
-                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0},
-                   {'Date': last_date_df, 'Country': list_country_without_data[3],
-                    'Confirmed': 0, 'Recovered': 0, 'Deaths': 0, 'Active_cases': 0}
-                   ]
+    list_of_row = []
+    for country_without_data in list_country_without_data:
+        list_of_row.append({'Date': last_date_df,
+                            'Country': country_without_data,
+                            'Confirmed': 0,
+                            'Recovered': 0,
+                            'Deaths': 0,
+                            'Active_cases': 0
+                            })
 
-    list_of_row_copy = list_of_row.copy()
-
-    for row in list_of_row_copy:
+    for row in list_of_row:
         df = df.append(row, ignore_index=True)
     return df
 
