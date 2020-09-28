@@ -4,7 +4,7 @@ import os
 import requests
 
 import logger
-from resources import load_resource
+from resources import load_resource, NUMBER_OF_COUNTRY_WORLD, data_string_world_format
 
 DEBUG_MODE_ENV_VAR = "DEBUG_MODE"
 
@@ -42,6 +42,13 @@ def new_positive_regions(df_regional_data):
     df = df_regional_data.tail(21)
     df = df.sort_values(by=['nuovi_positivi']).tail(3)
     return df['denominazione_regione'].tolist()
+
+
+def new_confirmed_countries_world(df_country_world_data):
+    df_country_world_data.sort_values(by=[data_string_world_format], inplace=True)
+    df = df_country_world_data.tail(NUMBER_OF_COUNTRY_WORLD)
+    df = df.sort_values(by=['Confirmed']).tail(3)
+    return df['Country'].tolist()
 
 
 def get_environment_variable(env_var_name):

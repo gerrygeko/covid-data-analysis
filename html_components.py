@@ -9,7 +9,8 @@ from pytz import timezone
 
 import logger
 from resources import language_list, load_resource, locale_language
-from utils import get_options_from_list, get_options, new_positive_regions, get_version
+from utils import get_options_from_list, get_options, new_positive_regions, \
+    new_confirmed_countries_world, get_version
 
 SECONDS = 1000
 PAGE_TITLE = "Coronavirus (SARS-CoV-2)"
@@ -30,7 +31,7 @@ italian_field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                                'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                                'tamponi', 'casi_testati']
 
-world_field_list_complete = ['Date', 'Country', 'Confirmed', 'Recovered', 'Deaths']
+world_field_list_complete = ['Confirmed', 'Recovered', 'Deaths', 'Active_cases']
 
 worldwide_aggregate_list_complete = ['Date', 'Confirmed', 'Recovered', 'Deaths', 'Increase rate']
 
@@ -426,6 +427,44 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                     id="right-column-world",
                                     className="eight columns",
                                 ),
+                            ],
+                            className="row flex-display",
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                html.P(load_resource('label_select_data'),
+                                                       className="control_label"),
+                                                dcc.Dropdown(
+                                                    id='dropdown_country_data_selected',
+                                                    options=get_options_from_list(
+                                                        world_field_list_complete),
+                                                    multi=False,
+                                                    value='Confirmed',
+                                                    className='dcc_control'
+                                                ),
+                                                html.P(load_resource('label_select_multiregion'),
+                                                       className="control_label"),
+                                                dcc.Dropdown(id='dropdown_country_list_selected',
+                                                             options=get_options(
+                                                                 df_country_world_data[
+                                                                     'Country'].unique()),
+                                                             multi=True,
+                                                             value=new_confirmed_countries_world(
+                                                                 df_country_world_data),
+                                                             className='dcc_control'
+                                                             ),
+                                                dcc.Graph(id='country_world_linear_chart')
+                                            ],
+                                            className="pretty_container",
+                                        ),
+                                    ],
+                                    id="left-column-world",
+                                    className="eight columns",
+                                )
                             ],
                             className="row flex-display",
                         ),

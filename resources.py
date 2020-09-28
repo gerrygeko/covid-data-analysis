@@ -16,6 +16,8 @@ language_list = [{'label': 'Italiano', 'value': 'IT'},
 
 list_country_without_data = ['Turkmenistan', 'Myanmar', 'North Korea', 'Greenland']
 NUMBER_OF_COUNTRY_WORLD = 188
+data_string_ita_format = 'data'
+data_string_world_format = 'Date'
 
 class LocaleLanguage:
 
@@ -73,7 +75,12 @@ resources = {DEFAULT_LANGUAGE: {
     'confirmed_worldwide_aggregate': 'Totale Casi',
     'recovered_worldwide_aggregate': 'Guariti',
     'deaths_worldwide_aggregate': 'Decessi',
-    'increase_rate_worldwide_aggregate': 'Tasso di Crescita'
+    'increase_rate_worldwide_aggregate': 'Tasso di Crescita',
+    'Country': 'Paese',
+    'Confirmed': 'Confermati',
+    'Recovered': 'Guariti',
+    'Deaths': 'Decessi',
+    'Active_cases': 'Casi Attivi'
     }
 }
 

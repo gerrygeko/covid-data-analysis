@@ -18,7 +18,8 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from resources import load_resource, start_translation, list_country_without_data, NUMBER_OF_COUNTRY_WORLD
+from resources import load_resource, start_translation, list_country_without_data, \
+    NUMBER_OF_COUNTRY_WORLD, data_string_world_format, data_string_ita_format
 from html_components import create_news, create_page_components, locale_language
 from utils import is_debug_mode_enabled
 
@@ -56,9 +57,6 @@ field_list_to_rate = ['ricoverati_con_sintomi', 'terapia_intensiva',
                       'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
                       'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                       'tamponi', 'casi_testati']
-
-data_string_ita_format = 'data'
-data_string_world_format = 'Date'
 
 
 def load_csv_from_file(path):
@@ -113,6 +111,15 @@ def format_value_string_to_locale(value):
     return locale.format_string('%.0f', value, True)
 
 
+def create_figure(data, title):
+    layout_figure = copy.deepcopy(layout)
+
+    layout_figure['title'] = title
+    layout_figure['hovermode'] = 'x unified'
+    figure = dict(data=data, layout=layout_figure)
+    return figure
+
+
 def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping):
     scatter_list = []
     # Draw empty figures if an empty list is passed
@@ -148,19 +155,25 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
     return figure
 
 
-def create_figure(data, title):
-    layout_figure = copy.deepcopy(layout)
-
-    layout_figure['title'] = title
-    layout_figure['hovermode'] = 'x unified'
-    figure = dict(data=data, layout=layout_figure)
+def create_scatter_plot_by_country_world(data_frame, title, x_axis_data, y_axis_data_mapping_country_world):
+    scatter_list = []
+    y_axis_data_mapping_country_world.sort(key=lambda tup: tup[1])
+    for field, country in y_axis_data_mapping_country_world:
+        scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['Country'] == country][field],
+                             mode='lines+markers',
+                             opacity=0.7,
+                             name=country,
+                             line=dict(shape="spline", smoothing=1, width=1),
+                             textposition='bottom center')
+        scatter_list.append(scatter)
+    figure = create_figure(scatter_list, title)
     return figure
 
 
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
                                                                Input('dropdown_data_selected', 'value')])
-def update_graph(region_list, data_selected):
+def update_regions_line_chart(region_list, data_selected):
     regions_list_mapping = []
     # if no region selected, create empty figure
     x_axis_data = df_regional_data[df_regional_data['denominazione_regione'] == "Abruzzo"]['data']
@@ -173,6 +186,25 @@ def update_graph(region_list, data_selected):
     figure = create_scatter_plot_by_region(df_regional_data, title,
                                            x_axis_data, regions_list_mapping)
     log.info('Updating main graph')
+    return figure
+
+
+# Callback for timeseries/country
+@app.callback(Output('country_world_linear_chart', 'figure'), [Input('dropdown_country_list_selected', 'value'),
+                                                               Input('dropdown_country_data_selected', 'value')])
+def update_country_world_line_chart(country_list, data_selected):
+    countries_list_mapping = []
+    # if no country was selected, create empty figure
+    x_axis_data = df_country_world_data[df_country_world_data['Country'] == "Italy"][data_string_world_format]
+    if len(country_list) == 0 or data_selected is None:
+        figure = create_scatter_plot(df_country_world_data, '', x_axis_data, [])
+        return figure
+    for country in country_list:
+        countries_list_mapping.append((data_selected, country))
+    title = load_resource(data_selected)
+    figure = create_scatter_plot_by_country_world(df_country_world_data, title,
+                                                  x_axis_data, countries_list_mapping)
+    log.info('Updating Country World Line chart')
     return figure
 
 
