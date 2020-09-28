@@ -375,6 +375,12 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                     ],
                                     className="pretty_container six columns",
                                 ),
+                                html.Div(
+                                    [
+                                        dcc.Graph(id="world_map")
+                                    ],
+                                    className="pretty_container six columns",
+                                ),
                             ],
                             className="row flex-display",
                         ),
@@ -476,17 +482,6 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                     id="left-column-world",
                                     className="eight columns",
                                 )
-                            ],
-                            className="row flex-display",
-                        ),
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        dcc.Graph(id="world_map")
-                                    ],
-                                    className="pretty_container twelve columns",
-                                ),
                             ],
                             className="row flex-display",
                         ),
