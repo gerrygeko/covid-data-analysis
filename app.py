@@ -439,7 +439,7 @@ def update_italian_graph_active_cases(self):
 
 
 @app.callback(Output('world_active_cases_line_chart', 'figure'), [Input('i_news', 'n_intervals')])
-def update_italian_graph_active_cases(self):
+def update_world_graph_active_cases(self):
     layout_world_active_cases = copy.deepcopy(layout)
     df = df_worldwide_aggregate_data
     df.reset_index(inplace=True)
@@ -451,15 +451,15 @@ def update_italian_graph_active_cases(self):
             type="scatter",
             x=x_list,
             y=y_list_1,
-            name=load_resource('Confirmed'),
-            fill='tozeroy',
-            marker=dict(color=colors[0]),
+            name=load_resource('Active_cases'),
+            marker=dict(color=colors[2])
         )
     ]
 
     layout_world_active_cases["title"] = load_resource('Active_cases')
     layout_world_active_cases["showlegend"] = True
     layout_world_active_cases["autosize"] = True
+    layout_world_active_cases["yaxis"] = dict(type='log', )
 
     figure = dict(data=data, layout=layout_world_active_cases)
     log.info('Updating World Active Cases Bar Graph')
