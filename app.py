@@ -340,24 +340,23 @@ def update_world_map(self):
     figure = px.choropleth_mapbox(df, geojson=url_geojson_country_world, locations='Country',
                                   featureidkey="properties.ADMIN",
                                   color=df['Confirmed'],
-                                  color_continuous_scale=[(0.00, "lightskyblue"), (0.33, "lightskyblue"),
-                                                          (0.66, "MidnightBlue"), (1.00, "MidnightBlue")],
-                                  range_color=(df['Confirmed'].min(), df['Confirmed'].max()),
+                                  color_continuous_scale='Blues',
+                                  range_color=(df['Confirmed'].min(), df['Confirmed'].mean(), df['Confirmed'].max()),
                                   mapbox_style="carto-positron",
                                   zoom=1, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5
                                   )
     figure.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        annotations=[dict(
-            x=0.0,
-            y=0.01,
-            xref='paper',
-            yref='paper',
-            showarrow=False
-        )]
+        # annotations=[dict(
+        #     x=0.0,
+        #     y=0.01,
+        #     xref='paper',
+        #     yref='paper',
+        #     showarrow=False
+        # )]
     )
-    log.info('Updating World Cloropleth Map')
+    log.info('Updating World Choropleth Map')
     return figure
 
 
