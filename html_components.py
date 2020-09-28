@@ -578,7 +578,13 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                     [
                                         dcc.Graph(id="italian_active_cases_bar_graph")
                                     ],
-                                    className="pretty_container twelve columns",
+                                    className="pretty_container six columns",
+                                ),
+                                html.Div(
+                                    [html.H5(id='map_header', children=load_resource('label_map'),
+                                             className='title'),
+                                     dcc.Graph(id="map_graph")],
+                                    className="pretty_container six columns",
                                 ),
                             ],
                             className="row flex-display",
@@ -641,18 +647,7 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                 ),
                             ],
                             className="row flex-display",
-                        ),
-                        html.Div(
-                            [
-                                html.Div(
-                                    [html.H5(id='map_header', children=load_resource('label_map'),
-                                             className='title'),
-                                     dcc.Graph(id="map_graph")],
-                                    className="pretty_container twelve columns",
-                                ),
-                            ],
-                            className="row flex-display",
-                        ),
+                        )
                     ]),
             # ==========================================================================================
             dcc.Tab(label=load_resource('label_tab_master_ita_regions'), value='tab_master_ita_regions',
