@@ -371,6 +371,17 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                             [
                                 html.Div(
                                     [
+                                        dcc.Graph(id="world_active_cases_line_chart")
+                                    ],
+                                    className="pretty_container six columns",
+                                ),
+                            ],
+                            className="row flex-display",
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
                                         html.P(load_resource('label_select_country'),
                                                className="control_label"),
                                         dcc.Dropdown(

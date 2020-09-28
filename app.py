@@ -297,7 +297,7 @@ def update_bar_graph(data_selected):
 
 
 @app.callback(Output('world_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
-def update_world_graph_active_cases(self):
+def update_world_bar_graph_active_cases(self):
     layout_world_active_cases = copy.deepcopy(layout)
     field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
     df_sub = df_country_world_data
@@ -331,7 +331,7 @@ def update_world_graph_active_cases(self):
 
 
 @app.callback(Output('world_deaths_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
-def update_world_graph_deaths(self):
+def update_world_bar_graph_deaths(self):
     layout_world_deaths = copy.deepcopy(layout)
     df_sub = df_country_world_data
     df = df_sub.copy()
@@ -435,6 +435,34 @@ def update_italian_graph_active_cases(self):
 
     figure = dict(data=data, layout=layout_italian_active_cases)
     log.info('Updating Italian Active Cases Bar Graph')
+    return figure
+
+
+@app.callback(Output('world_active_cases_line_chart', 'figure'), [Input('i_news', 'n_intervals')])
+def update_italian_graph_active_cases(self):
+    layout_world_active_cases = copy.deepcopy(layout)
+    df = df_worldwide_aggregate_data
+    df.reset_index(inplace=True)
+    y_list_1 = df['Active_cases'].values.tolist()
+    x_list = df[data_string_world_format]
+    colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
+    data = [
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_list_1,
+            name=load_resource('Confirmed'),
+            fill='tozeroy',
+            marker=dict(color=colors[0]),
+        )
+    ]
+
+    layout_world_active_cases["title"] = load_resource('Active_cases')
+    layout_world_active_cases["showlegend"] = True
+    layout_world_active_cases["autosize"] = True
+
+    figure = dict(data=data, layout=layout_world_active_cases)
+    log.info('Updating World Active Cases Bar Graph')
     return figure
 
 
@@ -906,6 +934,8 @@ def load_interactive_data():
     elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
         log.info('Worldwide Aggregate data update required')
         df_worldwide_aggregate_data = load_csv(url_csv_worldwide_aggregate_data, data_string_world_format)
+        df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
+            (df_worldwide_aggregate_data['Recovered'] + df_worldwide_aggregate_data['Deaths'])
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
@@ -919,7 +949,7 @@ def load_interactive_data():
         log.info('Country World data update required')
         df_country_world_data = load_csv(url_csv_country_world_data, data_string_world_format)
         df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
-                                                (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
+            (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         print(df_country_world_data)
