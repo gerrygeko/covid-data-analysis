@@ -4,13 +4,8 @@ import os
 import requests
 
 import logger
-from resources import load_resource, NUMBER_OF_WORLD_COUNTRIES, data_string_world_format
-
-DEBUG_MODE_ENV_VAR = "DEBUG_MODE"
-
-REPO_NAME = "covid-data-analysis"
-GITHUB_ACCESS_TOKEN_ENV_VAR = "GITHUB_ACCESS_TOKEN"
-GITHUB_USER_ENV_VAR = "GITHUB_USER"
+from constants import GITHUB_USER_ENV_VAR, GITHUB_ACCESS_TOKEN_ENV_VAR, DEBUG_MODE_ENV_VAR, REPO_NAME
+from resources import load_resource
 
 log = logger.get_logger()
 
@@ -36,19 +31,6 @@ def get_options_from_list(field_list):
         dict_list.append({'label': str(load_resource(data)), 'value': str(data)})
 
     return dict_list
-
-
-def new_positive_regions(df_regional_data):
-    df = df_regional_data.tail(21)
-    df = df.sort_values(by=['nuovi_positivi']).tail(3)
-    return df['denominazione_regione'].tolist()
-
-
-def new_confirmed_countries_world(df_country_world_data):
-    df_country_world_data.sort_values(by=[data_string_world_format], inplace=True)
-    df = df_country_world_data.tail(NUMBER_OF_WORLD_COUNTRIES)
-    df = df.sort_values(by=['Confirmed']).tail(3)
-    return df['Country'].tolist()
 
 
 def get_environment_variable(env_var_name):

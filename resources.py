@@ -1,8 +1,7 @@
 from googletrans import Translator
 
 import logger
-
-DEFAULT_LANGUAGE = "IT"
+from constants import DEFAULT_LANGUAGE
 
 language_list = [{'label': 'Italiano', 'value': 'IT'},
                  {'label': 'English', 'value': 'EN'},
@@ -13,11 +12,6 @@ language_list = [{'label': 'Italiano', 'value': 'IT'},
                  {'label': 'Portuguese', 'value': 'PT'}
                  ]
 
-
-LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
-NUMBER_OF_WORLD_COUNTRIES = 188
-data_string_ita_format = 'data'
-data_string_world_format = 'Date'
 
 class LocaleLanguage:
 

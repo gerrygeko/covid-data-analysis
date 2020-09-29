@@ -8,12 +8,10 @@ import requests
 from pytz import timezone
 
 import logger
+from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE
 from resources import language_list, load_resource, locale_language
-from utils import get_options_from_list, get_options, new_positive_regions, \
-    new_confirmed_countries_world, get_version
+from utils import get_options_from_list, get_options, get_version
 
-SECONDS = 1000
-PAGE_TITLE = "Coronavirus (SARS-CoV-2)"
 
 # API Requests for news
 news_requests = requests.get(
@@ -34,6 +32,19 @@ italian_field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
 world_field_list_complete = ['Confirmed', 'Recovered', 'Deaths', 'Active_cases']
 
 worldwide_aggregate_list_complete = ['Date', 'Confirmed', 'Recovered', 'Deaths', 'Increase rate']
+
+
+def new_positive_regions(df_regional_data):
+    df = df_regional_data.tail(21)
+    df = df.sort_values(by=['nuovi_positivi']).tail(3)
+    return df['denominazione_regione'].tolist()
+
+
+def new_confirmed_countries_world(df_country_world_data):
+    df_country_world_data.sort_values(by=[DATE_PROPERTY_NAME_EN], inplace=True)
+    df = df_country_world_data.tail(NUMBER_OF_WORLD_COUNTRIES)
+    df = df.sort_values(by=['Confirmed']).tail(3)
+    return df['Country'].tolist()
 
 
 def create_news():
@@ -239,11 +250,10 @@ def create_contacts(app):
 
 def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, df_country_world_data):
     log.info("Loading all the components")
-    global PAGE_TITLE
     return [
         dcc.Store(id="aggregate_data"),
         # Interval component for updating news list
-        dcc.Interval(id="i_news", interval=900 * SECONDS, n_intervals=0),
+        dcc.Interval(id="i_news", interval=900 * SECONDS_FOR_NEWS_UPDATE, n_intervals=0),
         # empty Div to trigger javascript file for graph resizing
         html.Div(id="output-clientside"),
         html.Div(  # START OF 1ST INCAPSULATION - (LOGO - HEADING - BUTTON)
@@ -868,3 +878,4 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
             href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
         )
     ]
+
