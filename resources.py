@@ -14,8 +14,8 @@ language_list = [{'label': 'Italiano', 'value': 'IT'},
                  ]
 
 
-list_country_without_data = ['Turkmenistan', 'Myanmar', 'North Korea', 'Greenland']
-NUMBER_OF_COUNTRY_WORLD = 188
+LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
+NUMBER_OF_WORLD_COUNTRIES = 188
 data_string_ita_format = 'data'
 data_string_world_format = 'Date'
 

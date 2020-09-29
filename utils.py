@@ -4,7 +4,7 @@ import os
 import requests
 
 import logger
-from resources import load_resource, NUMBER_OF_COUNTRY_WORLD, data_string_world_format
+from resources import load_resource, NUMBER_OF_WORLD_COUNTRIES, data_string_world_format
 
 DEBUG_MODE_ENV_VAR = "DEBUG_MODE"
 
@@ -46,7 +46,7 @@ def new_positive_regions(df_regional_data):
 
 def new_confirmed_countries_world(df_country_world_data):
     df_country_world_data.sort_values(by=[data_string_world_format], inplace=True)
-    df = df_country_world_data.tail(NUMBER_OF_COUNTRY_WORLD)
+    df = df_country_world_data.tail(NUMBER_OF_WORLD_COUNTRIES)
     df = df.sort_values(by=['Confirmed']).tail(3)
     return df['Country'].tolist()
 

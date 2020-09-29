@@ -18,8 +18,8 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from resources import load_resource, start_translation, list_country_without_data, \
-    NUMBER_OF_COUNTRY_WORLD, data_string_world_format, data_string_ita_format
+from resources import load_resource, start_translation, LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA, \
+    NUMBER_OF_WORLD_COUNTRIES, data_string_world_format, data_string_ita_format
 from html_components import create_news, create_page_components, locale_language
 from utils import is_debug_mode_enabled
 
@@ -303,7 +303,7 @@ def update_world_bar_graph_active_cases(self):
     df_sub = df_country_world_data
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD)
+    df_sorted = df_sorted.tail(NUMBER_OF_WORLD_COUNTRIES)
     df_sorted.reset_index(inplace=True)
     df_sorted.sort_values(by=[field_list[0]], ascending=False, inplace=True)
     df_sorted = df_sorted.head(20)
@@ -336,7 +336,7 @@ def update_world_bar_graph_deaths(self):
     df_sub = df_country_world_data
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD)
+    df_sorted = df_sorted.tail(NUMBER_OF_WORLD_COUNTRIES)
     df_sorted.reset_index(inplace=True)
     df_sorted.sort_values(by=['Deaths'], ascending=False, inplace=True)
     df_sorted = df_sorted.head(20)
@@ -364,11 +364,8 @@ def update_world_bar_graph_deaths(self):
 def update_world_map(self):
     df = df_country_world_data.copy()
     df.sort_values(by=[data_string_world_format], inplace=True)
-    df = df.tail(NUMBER_OF_COUNTRY_WORLD + len(list_country_without_data))
+    df = df.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     df.sort_values(by=['Country'], inplace=True)
-    # df.reset_index(inplace=True)
-    print(df.head())
-    print(df.tail())
     figure = px.choropleth_mapbox(df, geojson=url_geojson_country_world, locations='Country',
                                   featureidkey="properties.ADMIN",
                                   color=df['Confirmed'],
@@ -773,9 +770,9 @@ def update_country_world_cards_text(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[data_string_world_format])
-    df_sorted = df_sorted.tail(NUMBER_OF_COUNTRY_WORLD + len(list_country_without_data))
+    df_sorted = df_sorted.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     for field in field_list:
-        if country_selected in list_country_without_data:
+        if country_selected in LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
             total_text_values = ['N/D'] * 4
             variation_text_values = ['N/D'] * 4
         else:
@@ -801,7 +798,7 @@ def update_country_world_cards_color(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     for field in field_list:
-        if country_selected in list_country_without_data:
+        if country_selected in LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
             color = 'grey'
             color_cards_list.append(color)
         else:
@@ -895,7 +892,7 @@ def adjust_df_world_to_geojson(df):
 def add_excluded_country_world(df):
     last_date_df = df.iloc[-1][data_string_world_format]
     list_of_row = []
-    for country_without_data in list_country_without_data:
+    for country_without_data in LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
         list_of_row.append({'Date': last_date_df,
                             'Country': country_without_data,
                             'Confirmed': 0,
@@ -952,7 +949,6 @@ def load_interactive_data():
             (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
-        print(df_country_world_data)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
         last_update_content_country_world_data = current_update_content_country_world_data
