@@ -1,3 +1,7 @@
+# 3.0.0
+#### Added
+* Worldwide Tab: the web application now shows worldwide data from all 188 countries that release Covid-19 related reports
+
 # 2.0.2
 #### Changed
 * Improvement of application layout
