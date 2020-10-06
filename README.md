@@ -2,13 +2,14 @@
 
 [![GitHub commit](https://img.shields.io/github/last-commit/gerrygeko/covid-data-analysis)](https://github.com/gerrygeko/covid-data-analysis)[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
 
-This web application gather and show data for the COVID-19 for the Italian area. 
+This web application gathers and shows World data for the COVID-19, with particular attention to the details of the 
+Italian regions. 
 It gives the possibility to arrange and visualize the data in different ways using different graphs.
 The web application is reachable at the following link [SARS-CoV-2-Gellex](https://www.data-covid.com/)
 
 ## Data update
-- Data is published every day from the Department at 18:00
-- Data is collected from [Department of Protezione Civile repository](https://github.com/pcm-dpc/COVID-19)
+- Italian Data (data of the day) is published every day from the Department of Civil Protection at about 17:30.
+- Worldwide Data (data of the previous day) is released by Data Packaged Core Datasets at about 08:00
 - Update to this application is expected slightly after, but to keep consistency in case of later updates, 
 every 30 minutes a new attempt for check the presence of new data will be made
 
@@ -19,7 +20,7 @@ every 30 minutes a new attempt for check the presence of new data will be made
 (PaaS - Platform as a Service)
 
 ## Credits
-- Italian data is offered by [Department of Civil Protection](http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus).
+- Italian data is offered by [Department of Civil Protection](https://github.com/pcm-dpc/COVID-19).
 - Worldwide data is offered by [Johns Hopkins University Center for Systems Science and Engineering ](https://github.com/CSSEGISandData) and normalized by [Data Packaged Core Datasets
 ](https://github.com/datasets/covid-19)
 - The news feed is offered by [News API](https://newsapi.org/).
