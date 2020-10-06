@@ -3,9 +3,7 @@ import csv
 import json as js
 import locale
 import time
-import pytz
-from datetime import datetime
-from email.utils import parsedate_tz, mktime_tz
+from email.utils import parsedate_to_datetime
 from threading import Thread
 from urllib.request import urlopen
 
@@ -14,6 +12,7 @@ import dash_html_components as html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import pytz
 import requests
 import schedule
 from dash.dependencies import Input, Output, ClientsideFunction
@@ -23,8 +22,8 @@ import logger
 from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, DATE_PROPERTY_NAME_IT, \
     LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA, INHABITANT_RATE, URL_GEOJSON_REGIONS, URL_GEOJSON_WORLD_COUNTRIES, \
     URL_CSV_REGIONAL_DATA, URL_CSV_ITALY_DATA, URL_CSV_WORLDWIDE_AGGREGATE_DATA, URL_CSV_WORLD_COUNTRIES_DATA
-from resources import load_resource, start_translation
 from html_components import create_news, create_page_components, locale_language
+from resources import load_resource, start_translation
 from utils import is_debug_mode_enabled
 
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
@@ -864,16 +863,16 @@ def get_content_length(url):
     return size
 
 
-def get_date_request(url):
+def get_last_update(url):
     resp = requests.head(url)
     if resp.status_code != 200:
         log.error(f"Request failed trying to contact URL: {url}")
-        return -1
-    date_update_string = resp.headers["Date"]
-    timestamp = mktime_tz(parsedate_tz(date_update_string))
-    cet_dt = datetime.fromtimestamp(timestamp, pytz.timezone('Europe/Rome'))
-    cet_dt = cet_dt.strftime('%d/%m/%Y %H:%M:%S')
-    string_date_update = load_resource('label_last_update') + ' ' + cet_dt
+        last_update = 'Time not available'
+    else:
+        date_update_string = resp.headers["Date"]
+        datetime_obj = parsedate_to_datetime(date_update_string).astimezone(tz=pytz.timezone('Europe/Rome'))
+        last_update = f"{datetime_obj.date()} {datetime_obj.time()}"
+    string_date_update = f"{load_resource('label_last_update')} {last_update}"
     return string_date_update
 
 
@@ -896,7 +895,7 @@ def load_interactive_data():
         df_worldwide_aggregate_data = load_csv(URL_CSV_WORLDWIDE_AGGREGATE_DATA, DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
             (df_worldwide_aggregate_data['Recovered'] + df_worldwide_aggregate_data['Deaths'])
-        date_last_update_world_aggregate = get_date_request(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
+        date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
@@ -925,7 +924,7 @@ def load_interactive_data():
     elif current_update_content_national_data != last_update_content_national_data:
         log.info('National data update required')
         df_national_data = load_csv(URL_CSV_ITALY_DATA, DATE_PROPERTY_NAME_IT)
-        date_last_update_italy = get_date_request(URL_CSV_ITALY_DATA)
+        date_last_update_italy = get_last_update(URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
@@ -939,7 +938,7 @@ def load_interactive_data():
         log.info('Regional data update required')
         df_regional_data = load_csv(URL_CSV_REGIONAL_DATA, DATE_PROPERTY_NAME_IT)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
-        date_last_update_regional = get_date_request(URL_CSV_REGIONAL_DATA)
+        date_last_update_regional = get_last_update(URL_CSV_REGIONAL_DATA)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data
