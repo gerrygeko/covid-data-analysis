@@ -439,6 +439,7 @@ def update_world_graph_active_cases(self):
             x=x_list,
             y=y_list_1,
             name=load_resource('Active_cases'),
+            fill='tozeroy',
             marker=dict(color=colors[2])
         )
     ]
@@ -446,7 +447,6 @@ def update_world_graph_active_cases(self):
     layout_world_active_cases["title"] = load_resource('Active_cases')
     layout_world_active_cases["showlegend"] = True
     layout_world_active_cases["autosize"] = True
-    layout_world_active_cases["yaxis"] = dict(type='log', )
 
     figure = dict(data=data, layout=layout_world_active_cases)
     log.info('Updating World Active Cases Bar Graph')
