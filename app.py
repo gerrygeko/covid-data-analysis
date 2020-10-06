@@ -950,7 +950,7 @@ def load_interactive_data():
 
 def app_layout():
     app.layout = html.Div(
-        children=create_page_components(app, df_regional_data, df_worldwide_aggregate_data, df_country_world_data),
+        children=create_page_components(app, df_regional_data, df_country_world_data),
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
     )
