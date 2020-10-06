@@ -63,12 +63,13 @@ def create_logo_and_header(app):
                         src=app.get_asset_url("dash-logo.png"),
                         id="plotly-image",
                         style={
-                            "height": "120px",
+                            "height": "auto",
                             "width": "auto",
-                            "margin-bottom": "0px",
+                            "margin-bottom": "auto",
                             "display": "block",
                             "margin-left": "auto",
-                            "margin-right": "auto"
+                            "margin-right": "auto",
+                            "padding-bottom": "5%",
                         }
                     ),
 
@@ -77,35 +78,19 @@ def create_logo_and_header(app):
                 className="four columns",
             ),
             html.Div(
-                [
-                    html.Div(
-                        [
-                            html.H3(
-                                PAGE_TITLE
-                            )
-                        ]
-                    )
-                ],
+                html.H3(
+                    PAGE_TITLE
+                ),
                 className="four columns",
                 id="title",
             ),
             html.Div(
-                [
-                    html.Div(
-                        [
-                            html.Div(
-                                [
-                                    dcc.Dropdown(
-                                        id="dropdown_language_selected",
-                                        options=language_list,
-                                        value=locale_language.language,
-                                        searchable=False
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                ],
+                dcc.Dropdown(
+                    id="dropdown_language_selected",
+                    options=language_list,
+                    value=locale_language.language,
+                    searchable=False
+                ),
                 className="four columns",
                 id="logos"
             ),
