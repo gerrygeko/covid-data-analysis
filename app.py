@@ -298,7 +298,6 @@ def update_world_bar_graph_active_cases(self):
     df_sorted.reset_index(inplace=True)
     df_sorted.sort_values(by=[field_list[0]], ascending=False, inplace=True)
     df_sorted = df_sorted.head(20)
-    # print(df_sorted)
     y_list_1 = df_sorted['Active_cases'].values.tolist()
     x_list = df_sorted['Country']
     color_bar = "rgb(123, 199, 255)"
@@ -354,9 +353,6 @@ def update_world_bar_graph_deaths(self):
 @app.callback(Output('world_map', 'figure'), [Input('i_news', 'n_intervals')])
 def update_world_map(self):
     df = df_country_world_data.copy()
-    print(df)
-    print("Countries")
-    print(len(df["Country"].tolist()))
     df.sort_values(by=[DATE_PROPERTY_NAME_EN], inplace=True)
     df = df.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     df.sort_values(by=['Country'], inplace=True)

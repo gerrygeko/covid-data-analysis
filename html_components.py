@@ -12,7 +12,6 @@ from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, SECONDS_
 from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, get_version
 
-
 # API Requests for news
 news_requests = requests.get(
     "http://newsapi.org/v2/top-headlines?country=it&category=science&apiKey=b20640c581554761baab24317b8331e7")
@@ -59,7 +58,7 @@ def create_news():
             html.P(
                 className="p-news title",
                 children=load_resource('label_last_update')
-                         + datetime.now().astimezone(timezone('Europe/Berlin')).strftime("%d/%m/%Y %H:%M"),
+                         + datetime.now().astimezone(timezone('Europe/Rome')).strftime("%d/%m/%Y %H:%M:%S"),
             ),
             html.Table(
                 className="table-news",
@@ -878,4 +877,3 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
             href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
         )
     ]
-
