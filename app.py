@@ -911,7 +911,7 @@ def get_date_request(url):
     timestamp = mktime_tz(parsedate_tz(date_update_string))
     cet_dt = datetime.fromtimestamp(timestamp, pytz.timezone('Europe/Rome'))
     cet_dt = cet_dt.strftime('%d/%m/%Y %H:%M:%S')
-    string_date_update = load_resource('label_last_update') + ' ' +cet_dt
+    string_date_update = load_resource('label_last_update') + ' ' + cet_dt
     return string_date_update
 
 
