@@ -3,6 +3,7 @@ import csv
 import json as js
 import locale
 import time
+import datetime
 from threading import Thread
 from urllib.request import urlopen
 
@@ -75,6 +76,10 @@ df_national_data = None
 df_worldwide_aggregate_data = None
 df_country_world_data = None
 df_rate_regional = None
+date_last_update_world_aggregate = None
+#date_last_update_country_world =
+date_last_update_italy = None
+date_last_update_regional = None
 
 layout = dict(
     autosize=True,
@@ -515,8 +520,9 @@ def update_regional_graph_active_cases(region_selected):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(self):
     log.info('update cards')
-    sub_header_italian_text = (df_national_data[DATE_PROPERTY_NAME_IT].iloc[-1]).strftime(
-        load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    # sub_header_italian_text = (df_national_data[DATE_PROPERTY_NAME_IT].iloc[-1]).strftime(
+    #     load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    sub_header_italian_text = date_last_update_italy
     field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
@@ -576,8 +582,9 @@ def update_national_cards_color(self):
                ], [Input("i_news", "n_intervals")])
 def update_world_cards_text(self):
     log.info('Update World Cards')
-    sub_header_worldwide_text = (df_worldwide_aggregate_data[DATE_PROPERTY_NAME_EN].iloc[-1]).strftime(
-        load_resource('header_last_update') + " %d/%m/%Y")
+    # sub_header_worldwide_text = (df_worldwide_aggregate_data[DATE_PROPERTY_NAME_EN].iloc[-1]).strftime(
+    #     load_resource('header_last_update') + " %d/%m/%Y")
+    sub_header_worldwide_text = date_last_update_world_aggregate
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     total_text_values = []
     variation_text_values = []
@@ -661,8 +668,9 @@ def update_data_table(data_selected):
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
     log.info('Update regional cards')
-    sub_header_ita_regions_text = (df_national_data[DATE_PROPERTY_NAME_IT].iloc[-1]).strftime(
-        load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    # sub_header_ita_regions_text = (df_national_data[DATE_PROPERTY_NAME_IT].iloc[-1]).strftime(
+    #     load_resource('header_last_update') + " %d/%m/%Y %H:%M")
+    sub_header_ita_regions_text = date_last_update_regional
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
@@ -903,11 +911,22 @@ def get_content_length(url):
     return size
 
 
+def get_date_request(url):
+    resp = requests.head(url)
+    if resp.status_code != 200:
+        log.error(f"Request failed trying to contact URL: {url}")
+        return -1
+    date_update_string = resp.headers["Date"]
+    #date_update_obj = datetime.datetime.strptime(date_update_string, "%a, %d %b %Y %X %Z'")
+    return date_update_string
+
+
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
     global df_regional_data, df_national_data, df_country_world_data, df_worldwide_aggregate_data, df_rate_regional, \
         last_update_content_regional_data, last_update_content_national_data, \
-        last_update_content_worldwide_aggregate_data, last_update_content_country_world_data
+        last_update_content_worldwide_aggregate_data, last_update_content_country_world_data, \
+        date_last_update_world_aggregate, date_last_update_italy, date_last_update_regional
     current_update_content_regional_data = int(get_content_length(URL_CSV_REGIONAL_DATA))
     current_update_content_national_data = int(get_content_length(URL_CSV_ITALY_DATA))
     current_update_content_worldwide_aggregate_data = int(get_content_length(URL_CSV_WORLDWIDE_AGGREGATE_DATA))
@@ -921,6 +940,8 @@ def load_interactive_data():
         df_worldwide_aggregate_data = load_csv(URL_CSV_WORLDWIDE_AGGREGATE_DATA, DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
             (df_worldwide_aggregate_data['Recovered'] + df_worldwide_aggregate_data['Deaths'])
+        date_last_update_world_aggregate = get_date_request(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
+        print(date_last_update_world_aggregate)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
@@ -949,6 +970,7 @@ def load_interactive_data():
     elif current_update_content_national_data != last_update_content_national_data:
         log.info('National data update required')
         df_national_data = load_csv(URL_CSV_ITALY_DATA, DATE_PROPERTY_NAME_IT)
+        date_last_update_italy = get_date_request(URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
@@ -962,6 +984,7 @@ def load_interactive_data():
         log.info('Regional data update required')
         df_regional_data = load_csv(URL_CSV_REGIONAL_DATA, DATE_PROPERTY_NAME_IT)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
+        date_last_update_regional = get_date_request(URL_CSV_REGIONAL_DATA)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data

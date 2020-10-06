@@ -1,7 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
 - Center and space out Gellex logo from the tab below
-- Set the update datetime in line with the app scheduler
 - Extend data analysis worldwide (2)
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
 - Scheduler use CET time to not rely on the server time zone (2)
@@ -25,6 +24,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Set the update datetime in line with the app scheduler
 - Introduce a bar graph that renders national active cases (like Regional Analysis) (1)
 - Extend the visualization of the data table (Tab 1), i.e. to show all the region (from several users feedback)(1)
 - Introduce debug mode
