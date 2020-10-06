@@ -619,8 +619,33 @@ def update_world_cards_color(self):
     return dictionary_color
 
 
+@app.callback(Output('table_tab_country_world', 'figure'), [Input("dropdown_country_data_selected", "value")])
+def update_data_table_country_world(data_selected):
+    df_sub = df_country_world_data
+    df = df_sub.copy()
+    df = df.sort_values(by=[DATE_PROPERTY_NAME_EN])
+    df = df.tail(NUMBER_OF_WORLD_COUNTRIES)
+    df.sort_values(by=[data_selected], ascending=False, inplace=True)
+    df[data_selected] = pd.to_numeric(df[data_selected], downcast='float')
+    df[data_selected] = df[data_selected].apply(format_value_string_to_locale)
+    figure = go.Figure(data=[go.Table(
+        header=dict(values=(load_resource('Country'), load_resource(data_selected)),
+                    fill_color='lightskyblue',
+                    font_color='white',
+                    font_size=15,
+                    align='left'),
+        cells=dict(values=[df['Country'], df[data_selected]],
+                   fill_color='whitesmoke',
+                   align='center',
+                   font_size=13,
+                   height=20))
+    ])
+    figure.update_layout(height=470, margin=dict(l=0, r=0, b=0, t=0))
+    return figure
+
+
 @app.callback(Output('table_tab1', 'figure'), [Input("dropdown_data_selected", "value")])
-def update_data_table(data_selected):
+def update_data_table_national(data_selected):
     df = df_regional_data.tail(21)
     df = df.sort_values(by=[data_selected], ascending=False)
     df[data_selected] = pd.to_numeric(df[data_selected], downcast='float')

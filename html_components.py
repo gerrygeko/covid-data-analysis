@@ -490,6 +490,18 @@ def create_page_components(app, df_regional_data, df_worldwide_aggregate_data, d
                                     ],
                                     id="left-column-world",
                                     className="eight columns",
+                                ),
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                dcc.Graph(id="table_tab_country_world")
+                                            ],
+                                            className="pretty_container twelve columns",
+                                        )
+                                    ],
+                                    className="pretty_container four columns",
+                                    id="cross-filter-options-tab-country-world",
                                 )
                             ],
                             className="row flex-display",
