@@ -287,69 +287,6 @@ def update_bar_graph(data_selected):
     return figure
 
 
-@app.callback(Output('world_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
-def update_world_bar_graph_active_cases(self):
-    layout_world_active_cases = copy.deepcopy(layout)
-    field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
-    df_sub = df_country_world_data
-    df = df_sub.copy()
-    df_sorted = df.sort_values(by=[DATE_PROPERTY_NAME_EN])
-    df_sorted = df_sorted.tail(NUMBER_OF_WORLD_COUNTRIES)
-    df_sorted.reset_index(inplace=True)
-    df_sorted.sort_values(by=[field_list[0]], ascending=False, inplace=True)
-    df_sorted = df_sorted.head(20)
-    y_list_1 = df_sorted['Active_cases'].values.tolist()
-    x_list = df_sorted['Country']
-    color_bar = "rgb(123, 199, 255)"
-    data = [
-        dict(
-            type="bar",
-            x=x_list,
-            y=y_list_1,
-            name='Top 20 ' + load_resource('terapia_intensiva'),
-            marker=dict(color=color_bar),
-        )
-    ]
-
-    layout_world_active_cases["title"] = 'Top 20 ' + load_resource('label_casi_attivi')
-    layout_world_active_cases["showlegend"] = True
-    layout_world_active_cases["autosize"] = True
-
-    figure = dict(data=data, layout=layout_world_active_cases)
-    log.info('Updating World Active Cases Bar Graph')
-    return figure
-
-
-@app.callback(Output('world_deaths_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
-def update_world_bar_graph_deaths(self):
-    layout_world_deaths = copy.deepcopy(layout)
-    df_sub = df_country_world_data
-    df = df_sub.copy()
-    df_sorted = df.sort_values(by=[DATE_PROPERTY_NAME_EN])
-    df_sorted = df_sorted.tail(NUMBER_OF_WORLD_COUNTRIES)
-    df_sorted.reset_index(inplace=True)
-    df_sorted.sort_values(by=['Deaths'], ascending=False, inplace=True)
-    df_sorted = df_sorted.head(20)
-    y_list_1 = df_sorted['Deaths'].values.tolist()
-    x_list = df_sorted['Country']
-    color_bar = "rgb(25,25,112)"
-    data = [
-        dict(
-            type="bar",
-            x=x_list,
-            y=y_list_1,
-            name='Top 20 ' + load_resource('deceduti'),
-            marker=dict(color=color_bar),
-        )
-    ]
-    layout_world_deaths["title"] = 'Top 20 ' + load_resource('deceduti')
-    layout_world_deaths["showlegend"] = True
-    layout_world_deaths["autosize"] = True
-    figure = dict(data=data, layout=layout_world_deaths)
-    log.info('Updating World Deaths Bar Graph')
-    return figure
-
-
 @app.callback(Output('world_map', 'figure'), [Input('i_news', 'n_intervals')])
 def update_world_map(self):
     df = df_country_world_data.copy()
