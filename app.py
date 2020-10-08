@@ -902,9 +902,8 @@ def get_last_update(url):
         last_update = 'Time not available'
     else:
         date_update_string = resp.headers["Date"]
-        datetime_obj = parsedate_to_datetime(date_update_string).astimezone(tz=pytz.timezone('Europe/Rome'))
-        last_update = f"{datetime_obj.date()} {datetime_obj.time()}"
-    string_date_update = f"{load_resource('label_last_update')} {last_update}"
+        last_update = parsedate_to_datetime(date_update_string).astimezone(tz=pytz.timezone('Europe/Rome'))
+    string_date_update = last_update.strftime(load_resource('label_last_update') + " %d/%m/%Y %H:%M:%S")
     return string_date_update
 
 
