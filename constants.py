@@ -25,7 +25,5 @@ URL_GEOJSON_REGIONS = \
     "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
 URL_GEOJSON_WORLD_COUNTRIES = \
     "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
-URL_NEWS_UPDATE = "http://newsapi.org/v2/top-headlines?country=it&category=science&apiKey=b20640c581554761baab24317b8331e7"
 
 LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
-LIST_OF_WORLD_FIELDS = ('Confirmed', 'Recovered', 'Deaths', 'Active_cases')
