@@ -294,13 +294,7 @@ def update_bar_graph(data_selected):
 @app.callback(Output('world_map', 'figure'), [Input('dropdown_country_data_selected', 'value')])
 def update_world_map(data_selected):
     df = df_rate_country_world.copy()
-    # delete_ship_row = df[df['Country'] == 'Diamond Princess'].index
-    # df.drop(delete_ship_row, inplace=True)
     df = df[~df['Country'].isin(LIST_OF_SHIPS)]
-    compression_opts = dict(method='zip',
-                            archive_name='nuovo_out.csv')
-    df.to_csv('nuovo_out.zip', index=False,
-                                 compression=compression_opts)
     df['Population'] = pd.to_numeric(df['Population'], downcast='float')
     df['Population'] = df['Population'].apply(format_value_string_to_locale)
     df.sort_values(by=['Country'], inplace=True)
@@ -311,7 +305,7 @@ def update_world_map(data_selected):
                                   color_continuous_scale='Blues',
                                   hover_name='Country',
                                   hover_data=['Population'],
-                                  #range_color=(df[data_selected].min(), df[data_selected].max()),
+                                  range_color=(df[data_selected].min(), df[data_selected].max()),
                                   mapbox_style="carto-positron",
                                   zoom=1, center={"lat": 42.0902, "lon": 11.7129},
                                   opacity=0.5,
@@ -951,10 +945,6 @@ def load_interactive_data():
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
-        # compression_opts = dict(method='zip',
-        #                         archive_name='out.csv')
-        # df_rate_country_world.to_csv('out.zip', index=False,
-        #                              compression=compression_opts)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
         last_update_content_country_world_data = current_update_content_country_world_data
