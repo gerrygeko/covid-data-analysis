@@ -172,133 +172,143 @@ def create_world_tab(df_country_world_data):
                        ),
                        html.Div(
                            [
-                               html.Div(
-                                   [
-                                       dcc.Graph(id="world_active_cases_line_chart")
-                                   ],
-                                   className="pretty_container four columns",
-                               ),
-                               html.Div(
-                                   [
-                                       dcc.Graph(id="world_map")
-                                   ],
-                                   className="pretty_container eight columns",
-                               ),
-                           ],
-                           className="row flex-display",
-                       ),
-                       html.Div(
-                           [
-                               html.Div(
-                                   [
-                                       html.P(load_resource('label_select_country'),
-                                              className="control_label"),
-                                       dcc.Dropdown(
-                                           id='dropdown_country_selected',
-                                           options=get_options(
-                                               df_country_world_data['Country'].unique()),
-                                           multi=False,
-                                           value=
-                                           df_country_world_data['Country'].sort_values()[0],
-                                           className='dcc_control'
-                                       ),
-                                   ],
-                                   className="pretty_container four columns",
+                               html.P(load_resource('label_select_data'),
+                                      className="label_data_selection"),
+                               dcc.Dropdown(
+                                   id='dropdown_country_data_selected',
+                                   options=get_options_from_list(
+                                       LIST_OF_WORLD_FIELDS),
+                                   multi=False,
+                                   value='Confirmed',
+                                   className='dcc_dropdown_data_selected'
                                ),
                                html.Div(
                                    [
                                        html.Div(
                                            [
-                                               html.Div(
-                                                   [html.H6(id="total_active_cases_text_world", children=''),
-                                                    html.H6(id="total_active_cases_variation_world", children=''),
-                                                    html.P(load_resource('totale_positivi'))],
-                                                   id="total_positives_world",
-                                                   className="mini_container",
 
-                                               ),
-                                               html.Div(
-                                                   [html.H6(id="total_confirmed_text_world", children=''),
-                                                    html.H6(id="total_confirmed_variation_world", children=''),
-                                                    html.P(load_resource('totale_casi'))],
-                                                   id="total_cases_world",
-                                                   className="mini_container",
-
-                                               ),
-                                               html.Div(
-                                                   [html.H6(id="total_recovered_text_world", children=''),
-                                                    html.H6(id="total_recovered_variation_world", children=''),
-                                                    html.P(load_resource('dimessi_guariti'))],
-                                                   id="total_recovered_world",
-                                                   className="mini_container",
-                                               ),
-                                               html.Div(
-                                                   [html.H6(id="total_deaths_text_world", children=''),
-                                                    html.H6(id="total_deaths_variation_world", children=''),
-                                                    html.P(load_resource('deceduti'))],
-                                                   id="total_deaths_world",
-                                                   className="mini_container",
-                                               ),
+                                               dcc.Graph(id="world_active_cases_line_chart")
                                            ],
-                                           id="info-container_cards_countries_world",
-                                           className="row container-display",
-                                       )
+                                           className="pretty_container four columns",
+                                       ),
+                                       html.Div(
+                                           [
+                                               dcc.Graph(id="world_map")
+                                           ],
+                                           className="pretty_container eight columns",
+                                       ),
                                    ],
-                                   id="right-column-world",
-                                   className="eight columns",
+                                   className="row flex-display",
                                ),
-                           ],
-                           className="row flex-display",
-                       ),
-                       html.Div(
-                           [
+                               # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                html.Div(
                                    [
                                        html.Div(
                                            [
-                                               html.P(load_resource('label_select_data'),
-                                                      className="control_label"),
-                                               dcc.Dropdown(
-                                                   id='dropdown_country_data_selected',
-                                                   options=get_options_from_list(
-                                                       LIST_OF_WORLD_FIELDS),
-                                                   multi=False,
-                                                   value='Confirmed',
-                                                   className='dcc_control'
+                                               html.Div(
+                                                   [
+                                                       ##########################################
+                                                       html.P(load_resource('label_select_multiregion'),
+                                                              className="control_label"),
+                                                       dcc.Dropdown(id='dropdown_country_list_selected',
+                                                                    options=get_options(
+                                                                        df_country_world_data[
+                                                                            'Country'].unique()),
+                                                                    multi=True,
+                                                                    value=new_confirmed_countries_world(
+                                                                        df_country_world_data),
+                                                                    className='dcc_control'
+                                                                    ),
+                                                       dcc.Graph(id='country_world_linear_chart')
+                                                   ],
+                                                   className="pretty_container",
                                                ),
-                                               html.P(load_resource('label_select_multiregion'),
-                                                      className="control_label"),
-                                               dcc.Dropdown(id='dropdown_country_list_selected',
-                                                            options=get_options(
-                                                                df_country_world_data[
-                                                                    'Country'].unique()),
-                                                            multi=True,
-                                                            value=new_confirmed_countries_world(
-                                                                df_country_world_data),
-                                                            className='dcc_control'
-                                                            ),
-                                               dcc.Graph(id='country_world_linear_chart')
                                            ],
-                                           className="pretty_container",
+                                           id="left-column-world",
+                                           className="eight columns",
                                        ),
-                                   ],
-                                   id="left-column-world",
-                                   className="eight columns",
-                               ),
-                               html.Div(
-                                   [
                                        html.Div(
                                            [
                                                dcc.Graph(id="table_tab_country_world")
                                            ],
-                                           className="pretty_container twelve columns",
+                                           className="pretty_container four columns",
+                                           id="cross-filter-options-tab-country-world",
                                        )
                                    ],
-                                   className="pretty_container four columns",
-                                   id="cross-filter-options-tab-country-world",
+                                   className="row flex-display",
+                               ),
+                               # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                           ],
+                           className="pretty_container",  ######################à
+                       ),
+                       html.Div(
+                           [
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               html.P(load_resource('label_select_country'),
+                                                      className="control_label"),
+                                               dcc.Dropdown(
+                                                   id='dropdown_country_selected',
+                                                   options=get_options(
+                                                       df_country_world_data['Country'].unique()),
+                                                   multi=False,
+                                                   value=
+                                                   df_country_world_data['Country'].sort_values()[0],
+                                                   className='dcc_control'
+                                               ),
+                                           ],
+                                           className="pretty_container four columns",
+                                       ),
+                                       html.Div(
+                                           [
+                                               html.Div(
+                                                   [
+                                                       html.Div(
+                                                           [html.H6(id="total_confirmed_text_world", children=''),
+                                                            html.H6(id="total_confirmed_variation_world", children=''),
+                                                            html.P(load_resource('totale_casi'))],
+                                                           id="total_cases_world",
+                                                           className="mini_container",
+
+                                                       ),
+                                                       html.Div(
+                                                           [html.H6(id="total_active_cases_text_world", children=''),
+                                                            html.H6(id="total_active_cases_variation_world",
+                                                                    children=''),
+                                                            html.P(load_resource('totale_positivi'))],
+                                                           id="total_positives_world",
+                                                           className="mini_container",
+
+                                                       ),
+                                                       html.Div(
+                                                           [html.H6(id="total_recovered_text_world", children=''),
+                                                            html.H6(id="total_recovered_variation_world", children=''),
+                                                            html.P(load_resource('dimessi_guariti'))],
+                                                           id="total_recovered_world",
+                                                           className="mini_container",
+                                                       ),
+                                                       html.Div(
+                                                           [html.H6(id="total_deaths_text_world", children=''),
+                                                            html.H6(id="total_deaths_variation_world", children=''),
+                                                            html.P(load_resource('deceduti'))],
+                                                           id="total_deaths_world",
+                                                           className="mini_container",
+                                                       ),
+                                                   ],
+                                                   id="info-container_cards_countries_world",
+                                                   className="row container-display",
+                                               )
+                                           ],
+                                           id="right-column-world",
+                                           className="eight columns",
+                                       ),
+                                   ],
+                                   className="row flex-display",
                                )
                            ],
-                           className="row flex-display",
+                           className="pretty_container twelve columns",
                        )
                    ])
 
@@ -879,4 +889,3 @@ def create_version_link():
         ),
         href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
     )
-

@@ -589,7 +589,7 @@ def update_data_table_country_world(data_selected):
                    font_size=13,
                    height=20))
     ])
-    figure.update_layout(height=470, margin=dict(l=0, r=0, b=0, t=0))
+    figure.update_layout(height=520, margin=dict(l=0, r=0, b=0, t=0))
     return figure
 
 
@@ -714,18 +714,18 @@ def update_regional_details_card(region_selected):
     return rounded_mean, string_max_date, string_max_value
 
 
-@app.callback([Output('total_active_cases_text_world', 'children'),
-               Output('total_confirmed_text_world', 'children'),
+@app.callback([Output('total_confirmed_text_world', 'children'),
+               Output('total_active_cases_text_world', 'children'),
                Output('total_recovered_text_world', 'children'),
                Output('total_deaths_text_world', 'children'),
-               Output('total_active_cases_variation_world', 'children'),
                Output('total_confirmed_variation_world', 'children'),
+               Output('total_active_cases_variation_world', 'children'),
                Output('total_recovered_variation_world', 'children'),
                Output('total_deaths_variation_world', 'children'),
                ], [Input("dropdown_country_selected", "value")])
 def update_country_world_cards_text(country_selected):
     log.info('Update Country cards')
-    field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
+    field_list = ['Confirmed', 'Active_cases', 'Recovered', 'Deaths']
     total_text_values = []
     variation_text_values = []
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
@@ -748,13 +748,13 @@ def update_country_world_cards_text(country_selected):
     return (*total_text_values), (*variation_text_values),
 
 
-@app.callback([Output('total_active_cases_variation_world', 'style'),
-               Output('total_confirmed_variation_world', 'style'),
+@app.callback([Output('total_confirmed_variation_world', 'style'),
+               Output('total_active_cases_variation_world', 'style'),
                Output('total_recovered_variation_world', 'style'),
                Output('total_deaths_variation_world', 'style'),
                ], [Input("dropdown_country_selected", "value")])
 def update_country_world_cards_color(country_selected):
-    field_list = ['Active_cases', 'Confirmed', 'Recovered', 'Deaths']
+    field_list = ['Confirmed', 'Active_cases', 'Recovered', 'Deaths']
     color_cards_list = []
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
