@@ -200,14 +200,12 @@ def create_world_tab(df_country_world_data):
                                    ],
                                    className="row flex-display",
                                ),
-                               # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                html.Div(
                                    [
                                        html.Div(
                                            [
                                                html.Div(
                                                    [
-                                                       ##########################################
                                                        html.P(load_resource('label_select_multiregion'),
                                                               className="control_label"),
                                                        dcc.Dropdown(id='dropdown_country_list_selected',
@@ -237,9 +235,8 @@ def create_world_tab(df_country_world_data):
                                    ],
                                    className="row flex-display",
                                ),
-                               # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                            ],
-                           className="pretty_container",  ######################à
+                           className="pretty_container",
                        ),
                        html.Div(
                            [
