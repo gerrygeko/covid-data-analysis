@@ -374,12 +374,11 @@ def update_italian_graph_active_cases(self):
     return figure
 
 
-@app.callback(Output('world_active_cases_line_chart', 'figure'), [Input('i_news', 'n_intervals')])
-def update_world_graph_active_cases(self):
-    layout_world_active_cases = copy.deepcopy(layout)
+@app.callback(Output('linear_chart_world', 'figure'), [Input('dropdown_country_data_selected', 'value')])
+def update_world_linear_chart(data_selected):
+    layout_world_linear_chart = copy.deepcopy(layout)
     df = df_worldwide_aggregate_data
-    df.reset_index(inplace=True)
-    y_list_1 = df['Active_cases'].values.tolist()
+    y_list_1 = df[data_selected].values.tolist()
     x_list = df[DATE_PROPERTY_NAME_EN]
     colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
     data = [
@@ -387,18 +386,18 @@ def update_world_graph_active_cases(self):
             type="scatter",
             x=x_list,
             y=y_list_1,
-            name=load_resource('Active_cases'),
+            name=load_resource(data_selected),
             fill='tozeroy',
             marker=dict(color=colors[2])
         )
     ]
 
-    layout_world_active_cases["title"] = load_resource('Active_cases')
-    layout_world_active_cases["showlegend"] = True
-    layout_world_active_cases["autosize"] = True
+    layout_world_linear_chart["title"] = load_resource(data_selected)
+    layout_world_linear_chart["showlegend"] = True
+    layout_world_linear_chart["autosize"] = True
 
-    figure = dict(data=data, layout=layout_world_active_cases)
-    log.info('Updating World Active Cases Bar Graph')
+    figure = dict(data=data, layout=layout_world_linear_chart)
+    log.info('Updating World Linear Chart')
     return figure
 
 

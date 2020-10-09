@@ -187,7 +187,7 @@ def create_world_tab(df_country_world_data):
                                        html.Div(
                                            [
 
-                                               dcc.Graph(id="world_active_cases_line_chart")
+                                               dcc.Graph(id="linear_chart_world")
                                            ],
                                            className="pretty_container four columns",
                                        ),
