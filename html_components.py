@@ -431,8 +431,7 @@ def create_italy_tab(df_regional_data):
                                                                         df_regional_data),
                                                                     className='dcc_control'
                                                                     ),
-                                                       dcc.Graph(id='regional_timeseries_linear'),
-                                                       dcc.Graph(id="pie_graph")
+                                                       dcc.Graph(id='regional_timeseries_linear')
                                                    ],
                                                    className="pretty_container",
                                                ),

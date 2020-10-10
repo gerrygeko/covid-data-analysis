@@ -203,33 +203,6 @@ def update_country_world_line_chart(country_list, data_selected):
     return figure
 
 
-@app.callback(Output('pie_graph', 'figure'), [Input('dropdown_region_list_selected', 'value'),
-                                              Input('dropdown_italy_data_selected', 'value')])
-def update_pie_graph(region_list, data_selected):
-    layout_pie = copy.deepcopy(layout)
-    value_list = []
-    if len(region_list) == 0 or data_selected is None or data_selected == 'variazione_totale_positivi':
-        data = [go.Pie(labels=[],
-                       values=value_list)]
-        layout_pie['title'] = "Nessun dato selezionato o <br> il dato selezionato <br> non è rappresentabile"
-        figure = dict(data=data, layout=layout_pie)
-        return figure
-    region_list.sort()
-    for region in region_list:
-        value = df_regional_data[df_regional_data['denominazione_regione'] == region][data_selected].tail(1)
-        value_list.append(int(value))
-    data = [go.Pie(labels=region_list,
-                   values=value_list,
-                   hoverinfo='text+value+percent',
-                   sort=False,
-                   textinfo='label+percent',
-                   hole=0.5)]
-    layout_pie['legend'] = dict(font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)")
-    figure = dict(data=data, layout=layout_pie)
-    log.info('Updating pie graph')
-    return figure
-
-
 @app.callback(Output('map_graph', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
