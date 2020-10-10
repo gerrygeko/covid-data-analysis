@@ -441,24 +441,10 @@ def create_italy_tab(df_regional_data):
                                        ),
                                        html.Div(
                                            [
-                                               html.Div(
-                                                   [
-                                                       dcc.Graph(id="table_tab1")
-                                                   ],
-                                                   className="pretty_container twelve columns",
-                                               ),
-                                               html.Div(
-                                                   [html.H5(id='bar_header',
-                                                            children=load_resource('label_top_ten'),
-                                                            className='title'),
-                                                    dcc.Graph(id="bar_graph")],
-                                                   className="pretty_container twelve columns",
-                                               ),
-
+                                               dcc.Graph(id="table_tab_italy")
                                            ],
-                                           className="ghosty_container four columns",
-                                           id="cross-filter-options-tab1",
-                                       ),
+                                           className="pretty_container four columns",
+                                       )
                                    ],
                                    className="row flex-display",
                                )

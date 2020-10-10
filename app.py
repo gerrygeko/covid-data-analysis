@@ -238,32 +238,6 @@ def update_map_graph(data_selected):
     return figure
 
 
-@app.callback(Output('bar_graph', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
-def update_bar_graph(data_selected):
-    df_sub = df_regional_data.tail(21)
-    df_sorted = df_sub.sort_values(by=[data_selected])
-    df_sorted = df_sorted.tail(10)
-    region_list = df_sorted['denominazione_regione'].values.tolist()
-    value_list = df_sorted[data_selected].values.tolist()
-    data = [go.Bar(x=value_list,
-                   y=region_list,
-                   text=region_list,
-                   textposition='auto',
-                   hovertemplate='<i><b>Regione</b></i>: %{y}' +
-                                 '<br><b>N.</b>: %{x}<br>' +
-                                 '<extra></extra>',
-                   insidetextanchor="start",
-                   orientation='h'
-                   )
-            ]
-    layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = '{}'.format(load_resource(data_selected))
-    layout_bar['yaxis'] = dict(zeroline=False, showline=False, showgrid=False, showticklabels=False)
-    figure = dict(data=data, layout=layout_bar)
-    log.info('Updating bar graph in Tab 1')
-    return figure
-
-
 @app.callback(Output('world_map', 'figure'), [Input('dropdown_country_data_selected', 'value')])
 def update_world_map(data_selected):
     df = df_rate_country_world.copy()
@@ -578,7 +552,7 @@ def update_data_table_country_world(data_selected):
     return figure
 
 
-@app.callback(Output('table_tab1', 'figure'), [Input("dropdown_italy_data_selected", "value")])
+@app.callback(Output('table_tab_italy', 'figure'), [Input("dropdown_italy_data_selected", "value")])
 def update_data_table_national(data_selected):
     df = df_regional_data.tail(21)
     df = df.sort_values(by=[data_selected], ascending=False)
@@ -596,7 +570,7 @@ def update_data_table_national(data_selected):
                    font_size=13,
                    height=20))
     ])
-    figure.update_layout(height=470, margin=dict(l=0, r=0, b=0, t=0))
+    figure.update_layout(height=450, margin=dict(l=0, r=0, b=0, t=0))
     return figure
 
 
