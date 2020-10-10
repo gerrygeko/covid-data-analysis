@@ -203,8 +203,8 @@ def update_country_world_line_chart(country_list, data_selected):
     return figure
 
 
-@app.callback(Output('map_graph', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
-def update_map_graph(data_selected):
+@app.callback(Output('italy_map', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
+def update_italy_map(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
     df['population'] = df['population'].apply(format_value_string_to_locale)

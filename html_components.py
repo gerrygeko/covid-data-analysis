@@ -408,9 +408,9 @@ def create_italy_tab(df_regional_data):
                                            className="pretty_container six columns",
                                        ),
                                        html.Div(
-                                           [html.H5(id='map_header', children=load_resource('label_map'),
+                                           [html.H5(id='italy_map_header', children=load_resource('label_map'),
                                                     className='sub_title'),
-                                            dcc.Graph(id="map_graph")],
+                                            dcc.Graph(id="italy_map")],
                                            className="pretty_container six columns",
                                        ),
                                    ],
