@@ -41,10 +41,10 @@ app = dash.Dash(
 server = app.server
 
 field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensiva',
-                      'totale_ospedalizzati', 'isolamento_domiciliare',
-                      'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
-                      'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
-                      'tamponi', 'casi_testati']
+                                      'totale_ospedalizzati', 'isolamento_domiciliare',
+                                      'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
+                                      'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
+                                      'tamponi', 'casi_testati']
 
 field_list_to_rate_country_world = ['Confirmed', 'Recovered', 'Deaths', 'Active_cases']
 
@@ -167,7 +167,7 @@ def create_scatter_plot_by_country_world(data_frame, title, x_axis_data, y_axis_
 
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
-                                                               Input('dropdown_data_selected', 'value')])
+                                                               Input('dropdown_italy_data_selected', 'value')])
 def update_regions_line_chart(region_list, data_selected):
     regions_list_mapping = []
     # if no region selected, create empty figure
@@ -204,7 +204,7 @@ def update_country_world_line_chart(country_list, data_selected):
 
 
 @app.callback(Output('pie_graph', 'figure'), [Input('dropdown_region_list_selected', 'value'),
-                                              Input('dropdown_data_selected', 'value')])
+                                              Input('dropdown_italy_data_selected', 'value')])
 def update_pie_graph(region_list, data_selected):
     layout_pie = copy.deepcopy(layout)
     value_list = []
@@ -230,7 +230,7 @@ def update_pie_graph(region_list, data_selected):
     return figure
 
 
-@app.callback(Output('map_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
+@app.callback(Output('map_graph', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
 def update_map_graph(data_selected):
     df = df_rate_regional.tail(21)
     df['population'] = pd.to_numeric(df['population'], downcast='float')
@@ -265,7 +265,7 @@ def update_map_graph(data_selected):
     return figure
 
 
-@app.callback(Output('bar_graph', 'figure'), [Input('dropdown_data_selected', 'value')])
+@app.callback(Output('bar_graph', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
 def update_bar_graph(data_selected):
     df_sub = df_regional_data.tail(21)
     df_sorted = df_sub.sort_values(by=[data_selected])
@@ -328,21 +328,21 @@ def update_world_map(data_selected):
     return figure
 
 
-@app.callback(Output('italian_active_cases_bar_graph', 'figure'), [Input('i_news', 'n_intervals')])
-def update_italian_graph_active_cases(self):
+@app.callback(Output('linear_chart_italy', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
+def update_italian_linear_chart(data_selected):
     layout_italian_active_cases = copy.deepcopy(layout)
     df = df_national_data
-    df.reset_index(inplace=True)
-    y_list_1 = df['terapia_intensiva'].values.tolist()
-    y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
-    y_list_3 = df['isolamento_domiciliare'].values.tolist()
-    x_list = df['data']
     colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
-    data = [
+    x_list = df[DATE_PROPERTY_NAME_IT]
+    y_data_selected = df[data_selected].values.tolist()
+    y_active_cases_list_1 = df['terapia_intensiva'].values.tolist()
+    y_active_cases_list_2 = df['ricoverati_con_sintomi'].values.tolist()
+    y_active_cases_list_3 = df['isolamento_domiciliare'].values.tolist()
+    data_list = [
         dict(
             type="scatter",
             x=x_list,
-            y=y_list_3,
+            y=y_active_cases_list_3,
             name=load_resource('isolamento_domiciliare'),
             fill='tozeroy',
             marker=dict(color=colors[2]),
@@ -350,7 +350,7 @@ def update_italian_graph_active_cases(self):
         dict(
             type="scatter",
             x=x_list,
-            y=y_list_2,
+            y=y_active_cases_list_2,
             name=load_resource('ricoverati_con_sintomi'),
             fill='tozeroy',
             marker=dict(color=colors[1])
@@ -358,19 +358,32 @@ def update_italian_graph_active_cases(self):
         dict(
             type="scatter",
             x=x_list,
-            y=y_list_1,
+            y=y_active_cases_list_1,
             name=load_resource('terapia_intensiva'),
             fill='tozeroy',
             marker=dict(color=colors[0]),
+        ),
+        dict(
+            type="scatter",
+            x=x_list,
+            y=y_data_selected,
+            name=load_resource(data_selected),
+            fill='tozeroy',
+            marker=dict(color=colors[2])
         )
     ]
+    if data_selected == 'totale_positivi':
+        data = [data_list[0], data_list[1], data_list[2]]
+        layout_italian_active_cases["title"] = load_resource('label_casi_attivi')
+    else:
+        data = [data_list[3]]
+        layout_italian_active_cases["title"] = load_resource(data_selected)
 
-    layout_italian_active_cases["title"] = load_resource('label_casi_attivi')
     layout_italian_active_cases["showlegend"] = True
     layout_italian_active_cases["autosize"] = True
-
     figure = dict(data=data, layout=layout_italian_active_cases)
-    log.info('Updating Italian Active Cases Bar Graph')
+
+    log.info('Updating Italian Linear Graph')
     return figure
 
 
@@ -592,7 +605,7 @@ def update_data_table_country_world(data_selected):
     return figure
 
 
-@app.callback(Output('table_tab1', 'figure'), [Input("dropdown_data_selected", "value")])
+@app.callback(Output('table_tab1', 'figure'), [Input("dropdown_italy_data_selected", "value")])
 def update_data_table_national(data_selected):
     df = df_regional_data.tail(21)
     df = df.sort_values(by=[data_selected], ascending=False)
@@ -924,7 +937,8 @@ def load_interactive_data():
         log.info('Worldwide Aggregate data update required')
         df_worldwide_aggregate_data = load_csv(URL_CSV_WORLDWIDE_AGGREGATE_DATA, DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
-            (df_worldwide_aggregate_data['Recovered'] + df_worldwide_aggregate_data['Deaths'])
+                                                      (df_worldwide_aggregate_data['Recovered'] +
+                                                       df_worldwide_aggregate_data['Deaths'])
         date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
@@ -939,7 +953,7 @@ def load_interactive_data():
         log.info('Country World data update required')
         df_country_world_data = load_csv(URL_CSV_WORLD_COUNTRIES_DATA, DATE_PROPERTY_NAME_EN)
         df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
-            (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
+                                                (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)

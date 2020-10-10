@@ -390,7 +390,7 @@ def create_italy_tab(df_regional_data):
                                html.P(load_resource('label_select_data'),
                                       className="label_data_selection"),
                                dcc.Dropdown(
-                                   id='dropdown_data_selected',
+                                   id='dropdown_italy_data_selected',
                                    options=get_options_from_list(
                                        italian_field_list_complete),
                                    multi=False,
@@ -401,7 +401,7 @@ def create_italy_tab(df_regional_data):
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="italian_active_cases_bar_graph")
+                                               dcc.Graph(id="linear_chart_italy")
                                            ],
                                            className="pretty_container six columns",
                                        ),
