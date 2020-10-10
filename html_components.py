@@ -323,17 +323,17 @@ def create_italy_tab(df_regional_data):
                                        html.Div(
                                            [
                                                html.Div(
-                                                   [html.H6(id="total_positive_text", children=''),
-                                                    html.H6(id="total_positive_variation", children=''),
-                                                    html.P(load_resource('totale_positivi'))],
-                                                   id="total_positive",
-                                                   className="mini_container",
-                                               ),
-                                               html.Div(
                                                    [html.H6(id="total_cases_text", children=''),
                                                     html.H6(id="total_cases_variation", children=''),
                                                     html.P(load_resource('totale_casi'))],
                                                    id="total_cases",
+                                                   className="mini_container",
+                                               ),
+                                               html.Div(
+                                                   [html.H6(id="total_positive_text", children=''),
+                                                    html.H6(id="total_positive_variation", children=''),
+                                                    html.P(load_resource('totale_positivi'))],
+                                                   id="total_positive",
                                                    className="mini_container",
                                                ),
                                                html.Div(

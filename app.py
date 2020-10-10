@@ -409,14 +409,14 @@ def update_regional_graph_active_cases(region_selected):
     return figure
 
 
-@app.callback([Output('total_positive_text', 'children'),
-               Output('total_cases_text', 'children'),
+@app.callback([Output('total_cases_text', 'children'),
+               Output('total_positive_text', 'children'),
                Output('total_recovered_text', 'children'),
                Output('total_deaths_text', 'children'),
                Output('total_icu_text', 'children'),
                Output('total_swabs_text', 'children'),
-               Output('total_positive_variation', 'children'),
                Output('total_cases_variation', 'children'),
+               Output('total_positive_variation', 'children'),
                Output('total_recovered_variation', 'children'),
                Output('total_deaths_variation', 'children'),
                Output('total_icu_variation', 'children'),
@@ -426,7 +426,7 @@ def update_regional_graph_active_cases(region_selected):
 def update_national_cards_text(self):
     log.info('update cards')
     sub_header_italian_text = date_last_update_italy
-    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
+    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
     for field in field_list:
@@ -441,15 +441,15 @@ def update_national_cards_text(self):
     return (*total_text_values), (*variation_text_values), sub_header_italian_text
 
 
-@app.callback([Output('total_positive_variation', 'style'),
-               Output('total_cases_variation', 'style'),
+@app.callback([Output('total_cases_variation', 'style'),
+               Output('total_positive_variation', 'style'),
                Output('total_recovered_variation', 'style'),
                Output('total_deaths_variation', 'style'),
                Output('total_icu_variation', 'style'),
                Output('total_swabs_variation', 'style')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_color(self):
-    field_list = ['totale_positivi', 'totale_casi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
+    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     color_cards_list = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
