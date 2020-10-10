@@ -387,79 +387,84 @@ def create_italy_tab(df_regional_data):
                        ),
                        html.Div(
                            [
-                               html.Div(
-                                   [
-                                       dcc.Graph(id="italian_active_cases_bar_graph")
-                                   ],
-                                   className="pretty_container six columns",
-                               ),
-                               html.Div(
-                                   [html.H5(id='map_header', children=load_resource('label_map'),
-                                            className='title'),
-                                    dcc.Graph(id="map_graph")],
-                                   className="pretty_container six columns",
-                               ),
-                           ],
-                           className="row flex-display",
-                       ),
-                       html.Div(
-                           [
-                               html.Div(
-                                   [
-                                       html.Div(
-                                           [
-                                               html.P(load_resource('label_select_data'),
-                                                      className="control_label"),
-                                               dcc.Dropdown(
-                                                   id='dropdown_data_selected',
-                                                   options=get_options_from_list(
-                                                       italian_field_list_complete),
-                                                   multi=False,
-                                                   value='nuovi_positivi',
-                                                   className='dcc_control'
-                                               ),
-                                               html.P(load_resource('label_select_multiregion'),
-                                                      className="control_label"),
-                                               dcc.Dropdown(id='dropdown_region_list_selected',
-                                                            options=get_options(
-                                                                df_regional_data[
-                                                                    'denominazione_regione'].unique()),
-                                                            multi=True,
-                                                            value=new_positive_regions(
-                                                                df_regional_data),
-                                                            className='dcc_control'
-                                                            ),
-                                               dcc.Graph(id='regional_timeseries_linear'),
-                                               dcc.Graph(id="pie_graph")
-                                           ],
-                                           className="pretty_container",
-                                       ),
-                                   ],
-                                   id="right-column",
-                                   className="eight columns",
+                               html.P(load_resource('label_select_data'),
+                                      className="label_data_selection"),
+                               dcc.Dropdown(
+                                   id='dropdown_data_selected',
+                                   options=get_options_from_list(
+                                       italian_field_list_complete),
+                                   multi=False,
+                                   value='nuovi_positivi',
+                                   className='dcc_dropdown_data_selected'
                                ),
                                html.Div(
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="table_tab1")
+                                               dcc.Graph(id="italian_active_cases_bar_graph")
                                            ],
-                                           className="pretty_container twelve columns",
+                                           className="pretty_container six columns",
                                        ),
                                        html.Div(
-                                           [html.H5(id='bar_header',
-                                                    children=load_resource('label_top_ten'),
+                                           [html.H5(id='map_header', children=load_resource('label_map'),
                                                     className='title'),
-                                            dcc.Graph(id="bar_graph")],
-                                           className="pretty_container twelve columns",
+                                            dcc.Graph(id="map_graph")],
+                                           className="pretty_container six columns",
                                        ),
-
                                    ],
-                                   className="pretty_container four columns",
-                                   id="cross-filter-options-tab1",
+                                   className="row flex-display",
                                ),
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               html.Div(
+                                                   [
+                                                       html.P(load_resource('label_select_multiregion'),
+                                                              className="control_label"),
+                                                       dcc.Dropdown(id='dropdown_region_list_selected',
+                                                                    options=get_options(
+                                                                        df_regional_data[
+                                                                            'denominazione_regione'].unique()),
+                                                                    multi=True,
+                                                                    value=new_positive_regions(
+                                                                        df_regional_data),
+                                                                    className='dcc_control'
+                                                                    ),
+                                                       dcc.Graph(id='regional_timeseries_linear'),
+                                                       dcc.Graph(id="pie_graph")
+                                                   ],
+                                                   className="pretty_container",
+                                               ),
+                                           ],
+                                           id="right-column",
+                                           className="eight columns",
+                                       ),
+                                       html.Div(
+                                           [
+                                               html.Div(
+                                                   [
+                                                       dcc.Graph(id="table_tab1")
+                                                   ],
+                                                   className="pretty_container twelve columns",
+                                               ),
+                                               html.Div(
+                                                   [html.H5(id='bar_header',
+                                                            children=load_resource('label_top_ten'),
+                                                            className='title'),
+                                                    dcc.Graph(id="bar_graph")],
+                                                   className="pretty_container twelve columns",
+                                               ),
+
+                                           ],
+                                           className="ghosty_container four columns",
+                                           id="cross-filter-options-tab1",
+                                       ),
+                                   ],
+                                   className="row flex-display",
+                               )
                            ],
-                           className="row flex-display",
+                           className="pretty_container twelve columns",
                        )
                    ])
 
