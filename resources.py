@@ -60,6 +60,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_map': 'N° casi ogni 100K abitanti',
     'label_top_ten': 'Top 10 Regioni:',
     'label_hover_map': 'per regione (ogni cento mila abitanti)',
+    'label_hover_world_map': 'per nazione (ogni cento mila abitanti)',
     'label_persone': 'Persone',
     'fase_1': 'Fase 1',
     'fase_2': 'Fase 2',

@@ -254,7 +254,7 @@ def update_world_map(data_selected):
                                   hover_data=['Population'],
                                   range_color=(df[data_selected].min(), df[data_selected].max()),
                                   mapbox_style="carto-positron",
-                                  zoom=1, center={"lat": 42.0902, "lon": 11.7129},
+                                  zoom=0.95, center={"lat": 27.0902, "lon": 2.7129},
                                   opacity=0.5,
                                   labels={data_selected: (load_resource('label_persone'))}
                                   )
@@ -265,9 +265,9 @@ def update_world_map(data_selected):
             y=0.01,
             xref='paper',
             yref='paper',
-            text='*{} <br>'.format(load_resource(data_selected))
-                 + load_resource('label_hover_map')
-                 + '<br> {}'.format(date_string),
+            text=f"*{load_resource(data_selected)} <br>"
+            f"{load_resource('label_hover_world_map')} <br>"
+            f"{date_string}",
             showarrow=False
         )]
     )
@@ -783,18 +783,15 @@ def load_country_world_rate_data_frame(df):
     df_sb = df_sb.sort_values(by=[DATE_PROPERTY_NAME_EN])
     df_sb = df_sb.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     df_sb.sort_values(by=['Country'], inplace=True)
+    df_sb['Population'] = ''
     for index, row in df_sb.iterrows():
         nation_name = row["Country"]
-        df_sb['Population'] = world_population[nation_name]
-    # Convert field to float
-    for field in field_list_to_rate_country_world:
-        df_sb[field] = pd.to_numeric(df_sb[field], downcast='float')
-    for i, row in df_sb.iterrows():
-        population = row['Population']
+        population = int(world_population[nation_name])
+        df_sb.loc[index, 'Population'] = population
         for field in field_list_to_rate_country_world:
             value = row[field]
-            pressure_value = (float(value) / float(population)) * INHABITANT_RATE
-            df_sb.at[i, field] = round(pressure_value, 2)
+            pressure_value = (float(value) / population) * INHABITANT_RATE
+            df_sb.loc[index, field] = round(pressure_value, 2)
     return df_sb
 
 
