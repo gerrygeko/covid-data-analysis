@@ -783,7 +783,9 @@ def load_country_world_rate_data_frame(df):
     df_sb = df_sb.sort_values(by=[DATE_PROPERTY_NAME_EN])
     df_sb = df_sb.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     df_sb.sort_values(by=['Country'], inplace=True)
-    df_sb['Population'] = list(world_population.values())
+    for index, row in df_sb.iterrows():
+        nation_name = row["Country"]
+        df_sb['Population'] = world_population[nation_name]
     # Convert field to float
     for field in field_list_to_rate_country_world:
         df_sb[field] = pd.to_numeric(df_sb[field], downcast='float')
