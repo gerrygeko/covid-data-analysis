@@ -38,8 +38,8 @@ body {
 
 .dcc_dropdown_data_selected {
   width: 20%;
-  margin-right: 12px;
-  margin-left:auto;
+  margin-left: 12px;
+  margin-right:auto;
   display:block;
   height: 100%;
   text-transform: none;
@@ -52,7 +52,7 @@ body {
   padding-bottom: 0px;
   margin-bottom: 0px;
   width: calc(100%-40px);
-  float: right;
+  float: left;
 }
 
 .dcc_control {
