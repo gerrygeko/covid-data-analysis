@@ -29,5 +29,6 @@ URL_NEWS_UPDATE = "http://newsapi.org/v2/top-headlines?country=it&category=scien
 
 
 LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
-LIST_OF_WORLD_FIELDS = ('Confirmed', 'Recovered', 'Deaths', 'Active_cases')
+LIST_OF_WORLD_FIELDS = ('Confirmed', 'Recovered', 'Deaths', 'New Confirmed', 'New Recovered', 'New Deaths', 'Active_cases')
+LIST_OF_WORLD_FIELDS_TO_RATE = ('Confirmed', 'Recovered', 'Deaths', 'Active_cases', 'New Confirmed', 'New Recovered', 'New Deaths')
 LIST_OF_SHIPS = ('Diamond Princess', 'MS Zaandam')

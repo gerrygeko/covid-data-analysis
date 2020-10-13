@@ -22,7 +22,7 @@ import logger
 from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, DATE_PROPERTY_NAME_IT, \
     LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA, INHABITANT_RATE, URL_GEOJSON_REGIONS, URL_GEOJSON_WORLD_COUNTRIES, \
     URL_CSV_REGIONAL_DATA, URL_CSV_ITALY_DATA, URL_CSV_WORLDWIDE_AGGREGATE_DATA, URL_CSV_WORLD_COUNTRIES_DATA, \
-    LIST_OF_SHIPS
+    LIST_OF_SHIPS, LIST_OF_WORLD_FIELDS_TO_RATE
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation
 from utils import is_debug_mode_enabled
@@ -45,8 +45,6 @@ field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensi
                                       'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
                                       'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                                       'tamponi', 'casi_testati']
-
-field_list_to_rate_country_world = ['Confirmed', 'Recovered', 'Deaths', 'Active_cases']
 
 
 def load_csv_from_file(path):
@@ -788,7 +786,7 @@ def load_country_world_rate_data_frame(df):
         nation_name = row["Country"]
         population = int(world_population[nation_name])
         df_sb.loc[index, 'Population'] = population
-        for field in field_list_to_rate_country_world:
+        for field in LIST_OF_WORLD_FIELDS_TO_RATE:
             value = row[field]
             pressure_value = (float(value) / population) * INHABITANT_RATE
             df_sb.loc[index, field] = round(pressure_value, 2)
@@ -865,6 +863,31 @@ def get_last_update(url):
     return string_date_update
 
 
+def add_variation_columns(df):
+    df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
+    for index, row in df.iterrows():
+        for col in df.columns:
+            if col in ('Confirmed', 'Recovered', 'Deaths') and (index is not 0):
+                df.loc[index, f"New {col}"] = df.loc[index, f"{col}"] - df.loc[index - 1, f"{col}"]
+    return df
+
+
+def add_variation_columns_single_country(df):
+    df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
+    country = ""
+    for index, row in df.iterrows():
+        if (index is 0) or country != row['Country']:
+            country = row['Country']
+            print(country)
+        else:
+            for col in df.columns:
+                if col in ('Confirmed', 'Recovered', 'Deaths'):
+                    variation_value = df.loc[index, f"{col}"] - df.loc[index - 1, f"{col}"]
+                    df.loc[index, f"New {col}"] = variation_value
+    print(df)
+    return df
+
+
 def load_interactive_data():
     log.info('Start scheduled task to check data updates')
     global df_regional_data, df_national_data, df_country_world_data, df_worldwide_aggregate_data, df_rate_regional, \
@@ -885,6 +908,7 @@ def load_interactive_data():
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
                                                       (df_worldwide_aggregate_data['Recovered'] +
                                                        df_worldwide_aggregate_data['Deaths'])
+        df_worldwide_aggregate_data = add_variation_columns(df_worldwide_aggregate_data)
         date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
@@ -902,6 +926,7 @@ def load_interactive_data():
                                                 (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
+        df_country_world_data = add_variation_columns_single_country(df_country_world_data)
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")

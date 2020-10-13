@@ -74,6 +74,9 @@ resources = {DEFAULT_LANGUAGE: {
     'Confirmed': 'Confermati',
     'Recovered': 'Guariti',
     'Deaths': 'Decessi',
+    'New Confirmed': 'Nuovi Confermati',
+    'New Recovered': 'Nuovi Guariti',
+    'New Deaths': 'Nuovi Decessi',
     'Active_cases': 'Casi Attivi'
     }
 }
