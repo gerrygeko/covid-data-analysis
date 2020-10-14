@@ -785,11 +785,11 @@ def load_country_world_rate_data_frame(df):
     for index, row in df_sb.iterrows():
         nation_name = row["Country"]
         population = int(world_population[nation_name])
-        df_sb.loc[index, 'Population'] = population
+        df_sb.at[index, 'Population'] = population
         for field in LIST_OF_WORLD_FIELDS_TO_RATE:
             value = row[field]
             pressure_value = (float(value) / population) * INHABITANT_RATE
-            df_sb.loc[index, field] = round(pressure_value, 2)
+            df_sb.at[index, field] = round(pressure_value, 2)
     return df_sb
 
 
@@ -863,28 +863,29 @@ def get_last_update(url):
     return string_date_update
 
 
-def add_variation_columns(df):
+def add_variation_columns_for_world_aggregate_data(df):
     df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
     for index, row in df.iterrows():
         for col in df.columns:
             if col in ('Confirmed', 'Recovered', 'Deaths') and (index is not 0):
-                df.loc[index, f"New {col}"] = df.loc[index, f"{col}"] - df.loc[index - 1, f"{col}"]
+                df.at[index, f"New {col}"] = row[col] - df.loc[index - 1, f"{col}"]
     return df
 
 
-def add_variation_columns_single_country(df):
+def add_variation_columns_for_world_countries(df):
     df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
     country = ""
+    previous_row = ""
     for index, row in df.iterrows():
         if (index is 0) or country != row['Country']:
             country = row['Country']
-            print(country)
+            previous_row = row
         else:
             for col in df.columns:
                 if col in ('Confirmed', 'Recovered', 'Deaths'):
-                    variation_value = df.loc[index, f"{col}"] - df.loc[index - 1, f"{col}"]
-                    df.loc[index, f"New {col}"] = variation_value
-    print(df)
+                    variation_value = row[col] - previous_row[col]
+                    df.at[index, f"New {col}"] = variation_value
+            previous_row = row
     return df
 
 
@@ -908,7 +909,7 @@ def load_interactive_data():
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
                                                       (df_worldwide_aggregate_data['Recovered'] +
                                                        df_worldwide_aggregate_data['Deaths'])
-        df_worldwide_aggregate_data = add_variation_columns(df_worldwide_aggregate_data)
+        df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
         date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
@@ -926,7 +927,7 @@ def load_interactive_data():
                                                 (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
-        df_country_world_data = add_variation_columns_single_country(df_country_world_data)
+        df_country_world_data = add_variation_columns_for_world_countries(df_country_world_data)
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
@@ -1003,4 +1004,5 @@ if not debug_mode_enabled:
     start_translation()
 
 if __name__ == '__main__':
+    print("server started")
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
