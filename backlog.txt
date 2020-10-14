@@ -18,12 +18,13 @@ NEW FEATURES AND BUG TO SOLVE
 - Make header title (and image) of the website hyperlink to the root of the website
 - Localize also the date format if language has changed
 - Translate all the keys used in the resource dict from Italian to English
-- Introduce debug mode (to avoid to load all the languages at startup)
+- Show time spent while loading all the data and maybe time spent to boot the application
 
 -------------------------------------------------------------------------------------------------
 
 SOLVED
 
+- Introduce debug mode (to avoid to load all the languages at startup)
 - Set the update datetime in line with the app scheduler
 - Introduce a bar graph that renders national active cases (like Regional Analysis) (1)
 - Extend the visualization of the data table (Tab 1), i.e. to show all the region (from several users feedback)(1)
