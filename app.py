@@ -867,7 +867,7 @@ def add_variation_columns_for_world_aggregate_data(df):
     df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
     for index, row in df.iterrows():
         for col in df.columns:
-            if col in ('Confirmed', 'Recovered', 'Deaths') and (index is not 0):
+            if col in ('Confirmed', 'Recovered', 'Deaths') and (index != 0):
                 df.at[index, f"New {col}"] = row[col] - df.loc[index - 1, f"{col}"]
     return df
 
@@ -877,7 +877,7 @@ def add_variation_columns_for_world_countries(df):
     country = ""
     previous_row = ""
     for index, row in df.iterrows():
-        if (index is 0) or country != row['Country']:
+        if (index == 0) or country != row['Country']:
             country = row['Country']
             previous_row = row
         else:
