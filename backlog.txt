@@ -1,7 +1,5 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Center and space out Gellex logo from the tab below
-- Extend data analysis worldwide (2)
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
@@ -19,11 +17,15 @@ NEW FEATURES AND BUG TO SOLVE
 - Localize also the date format if language has changed
 - Translate all the keys used in the resource dict from Italian to English
 - Show time spent while loading all the data and maybe time spent to boot the application
+- PWA upgrade
+- 'Donate' button
 
 -------------------------------------------------------------------------------------------------
 
 SOLVED
 
+- Center and space out Gellex logo from the tab below
+- Extend data analysis worldwide (2)
 - Introduce debug mode (to avoid to load all the languages at startup)
 - Set the update datetime in line with the app scheduler
 - Introduce a bar graph that renders national active cases (like Regional Analysis) (1)
