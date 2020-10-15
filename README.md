@@ -19,6 +19,9 @@ every 30 minutes a new attempt for check the presence of new data will be made
 - The web application is running a cloud solution via the application platform [Heroku](https://www.heroku.com/) 
 (PaaS - Platform as a Service)
 
+## Changelog
+- SARS-CoV-2-Gellex updates can be followed [here](https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md)
+
 ## Credits
 - Italian data is offered by [Department of Civil Protection](https://github.com/pcm-dpc/COVID-19).
 - Worldwide data is offered by [Johns Hopkins University Center for Systems Science and Engineering ](https://github.com/CSSEGISandData) and normalized by [Data Packaged Core Datasets
