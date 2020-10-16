@@ -22,7 +22,7 @@ import logger
 from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, DATE_PROPERTY_NAME_IT, \
     LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA, INHABITANT_RATE, URL_GEOJSON_REGIONS, URL_GEOJSON_WORLD_COUNTRIES, \
     URL_CSV_REGIONAL_DATA, URL_CSV_ITALY_DATA, URL_CSV_WORLDWIDE_AGGREGATE_DATA, URL_CSV_WORLD_COUNTRIES_DATA, \
-    LIST_OF_SHIPS, LIST_OF_WORLD_FIELDS_TO_RATE
+    LIST_OF_NOT_LOCATED_COUNTRIES_ON_MAP, LIST_OF_WORLD_FIELDS_TO_RATE
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation
 from utils import is_debug_mode_enabled
@@ -239,7 +239,7 @@ def update_italy_map(data_selected):
 @app.callback(Output('world_map', 'figure'), [Input('dropdown_country_data_selected', 'value')])
 def update_world_map(data_selected):
     df = df_rate_country_world.copy()
-    df = df[~df['Country'].isin(LIST_OF_SHIPS)]
+    df = df[~df['Country'].isin(LIST_OF_NOT_LOCATED_COUNTRIES_ON_MAP)]
     df['Population'] = pd.to_numeric(df['Population'], downcast='float')
     df['Population'] = df['Population'].apply(format_value_string_to_locale)
     df.sort_values(by=['Country'], inplace=True)
