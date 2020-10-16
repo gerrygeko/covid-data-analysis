@@ -1,9 +1,12 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Italian Tab: calculate the ratio(percentage) between new positives and swabs N.B. include color control for < or > 3%
+- LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
+- 'Donate' button
+- PWA upgrade
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
-- LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
 - Have better text layout in the hoverbox of the national map for regional rated data (1)
 - Save logs somewhere and somehow
@@ -17,8 +20,6 @@ NEW FEATURES AND BUG TO SOLVE
 - Localize also the date format if language has changed
 - Translate all the keys used in the resource dict from Italian to English
 - Show time spent while loading all the data and maybe time spent to boot the application
-- PWA upgrade
-- 'Donate' button
 
 -------------------------------------------------------------------------------------------------
 

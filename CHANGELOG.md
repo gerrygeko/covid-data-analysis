@@ -8,7 +8,7 @@
     * Multiple Line Chart: allows you to compare the trend of the selected data from different countries;
     * Country Data Cards: show the official data released by the various countries of the world;
 #### Changed 
-*Italy Tab is now in line with World Tab layout
+* Italy Tab is now in line with World Tab layout
 
 # 2.0.2
 #### Changed
