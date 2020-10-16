@@ -788,7 +788,7 @@ def load_country_world_rate_data_frame(df):
         df_sb.at[index, 'Population'] = population
         for field in LIST_OF_WORLD_FIELDS_TO_RATE:
             value = row[field]
-            pressure_value = (float(value) / population) * INHABITANT_RATE
+            pressure_value = (value / population) * INHABITANT_RATE
             df_sb.at[index, field] = round(pressure_value, 2)
     return df_sb
 
@@ -873,7 +873,7 @@ def add_variation_columns_for_world_aggregate_data(df):
 
 
 def add_variation_columns_for_world_countries(df):
-    df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
+    df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0.0, 0.0, 0.0]
     country = ""
     previous_row = ""
     for index, row in df.iterrows():
