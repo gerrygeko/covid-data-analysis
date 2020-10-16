@@ -2,11 +2,11 @@
 #### Added
 * Worldwide Tab: the web application now shows worldwide data from all 188 countries that release Covid-19 related reports
     the following components show the updated data through the selection of the data of interest to the user:
-    *Total Data Cards: show the official total world data;
-    *Data Line Chart: shows the trend of the selected data;
-    *Data Table: shows, in order of value importance, the ranking of countries;
-    *Multiple Line Chart: allows you to compare the trend of the selected data from different countries;
-    *Country Data Cards: show the official data released by the various countries of the world;
+    * Total Data Cards: show the official total world data;
+    * Data Line Chart: shows the trend of the selected data;
+    * Data Table: shows, in order of value importance, the ranking of countries;
+    * Multiple Line Chart: allows you to compare the trend of the selected data from different countries;
+    * Country Data Cards: show the official data released by the various countries of the world;
 #### Changed 
 *Italy Tab is now in line with World Tab layout
 
