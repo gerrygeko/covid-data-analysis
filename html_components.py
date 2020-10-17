@@ -183,7 +183,7 @@ def create_world_tab(df_country_world_data):
                                                    options=get_options_from_list(
                                                        LIST_OF_WORLD_FIELDS),
                                                    multi=False,
-                                                   value='Confirmed',
+                                                   value='New Confirmed',
                                                    className='dcc_control'
                                                ),
                                            ],
