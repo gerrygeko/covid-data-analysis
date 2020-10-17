@@ -27,6 +27,7 @@ from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation
 from utils import is_debug_mode_enabled
 
+app_start_time = time.time()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 debug_mode_enabled = is_debug_mode_enabled()
 
@@ -1003,6 +1004,11 @@ app_layout()
 if not debug_mode_enabled:
     start_translation()
 
+
+def get_boot_time():
+    return time.time() - app_start_time
+
+
 if __name__ == '__main__':
-    print("server started")
+    log.info(f"Server started in {round(get_boot_time(), 2)} seconds")
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page

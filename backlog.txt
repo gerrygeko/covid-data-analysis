@@ -1,7 +1,10 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- "Ultimo Aggiornamento" label doesn't get translated
 - Italian Tab: calculate the ratio(percentage) between new positives and swabs N.B. include color control for < or > 3%
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
+- Introduce Integration Tests
+- Create Heroku/Git pipeline
 - 'Donate' button
 - PWA upgrade
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
@@ -19,12 +22,12 @@ NEW FEATURES AND BUG TO SOLVE
 - Make header title (and image) of the website hyperlink to the root of the website
 - Localize also the date format if language has changed
 - Translate all the keys used in the resource dict from Italian to English
-- Show time spent while loading all the data and maybe time spent to boot the application
 
 -------------------------------------------------------------------------------------------------
 
 SOLVED
 
+- Show time spent while loading all the data and maybe time spent to boot the application
 - Center and space out Gellex logo from the tab below
 - Extend data analysis worldwide (2)
 - Introduce debug mode (to avoid to load all the languages at startup)
