@@ -748,7 +748,7 @@ def update_language(language):
         raise PreventUpdate
     locale_language.language = language
     log.info(f"User switching language to: {language}")
-    return create_page_components(app, df_regional_data)
+    return create_page_components(app, df_regional_data, df_country_world_data)
 
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
