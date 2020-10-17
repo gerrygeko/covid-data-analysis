@@ -37,7 +37,7 @@ body {
 }
 
 .dcc_dropdown_data_selected {
-  width: 20%;
+  width: 100%;
   margin-left: 12px;
   margin-right:auto;
   display:block;

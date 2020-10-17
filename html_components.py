@@ -172,15 +172,25 @@ def create_world_tab(df_country_world_data):
                        ),
                        html.Div(
                            [
-                               html.P(load_resource('label_select_data'),
-                                      className="label_data_selection"),
-                               dcc.Dropdown(
-                                   id='dropdown_country_data_selected',
-                                   options=get_options_from_list(
-                                       LIST_OF_WORLD_FIELDS),
-                                   multi=False,
-                                   value='Confirmed',
-                                   className='dcc_dropdown_data_selected'
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               html.P(load_resource('label_select_data'),
+                                                      className="label_data_selection"),
+                                               dcc.Dropdown(
+                                                   id='dropdown_country_data_selected',
+                                                   options=get_options_from_list(
+                                                       LIST_OF_WORLD_FIELDS),
+                                                   multi=False,
+                                                   value='Confirmed',
+                                                   className='dcc_control'
+                                               ),
+                                           ],
+                                           className="ghosty_container four columns",
+                                       ),
+                                   ],
+                                   className="row flex-display",
                                ),
                                html.Div(
                                    [
@@ -389,15 +399,25 @@ def create_italy_tab(df_regional_data):
                        ),
                        html.Div(
                            [
-                               html.P(load_resource('label_select_data'),
-                                      className="label_data_selection"),
-                               dcc.Dropdown(
-                                   id='dropdown_italy_data_selected',
-                                   options=get_options_from_list(
-                                       italian_field_list_complete),
-                                   multi=False,
-                                   value='nuovi_positivi',
-                                   className='dcc_dropdown_data_selected'
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               html.P(load_resource('label_select_data'),
+                                                      className="label_data_selection"),
+                                               dcc.Dropdown(
+                                                   id='dropdown_italy_data_selected',
+                                                   options=get_options_from_list(
+                                                       italian_field_list_complete),
+                                                   multi=False,
+                                                   value='nuovi_positivi',
+                                                   className='dcc_control'
+                                               ),
+                                           ],
+                                           className="ghosty_container six columns",
+                                       ),
+                                   ],
+                                   className="row flex-display",
                                ),
                                html.Div(
                                    [
