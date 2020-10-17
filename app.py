@@ -179,7 +179,7 @@ def update_regions_line_chart(region_list, data_selected):
     title = load_resource(data_selected)
     figure = create_scatter_plot_by_region(df_regional_data, title,
                                            x_axis_data, regions_list_mapping)
-    log.info('Updating main graph')
+    log.info('Updating Italy Line chart')
     return figure
 
 
@@ -233,7 +233,7 @@ def update_italy_map(data_selected):
             showarrow=False
         )]
     )
-    log.info('Updating map graph')
+    log.info('Updating Italy Choropleth Map')
     return figure
 
 
@@ -423,7 +423,7 @@ def update_regional_graph_active_cases(region_selected):
                Output('sub_header_italian_update', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(self):
-    log.info('update cards')
+    log.info('Updating cards')
     sub_header_italian_text = date_last_update_italy
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
@@ -483,7 +483,7 @@ def update_national_cards_color(self):
                Output('sub_header_worldwide_update', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_world_cards_text(self):
-    log.info('Update World Cards')
+    log.info('Updating World Cards')
     sub_header_worldwide_text = date_last_update_world_aggregate
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     total_text_values = []
@@ -592,7 +592,7 @@ def update_data_table_national(data_selected):
                Output('sub_header_ita_regions_update', 'children'),
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
-    log.info('Update regional cards')
+    log.info('Updating regional cards')
     sub_header_ita_regions_text = date_last_update_regional
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
@@ -682,7 +682,7 @@ def update_regional_details_card(region_selected):
                Output('total_deaths_variation_world', 'children'),
                ], [Input("dropdown_country_selected", "value")])
 def update_country_world_cards_text(country_selected):
-    log.info('Update Country cards')
+    log.info('Updating Country cards')
     field_list = ['Confirmed', 'Active_cases', 'Recovered', 'Deaths']
     total_text_values = []
     variation_text_values = []
@@ -754,7 +754,7 @@ def update_language(language):
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
 def update_news(input):
-    log.info('Update news')
+    log.info('Updating news')
     return create_news()
 
 
@@ -1009,6 +1009,14 @@ def get_boot_time():
     return time.time() - app_start_time
 
 
+def show_application_started_messages():
+    log.info("----------------------------------------------------------------------")
+    log.info(f"| *** Server started in {round(get_boot_time(), 2)} seconds \t\t\t\t\t\t\t *** |")
+    log.info("| *** Running on http://127.0.0.1:5000/ - Enjoy the application! *** |")
+    log.info("----------------------------------------------------------------------")
+
+
 if __name__ == '__main__':
-    log.info(f"Server started in {round(get_boot_time(), 2)} seconds")
+    show_application_started_messages()
+    time.sleep(0.01) # Sleep for few milliseconds otherwise log messages get messed up with the app running
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page

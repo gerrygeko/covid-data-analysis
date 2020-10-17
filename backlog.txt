@@ -1,6 +1,7 @@
 NEW FEATURES AND BUG TO SOLVE
 
 - "Ultimo Aggiornamento" label doesn't get translated
+- Log messages for updating components are not consistent at all. They all use different namings
 - Italian Tab: calculate the ratio(percentage) between new positives and swabs N.B. include color control for < or > 3%
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Introduce Integration Tests

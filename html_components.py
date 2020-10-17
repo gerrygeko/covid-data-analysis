@@ -216,26 +216,21 @@ def create_world_tab(df_country_world_data):
                                    [
                                        html.Div(
                                            [
-                                               html.Div(
-                                                   [
-                                                       html.P(load_resource('label_select_multiregion'),
-                                                              className="control_label"),
-                                                       dcc.Dropdown(id='dropdown_country_list_selected',
-                                                                    options=get_options(
-                                                                        df_country_world_data[
-                                                                            'Country'].unique()),
-                                                                    multi=True,
-                                                                    value=new_confirmed_countries_world(
-                                                                        df_country_world_data),
-                                                                    className='dcc_control'
-                                                                    ),
-                                                       dcc.Graph(id='country_world_linear_chart')
-                                                   ],
-                                                   className="pretty_container",
-                                               ),
+                                                html.P(load_resource('label_select_multiregion'),
+                                                       className="control_label"),
+                                                dcc.Dropdown(id='dropdown_country_list_selected',
+                                                             options=get_options(
+                                                                 df_country_world_data[
+                                                                     'Country'].unique()),
+                                                             multi=True,
+                                                             value=new_confirmed_countries_world(
+                                                                 df_country_world_data),
+                                                             className='dcc_control'
+                                                             ),
+                                                dcc.Graph(id='country_world_linear_chart')
                                            ],
                                            id="left-column-world",
-                                           className="eight columns",
+                                           className="eight columns pretty_container",
                                        ),
                                        html.Div(
                                            [
