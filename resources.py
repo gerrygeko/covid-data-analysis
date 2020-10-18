@@ -48,6 +48,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_tab_master_ita_regions': 'Regioni Italiane',
     'label_select_data': 'Seleziona il dato da analizzare:',
     'label_select_multiregion': 'Seleziona una o più regioni italiane da confrontare:',
+    'label_select_multicountry': 'Seleziona uno o più Paesi da confrontare:',
     'label_select_region': 'Seleziona la regione italiana da analizzare:',
     'label_select_country': 'Paese:',
     'label_data_picco_max': 'Data Picco massimo',

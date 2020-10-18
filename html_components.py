@@ -216,7 +216,7 @@ def create_world_tab(df_country_world_data):
                                    [
                                        html.Div(
                                            [
-                                                html.P(load_resource('label_select_multiregion'),
+                                                html.P(load_resource('label_select_multicountry'),
                                                        className="control_label"),
                                                 dcc.Dropdown(id='dropdown_country_list_selected',
                                                              options=get_options(
