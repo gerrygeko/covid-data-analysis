@@ -896,12 +896,9 @@ def load_interactive_data():
         df_rate_country_world, last_update_content_regional_data, last_update_content_national_data, \
         last_update_content_worldwide_aggregate_data, last_update_content_country_world_data, \
         date_last_update_world_aggregate, date_last_update_italy, date_last_update_regional
-    current_update_content_regional_data = int(get_content_length(URL_CSV_REGIONAL_DATA))
-    current_update_content_national_data = int(get_content_length(URL_CSV_ITALY_DATA))
-    current_update_content_worldwide_aggregate_data = int(get_content_length(URL_CSV_WORLDWIDE_AGGREGATE_DATA))
-    current_update_content_country_world_data = int(get_content_length(URL_CSV_WORLD_COUNTRIES_DATA))
 
     # Check if updates for Worldwide Aggregate data is required
+    current_update_content_worldwide_aggregate_data = int(get_content_length(URL_CSV_WORLDWIDE_AGGREGATE_DATA))
     if current_update_content_worldwide_aggregate_data == -1:
         log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
     elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
@@ -919,6 +916,7 @@ def load_interactive_data():
         log.info('No updates required for Worldwide Aggregate data')
 
     # Check if updates for World data is required
+    current_update_content_country_world_data = int(get_content_length(URL_CSV_WORLD_COUNTRIES_DATA))
     if current_update_content_country_world_data == -1:
         log.info("Provider's server for Country World data is unresponsive, retrying later")
     elif current_update_content_country_world_data != last_update_content_country_world_data:
@@ -937,6 +935,7 @@ def load_interactive_data():
         log.info('No updates required for Country World data')
 
     # Check if updates for National data is required
+    current_update_content_national_data = int(get_content_length(URL_CSV_ITALY_DATA))
     if current_update_content_national_data == -1:
         log.info("Provider's server for National data is unresponsive, retrying later")
     elif current_update_content_national_data != last_update_content_national_data:
@@ -950,6 +949,7 @@ def load_interactive_data():
         log.info('No updates required for National data')
 
     # Check if updates for Regional data is required
+    current_update_content_regional_data = int(get_content_length(URL_CSV_REGIONAL_DATA))
     if current_update_content_regional_data == -1:
         log.info("Provider's server for Regional Data is unresponsive, retrying later")
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
