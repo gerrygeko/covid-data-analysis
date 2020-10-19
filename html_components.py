@@ -43,8 +43,7 @@ def create_page_components(app, df_regional_data, df_country_world_data, last_ch
         create_logo_and_header(app),
         create_tabs(df_country_world_data, df_regional_data),
         create_bottom_line(app),
-        create_last_check_update_data(last_check_update),
-        create_version_link()
+        create_footer(last_check_update)
     ]
 
 
@@ -876,8 +875,16 @@ def create_news():
     )
 
 
-def create_last_check_update_data(last_check_update):
-    return html.Footer(
+def create_footer(last_check_update):
+    return html.Footer(id="footer",
+                       children=[
+                           create_last_update_info(last_check_update),
+                           create_version_link()
+                       ])
+
+
+def create_last_update_info(last_check_update):
+    return html.P(
             id="last_check_update_text",
             className="p-version changelog",
             children=[load_resource('label_last_check_update') + last_check_update]
@@ -886,7 +893,7 @@ def create_last_check_update_data(last_check_update):
 
 def create_version_link():
     return html.A(
-        html.Footer(
+        html.P(
             id="version_text",
             className="p-version changelog",
             children=[get_version()]
