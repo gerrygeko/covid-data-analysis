@@ -877,7 +877,7 @@ def create_news():
 
 
 def create_last_check_update_data(last_check_update):
-    return html.P(
+    return html.Footer(
             id="last_check_update_text",
             className="p-version changelog",
             children=[load_resource('label_last_check_update') + last_check_update]
@@ -886,7 +886,7 @@ def create_last_check_update_data(last_check_update):
 
 def create_version_link():
     return html.A(
-        html.P(
+        html.Footer(
             id="version_text",
             className="p-version changelog",
             children=[get_version()]
