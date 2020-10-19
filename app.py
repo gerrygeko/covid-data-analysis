@@ -119,13 +119,13 @@ def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping):
     scatter_list = []
     # Draw empty figures if an empty list is passed
     if len(y_axis_data_mapping) == 0:
-        scatter = go.Scatter(x=x_axis_data, y=[], mode='lines+markers', opacity=0.7, textposition='bottom center')
+        scatter = go.Scatter(x=x_axis_data, y=[], mode='lines', opacity=0.7, textposition='bottom center')
         scatter_list.append(scatter)
     else:
         for y_data_name, label in y_axis_data_mapping:
             scatter = go.Scatter(x=x_axis_data,
                                  y=data_frame[y_data_name],
-                                 mode='lines+markers',
+                                 mode='lines',
                                  opacity=0.7,
                                  name=label,
                                  textposition='bottom center')
@@ -140,7 +140,7 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
     y_axis_data_mapping_region.sort(key=lambda tup: tup[1])
     for field, region in y_axis_data_mapping_region:
         scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['denominazione_regione'] == region][field],
-                             mode='lines+markers',
+                             mode='lines',
                              opacity=0.7,
                              name=region,
                              # line=dict(shape="spline", smoothing=1, width=1),
@@ -155,10 +155,10 @@ def create_scatter_plot_by_country_world(data_frame, title, x_axis_data, y_axis_
     y_axis_data_mapping_country_world.sort(key=lambda tup: tup[1])
     for field, country in y_axis_data_mapping_country_world:
         scatter = go.Scatter(x=x_axis_data, y=data_frame[data_frame['Country'] == country][field],
-                             mode='lines+markers',
+                             mode='lines',
                              opacity=0.7,
                              name=country,
-                             line=dict(shape="spline", smoothing=1, width=1),
+                             #line=dict(shape="spline", smoothing=1, width=1),
                              textposition='bottom center')
         scatter_list.append(scatter)
     figure = create_figure(scatter_list, title)
