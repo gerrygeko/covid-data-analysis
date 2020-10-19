@@ -20,10 +20,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import logger
-from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, DATE_PROPERTY_NAME_IT, \
-    LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA, INHABITANT_RATE, URL_GEOJSON_REGIONS, URL_GEOJSON_WORLD_COUNTRIES, \
-    URL_CSV_REGIONAL_DATA, URL_CSV_ITALY_DATA, URL_CSV_WORLDWIDE_AGGREGATE_DATA, URL_CSV_WORLD_COUNTRIES_DATA, \
-    LIST_OF_NOT_LOCATED_COUNTRIES_ON_MAP, LIST_OF_WORLD_FIELDS_TO_RATE
+import constants
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation
 from utils import is_debug_mode_enabled
@@ -72,7 +69,7 @@ def load_geojson(url):
 
 italy_regional_population = load_csv_from_file('assets/italy_region_population_2020.csv')
 world_population = load_csv_from_file('assets/worldwide_population_2020.csv')
-geojson_province = load_geojson(URL_GEOJSON_REGIONS)
+geojson_province = load_geojson(constants.URL_GEOJSON_REGIONS)
 last_update_content_regional_data = 0
 last_update_content_national_data = 0
 last_update_content_worldwide_aggregate_data = 0
@@ -191,7 +188,7 @@ def update_regions_line_chart(region_list, data_selected):
 def update_country_world_line_chart(country_list, data_selected):
     countries_list_mapping = []
     # if no country was selected, create empty figure
-    x_axis_data = df_country_world_data[df_country_world_data['Country'] == "Italy"][DATE_PROPERTY_NAME_EN]
+    x_axis_data = df_country_world_data[df_country_world_data['Country'] == "Italy"][constants.DATE_PROPERTY_NAME_EN]
     if len(country_list) == 0 or data_selected is None:
         figure = create_scatter_plot(df_country_world_data, '', x_axis_data, [])
         return figure
@@ -210,7 +207,7 @@ def update_italy_map(data_selected):
     df['population'] = pd.to_numeric(df['population'], downcast='float')
     df['population'] = df['population'].apply(format_value_string_to_locale)
     date_string = df_national_data.iloc[-1]['data'].strftime('%d/%m/%Y')
-    figure = px.choropleth_mapbox(df, geojson=URL_GEOJSON_REGIONS, locations='codice_regione',
+    figure = px.choropleth_mapbox(df, geojson=constants.URL_GEOJSON_REGIONS, locations='codice_regione',
                                   featureidkey="properties.reg_istat_code_num",
                                   color=data_selected,
                                   color_continuous_scale="Blues",
@@ -242,12 +239,12 @@ def update_italy_map(data_selected):
 @app.callback(Output('world_map', 'figure'), [Input('dropdown_country_data_selected', 'value')])
 def update_world_map(data_selected):
     df = df_rate_country_world.copy()
-    df = df[~df['Country'].isin(LIST_OF_NOT_LOCATED_COUNTRIES_ON_MAP)]
+    df = df[~df['Country'].isin(constants.LIST_OF_NOT_LOCATED_COUNTRIES_ON_MAP)]
     df['Population'] = pd.to_numeric(df['Population'], downcast='float')
     df['Population'] = df['Population'].apply(format_value_string_to_locale)
     df.sort_values(by=['Country'], inplace=True)
-    date_string = df.iloc[-1][DATE_PROPERTY_NAME_EN].strftime('%d/%m/%Y')
-    figure = px.choropleth_mapbox(df, geojson=URL_GEOJSON_WORLD_COUNTRIES, locations='Country',
+    date_string = df.iloc[-1][constants.DATE_PROPERTY_NAME_EN].strftime('%d/%m/%Y')
+    figure = px.choropleth_mapbox(df, geojson=constants.URL_GEOJSON_WORLD_COUNTRIES, locations='Country',
                                   featureidkey="properties.ADMIN",
                                   color=data_selected,
                                   color_continuous_scale='Blues',
@@ -281,7 +278,7 @@ def update_italian_linear_chart(data_selected):
     layout_italian_active_cases = copy.deepcopy(layout)
     df = df_national_data
     colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
-    x_list = df[DATE_PROPERTY_NAME_IT]
+    x_list = df[constants.DATE_PROPERTY_NAME_IT]
     y_data_selected = df[data_selected].values.tolist()
     y_active_cases_list_1 = df['terapia_intensiva'].values.tolist()
     y_active_cases_list_2 = df['ricoverati_con_sintomi'].values.tolist()
@@ -340,7 +337,7 @@ def update_world_linear_chart(data_selected):
     layout_world_linear_chart = copy.deepcopy(layout)
     df = df_worldwide_aggregate_data
     y_list_1 = df[data_selected].values.tolist()
-    x_list = df[DATE_PROPERTY_NAME_EN]
+    x_list = df[constants.DATE_PROPERTY_NAME_EN]
     colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
     data = [
         dict(
@@ -532,8 +529,8 @@ def update_world_cards_color(self):
 def update_data_table_country_world(data_selected):
     df_sub = df_country_world_data
     df = df_sub.copy()
-    df = df.sort_values(by=[DATE_PROPERTY_NAME_EN])
-    df = df.tail(NUMBER_OF_WORLD_COUNTRIES)
+    df = df.sort_values(by=[constants.DATE_PROPERTY_NAME_EN])
+    df = df.tail(constants.NUMBER_OF_WORLD_COUNTRIES)
     df.sort_values(by=[data_selected], ascending=False, inplace=True)
     df[data_selected] = pd.to_numeric(df[data_selected], downcast='float')
     df[data_selected] = df[data_selected].apply(format_value_string_to_locale)
@@ -690,10 +687,10 @@ def update_country_world_cards_text(country_selected):
     variation_text_values = []
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
-    df_sorted = df.sort_values(by=[DATE_PROPERTY_NAME_EN])
-    df_sorted = df_sorted.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
+    df_sorted = df.sort_values(by=[constants.DATE_PROPERTY_NAME_EN])
+    df_sorted = df_sorted.tail(constants.NUMBER_OF_WORLD_COUNTRIES + len(constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     for field in field_list:
-        if country_selected in LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
+        if country_selected in constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
             total_text_values = ['N/D'] * 4
             variation_text_values = ['N/D'] * 4
         else:
@@ -719,7 +716,7 @@ def update_country_world_cards_color(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     for field in field_list:
-        if country_selected in LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
+        if country_selected in constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
             color = 'grey'
             color_cards_list.append(color)
         else:
@@ -781,17 +778,17 @@ def adjust_region(df_sb):
 def load_country_world_rate_data_frame(df):
     # We create a copy of the original DataFrame to avoid working on the original DataFrame and to suppress warning
     df_sb = df.copy()
-    df_sb = df_sb.sort_values(by=[DATE_PROPERTY_NAME_EN])
-    df_sb = df_sb.tail(NUMBER_OF_WORLD_COUNTRIES + len(LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
+    df_sb = df_sb.sort_values(by=[constants.DATE_PROPERTY_NAME_EN])
+    df_sb = df_sb.tail(constants.NUMBER_OF_WORLD_COUNTRIES + len(constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     df_sb.sort_values(by=['Country'], inplace=True)
     df_sb['Population'] = ''
     for index, row in df_sb.iterrows():
         nation_name = row["Country"]
         population = int(world_population[nation_name])
         df_sb.at[index, 'Population'] = population
-        for field in LIST_OF_WORLD_FIELDS_TO_RATE:
+        for field in constants.LIST_OF_WORLD_FIELDS_TO_RATE:
             value = row[field]
-            pressure_value = (value / population) * INHABITANT_RATE
+            pressure_value = (value / population) * constants.INHABITANT_RATE
             df_sb.at[index, field] = round(pressure_value, 2)
     return df_sb
 
@@ -809,7 +806,7 @@ def load_region_rate_data_frame(df):
         population = row['population']
         for field in field_list_to_rate_italian_regions:
             value = row[field]
-            pressure_value = (float(value) / float(population)) * INHABITANT_RATE
+            pressure_value = (float(value) / float(population)) * constants.INHABITANT_RATE
             df_sb.at[i, field] = round(pressure_value, 2)
     return df_sb
 
@@ -829,9 +826,9 @@ def adjust_df_world_to_geojson(df):
 # for adding country not included in the df_country world source
 # useful for mapping countries with geojson data
 def add_excluded_country_world(df):
-    last_date_df = df.iloc[-1][DATE_PROPERTY_NAME_EN]
+    last_date_df = df.iloc[-1][constants.DATE_PROPERTY_NAME_EN]
     list_of_row = []
-    for country_without_data in LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
+    for country_without_data in constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
         list_of_row.append({'Date': last_date_df,
                             'Country': country_without_data,
                             'Confirmed': 0,
@@ -906,14 +903,14 @@ def load_data_from_web():
 def load_regional_data():
     global df_regional_data, df_rate_regional, date_last_update_regional, last_update_content_regional_data
     # Check if updates for Regional data is required
-    current_update_content_regional_data = int(get_content_length(URL_CSV_REGIONAL_DATA))
+    current_update_content_regional_data = int(get_content_length(constants.URL_CSV_REGIONAL_DATA))
     if current_update_content_regional_data == -1:
         log.info("Provider's server for Regional Data is unresponsive, retrying later")
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
         log.info('Regional data update required')
-        df_regional_data = load_csv(URL_CSV_REGIONAL_DATA, DATE_PROPERTY_NAME_IT)
+        df_regional_data = load_csv(constants.URL_CSV_REGIONAL_DATA, DATE_PROPERTY_NAME_IT)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
-        date_last_update_regional = get_last_update(URL_CSV_REGIONAL_DATA)
+        date_last_update_regional = get_last_update(constants.URL_CSV_REGIONAL_DATA)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data
@@ -924,13 +921,13 @@ def load_regional_data():
 def load_national_data():
     global df_national_data, date_last_update_italy, last_update_content_national_data
     # Check if updates for National data is required
-    current_update_content_national_data = int(get_content_length(URL_CSV_ITALY_DATA))
+    current_update_content_national_data = int(get_content_length(constants.URL_CSV_ITALY_DATA))
     if current_update_content_national_data == -1:
         log.info("Provider's server for National data is unresponsive, retrying later")
     elif current_update_content_national_data != last_update_content_national_data:
         log.info('National data update required')
-        df_national_data = load_csv(URL_CSV_ITALY_DATA, DATE_PROPERTY_NAME_IT)
-        date_last_update_italy = get_last_update(URL_CSV_ITALY_DATA)
+        df_national_data = load_csv(constants.URL_CSV_ITALY_DATA, DATE_PROPERTY_NAME_IT)
+        date_last_update_italy = get_last_update(constants.URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
@@ -941,12 +938,12 @@ def load_national_data():
 def load_country_world_data():
     global df_country_world_data, df_rate_country_world, last_update_content_country_world_data
     # Check if updates for World data is required
-    current_update_content_country_world_data = int(get_content_length(URL_CSV_WORLD_COUNTRIES_DATA))
+    current_update_content_country_world_data = int(get_content_length(constants.URL_CSV_WORLD_COUNTRIES_DATA))
     if current_update_content_country_world_data == -1:
         log.info("Provider's server for Country World data is unresponsive, retrying later")
     elif current_update_content_country_world_data != last_update_content_country_world_data:
         log.info('Country World data update required')
-        df_country_world_data = load_csv(URL_CSV_WORLD_COUNTRIES_DATA, DATE_PROPERTY_NAME_EN)
+        df_country_world_data = load_csv(constants.URL_CSV_WORLD_COUNTRIES_DATA, constants.DATE_PROPERTY_NAME_EN)
         df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
                                                 (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
@@ -963,17 +960,17 @@ def load_country_world_data():
 def load_worldwide_aggregate_data():
     global df_worldwide_aggregate_data, date_last_update_world_aggregate, last_update_content_worldwide_aggregate_data
     # Check if updates for Worldwide Aggregate data is required
-    current_update_content_worldwide_aggregate_data = int(get_content_length(URL_CSV_WORLDWIDE_AGGREGATE_DATA))
+    current_update_content_worldwide_aggregate_data = int(get_content_length(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA))
     if current_update_content_worldwide_aggregate_data == -1:
         log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
     elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
         log.info('Worldwide Aggregate data update required')
-        df_worldwide_aggregate_data = load_csv(URL_CSV_WORLDWIDE_AGGREGATE_DATA, DATE_PROPERTY_NAME_EN)
+        df_worldwide_aggregate_data = load_csv(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA, constants.DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
                                                       (df_worldwide_aggregate_data['Recovered'] +
                                                        df_worldwide_aggregate_data['Deaths'])
         df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
-        date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
+        date_last_update_world_aggregate = get_last_update(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
