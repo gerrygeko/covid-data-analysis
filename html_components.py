@@ -42,7 +42,7 @@ def create_page_components(app, df_regional_data, df_country_world_data, last_ch
         html.Div(id="output-clientside"),
         create_logo_and_header(app),
         create_tabs(df_country_world_data, df_regional_data),
-        create_footer(app),
+        create_bottom_line(app),
         create_last_check_update_data(last_check_update),
         create_version_link()
     ]
@@ -614,7 +614,7 @@ def create_regions_tab(df_regional_data):
                    ])
 
 
-def create_footer(app):
+def create_bottom_line(app):
     return html.Div(
         [
             html.Div(
