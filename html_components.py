@@ -32,7 +32,7 @@ def new_positive_regions(df_regional_data):
     return df['denominazione_regione'].tolist()
 
 
-def create_page_components(app, df_regional_data, df_country_world_data):
+def create_page_components(app, df_regional_data, df_country_world_data, last_check_update):
     log.info("Loading all the components")
     return [
         dcc.Store(id="aggregate_data"),
@@ -43,6 +43,7 @@ def create_page_components(app, df_regional_data, df_country_world_data):
         create_logo_and_header(app),
         create_tabs(df_country_world_data, df_regional_data),
         create_footer(app),
+        create_last_check_update_data(last_check_update),
         create_version_link()
     ]
 
@@ -837,7 +838,7 @@ def create_news():
             html.H5(className="p-news title", children=news_title),
             html.P(
                 className="p-news title",
-                children=load_resource('label_last_update')
+                children=load_resource('label_last_news_update')
                          + datetime.now().astimezone(timezone('Europe/Rome')).strftime("%d/%m/%Y %H:%M:%S"),
             ),
             html.Table(
@@ -873,6 +874,14 @@ def create_news():
             ),
         ]
     )
+
+
+def create_last_check_update_data(last_check_update):
+    return html.P(
+            id="last_check_update_text",
+            className="p-version changelog",
+            children=[load_resource('label_last_check_update') + last_check_update]
+        )
 
 
 def create_version_link():

@@ -126,8 +126,14 @@ body {
 
 #version_text {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 15px;
+}
+
+#last_check_update_text {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
 }
 
 .title {
