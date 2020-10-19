@@ -29,7 +29,6 @@ app_start_time = time.time()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 debug_mode_enabled = is_debug_mode_enabled()
 
-log = logger.get_logger()
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
                          {"property": "og:title", "content": "SARS-CoV-2-Gellex"},
@@ -37,6 +36,8 @@ app = dash.Dash(
                          {"property": "og:description", "content": "SARS-CoV-2-Gellex"},
                          {"property": "og:url", "content": "https://www.data-covid.com/"}]
 )
+logger.initialize_logger()
+log = logger.get_logger()
 server = app.server
 
 field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensiva',

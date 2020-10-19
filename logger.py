@@ -1,7 +1,6 @@
 import logging
 
 
-main_logger = None
 WERKZEUG_LOG_LEVEL = logging.ERROR
 
 
@@ -18,7 +17,6 @@ def initialize_logger():
     logger.addHandler(fh)
     change_werkzeug_log_level(WERKZEUG_LOG_LEVEL)
     logger.info(f"Changed werkzeug log level to {logging.getLevelName(WERKZEUG_LOG_LEVEL)}")
-    return logger
 
 
 def change_werkzeug_log_level(log_level):
@@ -27,8 +25,5 @@ def change_werkzeug_log_level(log_level):
 
 
 def get_logger():
-    global main_logger
-    if main_logger is None:
-        main_logger = initialize_logger()
-        main_logger.info("Logger initialized")
-    return main_logger
+    logger = logging.getLogger('dash_app')
+    return logger
