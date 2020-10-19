@@ -863,6 +863,18 @@ def get_content_length(url):
     return size
 
 
+def get_content_date_last_download_data(url):
+    resp = requests.head(url)
+    if resp.status_code != 200:
+        log.error(f"Request failed trying to contact URL: {url}")
+        last_update = 'Time not available'
+    else:
+        date_update_string = resp.headers["Date"]
+        last_update = parsedate_to_datetime(date_update_string).astimezone(tz=pytz.timezone('Europe/Rome'))
+    string_date_update = last_update.strftime(" %d/%m/%Y %H:%M:%S")
+    return string_date_update
+
+
 def get_last_df_data_update(df, date_property_name):
     string_date_update = (df[date_property_name].iloc[-1]).strftime(" %d/%m/%Y")
     return string_date_update
@@ -919,8 +931,10 @@ def load_regional_data():
         log.info('| Regional data update required')
         df_regional_data = load_csv(constants.URL_CSV_REGIONAL_DATA, constants.DATE_PROPERTY_NAME_IT)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
+        date_last_update_regional = get_content_date_last_download_data(constants.URL_CSV_REGIONAL_DATA)
         log.info(f"| Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"| New Content-length: {current_update_content_regional_data} bytes")
+        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_regional}")
         log.info('| -------------------------------------------------------------------')
         last_update_content_regional_data = current_update_content_regional_data
     else:
@@ -937,8 +951,10 @@ def load_national_data():
         log.info('| -------------------------------------------------------------------')
         log.info('| National data update required')
         df_national_data = load_csv(constants.URL_CSV_ITALY_DATA, constants.DATE_PROPERTY_NAME_IT)
+        date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
         log.info(f"| Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"| New Content-length: {current_update_content_national_data} bytes")
+        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_italy}")
         log.info('| -------------------------------------------------------------------')
         last_update_content_national_data = current_update_content_national_data
     else:
@@ -961,8 +977,11 @@ def load_country_world_data():
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         df_country_world_data = add_variation_columns_for_world_countries(df_country_world_data)
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
+        date_last_update_world_countries_data = get_content_date_last_download_data(
+            constants.URL_CSV_WORLD_COUNTRIES_DATA)
         log.info(f"| Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"| New Content-length: {current_update_content_country_world_data} bytes")
+        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_world_countries_data}")
         log.info('| -------------------------------------------------------------------')
         last_update_content_country_world_data = current_update_content_country_world_data
     else:
@@ -983,8 +1002,11 @@ def load_worldwide_aggregate_data():
                                                       (df_worldwide_aggregate_data['Recovered'] +
                                                        df_worldwide_aggregate_data['Deaths'])
         df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
+        date_last_update_world_aggregate = get_content_date_last_download_data(
+            constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"| Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"| New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
+        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_world_aggregate}")
         log.info('| -------------------------------------------------------------------')
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
     else:
