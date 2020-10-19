@@ -951,7 +951,6 @@ def load_national_data():
         date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
-        log.info(f"The update (HTTP HEAD request) was done at: {date_last_update_italy}")
         last_update_content_national_data = current_update_content_national_data
     else:
         log.info('No updates required for National data')
@@ -976,7 +975,6 @@ def load_country_world_data():
             constants.URL_CSV_WORLD_COUNTRIES_DATA)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
-        log.info(f"The update (HTTP HEAD request) was done at: {date_last_update_world_countries_data}")
         last_update_content_country_world_data = current_update_content_country_world_data
     else:
         log.info('No updates required for Country World data')
@@ -999,7 +997,6 @@ def load_worldwide_aggregate_data():
             constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
-        log.info(f"The update (HTTP HEAD request) was done at: {date_last_update_world_aggregate}")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
     else:
         log.info('No updates required for Worldwide Aggregate data')
