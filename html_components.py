@@ -803,7 +803,7 @@ def create_credits(app):
                     className='credits_icon',
                     id="jh-image",
                 ),
-                href="systems.jhu.edu /"
+                href="https://github.com/CSSEGISandData/COVID-19"
             ),
             html.A(
                 children=html.Img(
