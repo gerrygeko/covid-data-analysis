@@ -8,7 +8,7 @@ import requests
 from pytz import timezone
 
 import logger
-from constants import DATE_PROPERTY_NAME_EN, NUMBER_OF_WORLD_COUNTRIES, SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
+from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
     LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
 from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, get_version
