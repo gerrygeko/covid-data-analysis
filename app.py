@@ -1,5 +1,6 @@
 import copy
 import csv
+import datetime
 import json as js
 import locale
 import time
@@ -59,6 +60,7 @@ def load_csv_from_file(path):
 
 def load_csv(url, data_string):
     data_loaded = pd.read_csv(url, parse_dates=[data_string])
+    log.info(f"Data loaded at {datetime.datetime.now().time()}")
     return data_loaded
 
 
@@ -890,31 +892,54 @@ def add_variation_columns_for_world_countries(df):
     return df
 
 
-def load_interactive_data():
+def load_data_from_web():
     log.info('Start scheduled task to check data updates')
-    global df_regional_data, df_national_data, df_country_world_data, df_worldwide_aggregate_data, df_rate_regional, \
-        df_rate_country_world, last_update_content_regional_data, last_update_content_national_data, \
-        last_update_content_worldwide_aggregate_data, last_update_content_country_world_data, \
-        date_last_update_world_aggregate, date_last_update_italy, date_last_update_regional
 
-    # Check if updates for Worldwide Aggregate data is required
-    current_update_content_worldwide_aggregate_data = int(get_content_length(URL_CSV_WORLDWIDE_AGGREGATE_DATA))
-    if current_update_content_worldwide_aggregate_data == -1:
-        log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
-    elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
-        log.info('Worldwide Aggregate data update required')
-        df_worldwide_aggregate_data = load_csv(URL_CSV_WORLDWIDE_AGGREGATE_DATA, DATE_PROPERTY_NAME_EN)
-        df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
-                                                      (df_worldwide_aggregate_data['Recovered'] +
-                                                       df_worldwide_aggregate_data['Deaths'])
-        df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
-        date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
-        log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
-        log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
-        last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
+    load_worldwide_aggregate_data()
+    load_country_world_data()
+    load_national_data()
+    load_regional_data()
+
+    log.info('Update task completed')
+
+
+def load_regional_data():
+    global df_regional_data, df_rate_regional, date_last_update_regional, last_update_content_regional_data
+    # Check if updates for Regional data is required
+    current_update_content_regional_data = int(get_content_length(URL_CSV_REGIONAL_DATA))
+    if current_update_content_regional_data == -1:
+        log.info("Provider's server for Regional Data is unresponsive, retrying later")
+    elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
+        log.info('Regional data update required')
+        df_regional_data = load_csv(URL_CSV_REGIONAL_DATA, DATE_PROPERTY_NAME_IT)
+        df_rate_regional = load_region_rate_data_frame(df_regional_data)
+        date_last_update_regional = get_last_update(URL_CSV_REGIONAL_DATA)
+        log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
+        log.info(f"New Content-length: {current_update_content_regional_data} bytes")
+        last_update_content_regional_data = current_update_content_regional_data
     else:
-        log.info('No updates required for Worldwide Aggregate data')
+        log.info('No updates required for Regional data')
 
+
+def load_national_data():
+    global df_national_data, date_last_update_italy, last_update_content_national_data
+    # Check if updates for National data is required
+    current_update_content_national_data = int(get_content_length(URL_CSV_ITALY_DATA))
+    if current_update_content_national_data == -1:
+        log.info("Provider's server for National data is unresponsive, retrying later")
+    elif current_update_content_national_data != last_update_content_national_data:
+        log.info('National data update required')
+        df_national_data = load_csv(URL_CSV_ITALY_DATA, DATE_PROPERTY_NAME_IT)
+        date_last_update_italy = get_last_update(URL_CSV_ITALY_DATA)
+        log.info(f"Old Content-length: {last_update_content_national_data} bytes")
+        log.info(f"New Content-length: {current_update_content_national_data} bytes")
+        last_update_content_national_data = current_update_content_national_data
+    else:
+        log.info('No updates required for National data')
+
+
+def load_country_world_data():
+    global df_country_world_data, df_rate_country_world, last_update_content_country_world_data
     # Check if updates for World data is required
     current_update_content_country_world_data = int(get_content_length(URL_CSV_WORLD_COUNTRIES_DATA))
     if current_update_content_country_world_data == -1:
@@ -934,35 +959,26 @@ def load_interactive_data():
     else:
         log.info('No updates required for Country World data')
 
-    # Check if updates for National data is required
-    current_update_content_national_data = int(get_content_length(URL_CSV_ITALY_DATA))
-    if current_update_content_national_data == -1:
-        log.info("Provider's server for National data is unresponsive, retrying later")
-    elif current_update_content_national_data != last_update_content_national_data:
-        log.info('National data update required')
-        df_national_data = load_csv(URL_CSV_ITALY_DATA, DATE_PROPERTY_NAME_IT)
-        date_last_update_italy = get_last_update(URL_CSV_ITALY_DATA)
-        log.info(f"Old Content-length: {last_update_content_national_data} bytes")
-        log.info(f"New Content-length: {current_update_content_national_data} bytes")
-        last_update_content_national_data = current_update_content_national_data
-    else:
-        log.info('No updates required for National data')
 
-    # Check if updates for Regional data is required
-    current_update_content_regional_data = int(get_content_length(URL_CSV_REGIONAL_DATA))
-    if current_update_content_regional_data == -1:
-        log.info("Provider's server for Regional Data is unresponsive, retrying later")
-    elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
-        log.info('Regional data update required')
-        df_regional_data = load_csv(URL_CSV_REGIONAL_DATA, DATE_PROPERTY_NAME_IT)
-        df_rate_regional = load_region_rate_data_frame(df_regional_data)
-        date_last_update_regional = get_last_update(URL_CSV_REGIONAL_DATA)
-        log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
-        log.info(f"New Content-length: {current_update_content_regional_data} bytes")
-        last_update_content_regional_data = current_update_content_regional_data
+def load_worldwide_aggregate_data():
+    global df_worldwide_aggregate_data, date_last_update_world_aggregate, last_update_content_worldwide_aggregate_data
+    # Check if updates for Worldwide Aggregate data is required
+    current_update_content_worldwide_aggregate_data = int(get_content_length(URL_CSV_WORLDWIDE_AGGREGATE_DATA))
+    if current_update_content_worldwide_aggregate_data == -1:
+        log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
+    elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
+        log.info('Worldwide Aggregate data update required')
+        df_worldwide_aggregate_data = load_csv(URL_CSV_WORLDWIDE_AGGREGATE_DATA, DATE_PROPERTY_NAME_EN)
+        df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
+                                                      (df_worldwide_aggregate_data['Recovered'] +
+                                                       df_worldwide_aggregate_data['Deaths'])
+        df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
+        date_last_update_world_aggregate = get_last_update(URL_CSV_WORLDWIDE_AGGREGATE_DATA)
+        log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
+        log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
+        last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
     else:
-        log.info('No updates required for Regional data')
-    log.info('Update task completed')
+        log.info('No updates required for Worldwide Aggregate data')
 
 
 def app_layout():
@@ -973,9 +989,9 @@ def app_layout():
     )
 
 
-schedule.every(30).minutes.do(load_interactive_data)
-schedule.every().day.at("08:15").do(load_interactive_data)
-schedule.every().day.at("18:05").do(load_interactive_data)
+schedule.every(30).minutes.do(load_data_from_web)
+schedule.every().day.at("08:15").do(load_data_from_web)
+schedule.every().day.at("18:05").do(load_data_from_web)
 
 
 def run_schedule():
@@ -991,7 +1007,7 @@ def initialize_thread():
 
 
 initialize_thread()
-load_interactive_data()
+load_data_from_web()
 app.config.suppress_callback_exceptions = True
 # Create callbacks
 app.clientside_callback(
