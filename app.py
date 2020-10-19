@@ -184,8 +184,8 @@ def update_regions_line_chart(region_list, data_selected):
 
 @app.callback(Output('dropdown_country_list_selected', 'value'), [Input('dropdown_country_data_selected', 'value')])
 def initialize_dropdown_country_data_selected(data_selected):
-    df_country_world_data.sort_values(by=[DATE_PROPERTY_NAME_EN], inplace=True)
-    df = df_country_world_data.tail(NUMBER_OF_WORLD_COUNTRIES)
+    df_country_world_data.sort_values(by=[constants.DATE_PROPERTY_NAME_EN], inplace=True)
+    df = df_country_world_data.tail(constants.NUMBER_OF_WORLD_COUNTRIES)
     df = df.sort_values(by=[data_selected]).tail(3)
     return df['Country'].tolist()
 
