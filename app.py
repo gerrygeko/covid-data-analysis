@@ -27,7 +27,6 @@ from utils import is_debug_mode_enabled
 
 app_start_time = time.time()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
-debug_mode_enabled = is_debug_mode_enabled()
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
@@ -38,6 +37,7 @@ app = dash.Dash(
 )
 logger.initialize_logger()
 log = logger.get_logger()
+debug_mode_enabled = is_debug_mode_enabled()
 server = app.server
 
 field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensiva',
@@ -58,7 +58,7 @@ def load_csv_from_file(path):
 
 def load_csv(url, data_string):
     data_loaded = pd.read_csv(url, parse_dates=[data_string])
-    log.info(f"| Data loaded at {datetime.datetime.now().time()}")
+    log.info(f"Data loaded at {datetime.datetime.now().time()}")
     return data_loaded
 
 
@@ -928,13 +928,12 @@ def load_regional_data():
     if current_update_content_regional_data == -1:
         log.info("Provider's server for Regional Data is unresponsive, retrying later")
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
-        log.info('| Regional data update required')
+        log.info('Regional data update required')
         df_regional_data = load_csv(constants.URL_CSV_REGIONAL_DATA, constants.DATE_PROPERTY_NAME_IT)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
         date_last_update_regional = get_content_date_last_download_data(constants.URL_CSV_REGIONAL_DATA)
-        log.info(f"| Old Content-length: {last_update_content_regional_data} bytes")
-        log.info(f"| New Content-length: {current_update_content_regional_data} bytes")
-        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_regional}")
+        log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
+        log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data
     else:
         log.info('No updates required for Regional data')
@@ -947,12 +946,12 @@ def load_national_data():
     if current_update_content_national_data == -1:
         log.info("Provider's server for National data is unresponsive, retrying later")
     elif current_update_content_national_data != last_update_content_national_data:
-        log.info('| National data update required')
+        log.info('National data update required')
         df_national_data = load_csv(constants.URL_CSV_ITALY_DATA, constants.DATE_PROPERTY_NAME_IT)
         date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
-        log.info(f"| Old Content-length: {last_update_content_national_data} bytes")
-        log.info(f"| New Content-length: {current_update_content_national_data} bytes")
-        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_italy}")
+        log.info(f"Old Content-length: {last_update_content_national_data} bytes")
+        log.info(f"New Content-length: {current_update_content_national_data} bytes")
+        log.info(f"The update (HTTP HEAD request) was done at: {date_last_update_italy}")
         last_update_content_national_data = current_update_content_national_data
     else:
         log.info('No updates required for National data')
@@ -965,7 +964,7 @@ def load_country_world_data():
     if current_update_content_country_world_data == -1:
         log.info("Provider's server for Country World data is unresponsive, retrying later")
     elif current_update_content_country_world_data != last_update_content_country_world_data:
-        log.info('| Country World data update required')
+        log.info('Country World data update required')
         df_country_world_data = load_csv(constants.URL_CSV_WORLD_COUNTRIES_DATA, constants.DATE_PROPERTY_NAME_EN)
         df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
                                                 (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
@@ -975,9 +974,9 @@ def load_country_world_data():
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
         date_last_update_world_countries_data = get_content_date_last_download_data(
             constants.URL_CSV_WORLD_COUNTRIES_DATA)
-        log.info(f"| Old Content-length: {last_update_content_country_world_data} bytes")
-        log.info(f"| New Content-length: {current_update_content_country_world_data} bytes")
-        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_world_countries_data}")
+        log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
+        log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
+        log.info(f"The update (HTTP HEAD request) was done at: {date_last_update_world_countries_data}")
         last_update_content_country_world_data = current_update_content_country_world_data
     else:
         log.info('No updates required for Country World data')
@@ -990,7 +989,7 @@ def load_worldwide_aggregate_data():
     if current_update_content_worldwide_aggregate_data == -1:
         log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
     elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
-        log.info('| Worldwide Aggregate data update required')
+        log.info('Worldwide Aggregate data update required')
         df_worldwide_aggregate_data = load_csv(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA, constants.DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
                                                       (df_worldwide_aggregate_data['Recovered'] +
@@ -998,9 +997,9 @@ def load_worldwide_aggregate_data():
         df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
         date_last_update_world_aggregate = get_content_date_last_download_data(
             constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA)
-        log.info(f"| Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
-        log.info(f"| New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
-        log.info(f"| The update (HTTP HEAD request) was done at: {date_last_update_world_aggregate}")
+        log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
+        log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
+        log.info(f"The update (HTTP HEAD request) was done at: {date_last_update_world_aggregate}")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
     else:
         log.info('No updates required for Worldwide Aggregate data')
