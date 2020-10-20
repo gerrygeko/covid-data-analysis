@@ -1,6 +1,7 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Fix datetime format (from UTC to CET) of (footer) last check update
+- Show dinamically the top 3 italian regions based on the selected data (like World Tab Line Chart)
+- Enlarge the world_map for covering and so optimizing the unused white space at the top
 - Switch country News repository in line with language selection
 - Log messages for updating components are not consistent at all. They all use different namings
 - Italian Tab: calculate the ratio(percentage) between new positives and swabs N.B. include color control for < or > 3%
@@ -29,6 +30,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Fix datetime format (from UTC to CET) of (footer) last check update
 - "Ultimo Aggiornamento" label doesn't get translated
 - Show time spent while loading all the data and maybe time spent to boot the application
 - Center and space out Gellex logo from the tab below
@@ -59,9 +61,9 @@ SOLVED
 - Deal with region that have 'codice_regione' 21 and 22
 - Make card text different color based on positivity or negativity of the number
 - Time showed in the news feed is displayed in UTC instead of CET timezone
-- Change format of Cloropleth hover_data to it_IT
+- Change format of Choropleth hover_data to it_IT
 - Don't show hour in the date format in the Line Graph
-- Remove dropdown selection for CloroplethMap
+- Remove dropdown selection for ChoroplethMap
 - Introduce hyperlink for CHANGELOG
 - Regional Cards
 - Vertical Bar Chart to show Active Case by day(hozpitalized w symptoms,ICU, quarantined)
