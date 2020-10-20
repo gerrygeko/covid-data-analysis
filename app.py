@@ -84,7 +84,6 @@ df_rate_country_world = None
 date_last_update_world_aggregate = None
 date_last_update_italy = None
 date_last_update_regional = None
-last_check_update = None
 
 layout = dict(
     autosize=True,
@@ -761,13 +760,20 @@ def update_language(language):
         raise PreventUpdate
     locale_language.language = language
     log.info(f"User switching language to: {language}")
-    return create_page_components(app, df_regional_data, df_country_world_data, last_check_update)
+    return create_page_components(app, df_regional_data, df_country_world_data)
 
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
 def update_news(input):
     log.info('Updating news')
     return create_news()
+
+
+@app.callback(Output("last_check_update_text", "children"), [Input("i_news", "n_intervals")])
+def update_last_data_check(self):
+    log.info('Updating last data check')
+    string_last_data_check = load_resource('label_last_check_update') + get_last_data_check() + ' CET'
+    return string_last_data_check
 
 
 # Merge data of P.A Bolzano and P.A. Trento (in Trentino Alto Adige region, with 'codice_regione' = 4) to match
@@ -876,6 +882,11 @@ def get_content_date_last_download_data(url):
     return string_date_update
 
 
+def get_last_data_check():
+    last_check_update = datetime.datetime.now(pytz.timezone('Europe/Rome')).strftime(" %d/%m/%Y %H:%M:%S")
+    return last_check_update
+
+
 def get_last_df_data_update(df, date_property_name):
     string_date_update = (df[date_property_name].iloc[-1]).strftime(" %d/%m/%Y")
     return string_date_update
@@ -915,10 +926,7 @@ def load_data_from_web():
     load_national_data()
     load_regional_data()
 
-    global last_check_update
-    last_check_update = datetime.datetime.now().strftime(" %d/%m/%Y %H:%M:%S")
-
-    log.info(f'Update task completed at: {last_check_update}')
+    log.info(f'Update task completed at: {get_last_data_check()}')
 
 
 def load_regional_data():
@@ -1004,7 +1012,7 @@ def load_worldwide_aggregate_data():
 
 def app_layout():
     app.layout = html.Div(
-        children=create_page_components(app, df_regional_data, df_country_world_data, last_check_update),
+        children=create_page_components(app, df_regional_data, df_country_world_data),
         id="mainContainer",
         style={"display": "flex", "flex-direction": "column"},
     )

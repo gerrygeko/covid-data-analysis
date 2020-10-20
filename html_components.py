@@ -32,7 +32,7 @@ def new_positive_regions(df_regional_data):
     return df['denominazione_regione'].tolist()
 
 
-def create_page_components(app, df_regional_data, df_country_world_data, last_check_update):
+def create_page_components(app, df_regional_data, df_country_world_data):
     log.info("Loading all the components")
     return [
         dcc.Store(id="aggregate_data"),
@@ -43,7 +43,7 @@ def create_page_components(app, df_regional_data, df_country_world_data, last_ch
         create_logo_and_header(app),
         create_tabs(df_country_world_data, df_regional_data),
         create_bottom_line(app),
-        create_footer(last_check_update)
+        create_footer()
     ]
 
 
@@ -209,16 +209,16 @@ def create_world_tab(df_country_world_data):
                                    [
                                        html.Div(
                                            [
-                                                html.P(load_resource('label_select_multicountry'),
-                                                       className="control_label"),
-                                                dcc.Dropdown(id='dropdown_country_list_selected',
-                                                             options=get_options(
-                                                                 df_country_world_data[
-                                                                     'Country'].unique()),
-                                                             multi=True,
-                                                             className='dcc_control'
-                                                             ),
-                                                dcc.Graph(id='country_world_linear_chart')
+                                               html.P(load_resource('label_select_multicountry'),
+                                                      className="control_label"),
+                                               dcc.Dropdown(id='dropdown_country_list_selected',
+                                                            options=get_options(
+                                                                df_country_world_data[
+                                                                    'Country'].unique()),
+                                                            multi=True,
+                                                            className='dcc_control'
+                                                            ),
+                                               dcc.Graph(id='country_world_linear_chart')
                                            ],
                                            id="left-column-world",
                                            className="eight columns pretty_container",
@@ -838,7 +838,7 @@ def create_news():
             html.P(
                 className="p-news title",
                 children=load_resource('label_last_news_update')
-                         + datetime.now().astimezone(timezone('Europe/Rome')).strftime("%d/%m/%Y %H:%M:%S"),
+                         + datetime.now().astimezone(timezone('Europe/Rome')).strftime("%d/%m/%Y %H:%M:%S") + ' CET',
             ),
             html.Table(
                 className="table-news",
@@ -875,20 +875,20 @@ def create_news():
     )
 
 
-def create_footer(last_check_update):
+def create_footer():
     return html.Footer(id="footer",
                        children=[
-                           create_last_update_info(last_check_update),
+                           create_last_update_info(),
                            create_version_link()
                        ])
 
 
-def create_last_update_info(last_check_update):
+def create_last_update_info():
     return html.P(
-            id="last_check_update_text",
-            className="p-version changelog",
-            children=[load_resource('label_last_check_update') + last_check_update]
-        )
+        id="last_check_update_text",
+        className="p-version changelog",
+        children=''
+    )
 
 
 def create_version_link():
