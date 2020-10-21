@@ -1,3 +1,10 @@
+# 3.0.1
+#### Added
+* DataHub references in the Credits section.
+
+#### Changed
+* Last update label now shows also the source of data
+
 # 3.0.0
 #### Added
 * Worldwide Tab: the web application now shows worldwide data from all 188 countries that release Covid-19 related reports
