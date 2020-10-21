@@ -37,7 +37,7 @@ app = dash.Dash(
 )
 logger.initialize_logger()
 log = logger.get_logger()
-debug_mode_enabled = False
+debug_mode_enabled = is_debug_mode_enabled()
 server = app.server
 
 field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensiva',
@@ -164,6 +164,13 @@ def create_scatter_plot_by_country_world(data_frame, title, x_axis_data, y_axis_
     return figure
 
 
+@app.callback(Output('dropdown_region_list_selected', 'value'), [Input('dropdown_italy_data_selected', 'value')])
+def initialize_dropdown_region_data_selected(data_selected):
+    df = df_regional_data.tail(21)
+    df = df.sort_values(by=[data_selected]).tail(3)
+    return df['denominazione_regione'].tolist()
+
+
 # Callback for timeseries/region
 @app.callback(Output('regional_timeseries_linear', 'figure'), [Input('dropdown_region_list_selected', 'value'),
                                                                Input('dropdown_italy_data_selected', 'value')])
@@ -283,7 +290,7 @@ def update_world_map(data_selected):
 
 
 @app.callback(Output('linear_chart_italy', 'figure'), [Input('dropdown_italy_data_selected', 'value')])
-def update_italian_linear_chart(data_selected):
+def update_italian_line_chart(data_selected):
     layout_italian_active_cases = copy.deepcopy(layout)
     df = df_national_data
     colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
@@ -342,7 +349,7 @@ def update_italian_linear_chart(data_selected):
 
 
 @app.callback(Output('linear_chart_world', 'figure'), [Input('dropdown_country_data_selected', 'value')])
-def update_world_linear_chart(data_selected):
+def update_world_line_chart(data_selected):
     layout_world_linear_chart = copy.deepcopy(layout)
     df = df_worldwide_aggregate_data
     y_list_1 = df[data_selected].values.tolist()

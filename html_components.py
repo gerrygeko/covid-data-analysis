@@ -26,12 +26,6 @@ italian_field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                                'tamponi', 'casi_testati']
 
 
-def new_positive_regions(df_regional_data):
-    df = df_regional_data.tail(21)
-    df = df.sort_values(by=['nuovi_positivi']).tail(3)
-    return df['denominazione_regione'].tolist()
-
-
 def create_page_components(app, df_regional_data, df_country_world_data):
     log.info("Loading all the components")
     return [
@@ -435,8 +429,6 @@ def create_italy_tab(df_regional_data):
                                                                         df_regional_data[
                                                                             'denominazione_regione'].unique()),
                                                                     multi=True,
-                                                                    value=new_positive_regions(
-                                                                        df_regional_data),
                                                                     className='dcc_control'
                                                                     ),
                                                        dcc.Graph(id='regional_timeseries_linear')

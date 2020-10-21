@@ -1,6 +1,5 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Show dinamically the top 3 italian regions based on the selected data (like World Tab Line Chart)
 - Enlarge the world_map for covering and so optimizing the unused white space at the top
 - Switch country News repository in line with language selection
 - Log messages for updating components are not consistent at all. They all use different namings
@@ -30,6 +29,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Show dinamically the top 3 italian regions based on the selected data (like World Tab Line Chart)
 - Fix datetime format (from UTC to CET) of (footer) last check update
 - "Ultimo Aggiornamento" label doesn't get translated
 - Show time spent while loading all the data and maybe time spent to boot the application
