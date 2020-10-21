@@ -799,6 +799,14 @@ def create_credits(app):
             ),
             html.A(
                 children=html.Img(
+                    src=app.get_asset_url("datahub-cube-edited.svg"),
+                    className='credits_icon',
+                    id="datahub-image",
+                ),
+                href="https://github.com/datasets/covid-19"
+            ),
+            html.A(
+                children=html.Img(
                     src=app.get_asset_url("jh.png"),
                     className='credits_icon',
                     id="jh-image",

@@ -24,8 +24,7 @@ every 30 minutes a new attempt for check the presence of new data will be made
 
 ## Credits
 - Italian data is offered by [Department of Civil Protection](https://github.com/pcm-dpc/COVID-19).
-- Worldwide data is offered by [Johns Hopkins University Center for Systems Science and Engineering ](https://github.com/CSSEGISandData) and normalized by [Data Packaged Core Datasets
-](https://github.com/datasets/covid-19)
+- Worldwide data is offered by [Johns Hopkins University Center for Systems Science and Engineering ](https://github.com/CSSEGISandData) and normalized by [DataHub.io](https://github.com/datasets/covid-19)
 - The news feed is offered by [News API](https://newsapi.org/).
 - Resident Population data is offered by [I.Stat](http://dati.istat.it/)
 
