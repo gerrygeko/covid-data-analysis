@@ -37,7 +37,7 @@ app = dash.Dash(
 )
 logger.initialize_logger()
 log = logger.get_logger()
-debug_mode_enabled = is_debug_mode_enabled()
+debug_mode_enabled = False
 server = app.server
 
 field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensiva',
@@ -432,7 +432,7 @@ def update_regional_graph_active_cases(region_selected):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(self):
     log.info('Updating cards')
-    sub_header_italian_text = load_resource('header_last_update') + \
+    sub_header_italian_text = load_resource('header_last_update_italy') + \
         get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
@@ -493,7 +493,7 @@ def update_national_cards_color(self):
                ], [Input("i_news", "n_intervals")])
 def update_world_cards_text(self):
     log.info('Updating World Cards')
-    sub_header_worldwide_text = load_resource('header_last_update') + \
+    sub_header_worldwide_text = load_resource('header_last_update_world') + \
         get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     total_text_values = []
@@ -603,7 +603,7 @@ def update_data_table_national(data_selected):
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
     log.info('Updating regional cards')
-    sub_header_ita_regions_text = load_resource('header_last_update') + \
+    sub_header_ita_regions_text = load_resource('header_last_update_italy') + \
         get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
