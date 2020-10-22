@@ -84,6 +84,7 @@ df_rate_country_world = None
 date_last_update_world_aggregate = None
 date_last_update_italy = None
 date_last_update_regional = None
+last_check_for_update = None
 
 layout = dict(
     autosize=True,
@@ -779,7 +780,7 @@ def update_news(input):
 @app.callback(Output("last_check_update_text", "children"), [Input("i_news", "n_intervals")])
 def update_last_data_check(self):
     log.info('Updating last data check')
-    string_last_data_check = load_resource('label_last_check_update') + get_last_data_check() + ' CET'
+    string_last_data_check = load_resource('label_last_check_update') + last_check_for_update + ' CET'
     return string_last_data_check
 
 
@@ -933,7 +934,9 @@ def load_data_from_web():
     load_national_data()
     load_regional_data()
 
-    log.info(f'Update task completed at: {get_last_data_check()}')
+    global last_check_for_update
+    last_check_for_update = get_last_data_check()
+    log.info(f'Update task completed at: {last_check_for_update}')
 
 
 def load_regional_data():
