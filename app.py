@@ -811,6 +811,8 @@ def load_country_world_rate_data_frame(df):
     df_sb['Population'] = ''
     for index, row in df_sb.iterrows():
         nation_name = row["Country"]
+        if nation_name not in world_population:
+            continue
         population = int(world_population[nation_name])
         df_sb.at[index, 'Population'] = population
         for field in constants.LIST_OF_WORLD_FIELDS_TO_RATE:
