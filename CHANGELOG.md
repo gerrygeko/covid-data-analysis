@@ -1,3 +1,7 @@
+# 3.0.2
+#### Fixed
+* Fixed a bug that in specific cases, did not perform a correct association of nations to available population
+
 # 3.0.1
 #### Added
 * DataHub references in the Credits section.
