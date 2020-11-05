@@ -88,7 +88,7 @@ def create_logo_and_header(app):
 
 
 def create_tabs(df_country_world_data, df_regional_data):
-    return dcc.Tabs(id='tabs_master', value='tab_master_worldwide', children=[
+    return dcc.Tabs(id='tabs_master', value='tab_master_ita', children=[
         create_world_tab(df_country_world_data),
         create_italy_tab(df_regional_data),
         create_regions_tab(df_regional_data),
