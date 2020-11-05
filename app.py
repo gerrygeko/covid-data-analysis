@@ -158,7 +158,7 @@ def create_scatter_plot_by_country_world(data_frame, title, x_axis_data, y_axis_
                              mode='lines',
                              opacity=0.7,
                              name=country,
-                             #line=dict(shape="spline", smoothing=1, width=1),
+                             # line=dict(shape="spline", smoothing=1, width=1),
                              textposition='bottom center')
         scatter_list.append(scatter)
     figure = create_figure(scatter_list, title)
@@ -281,8 +281,8 @@ def update_world_map(data_selected):
             xref='paper',
             yref='paper',
             text=f"*{load_resource(data_selected)} <br>"
-            f"{load_resource('label_hover_world_map')} <br>"
-            f"{date_string}",
+                 f"{load_resource('label_hover_world_map')} <br>"
+                 f"{date_string}",
             showarrow=False
         )]
     )
@@ -441,7 +441,7 @@ def update_regional_graph_active_cases(region_selected):
 def update_national_cards_text(self):
     log.info('Updating cards')
     sub_header_italian_text = load_resource('header_last_update_italy') + \
-        get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+                              get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
     total_text_values = []
     variation_text_values = []
@@ -502,7 +502,7 @@ def update_national_cards_color(self):
 def update_world_cards_text(self):
     log.info('Updating World Cards')
     sub_header_worldwide_text = load_resource('header_last_update_world') + \
-        get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
+                                get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     total_text_values = []
     variation_text_values = []
@@ -612,7 +612,7 @@ def update_data_table_national(data_selected):
 def update_regional_cards_text(region_selected):
     log.info('Updating regional cards')
     sub_header_ita_regions_text = load_resource('header_last_update_italy') + \
-        get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
+                                  get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
@@ -708,7 +708,8 @@ def update_country_world_cards_text(country_selected):
     df_sub = df_country_world_data[df_country_world_data['Country'] == country_selected]
     df = df_sub.copy()
     df_sorted = df.sort_values(by=[constants.DATE_PROPERTY_NAME_EN])
-    df_sorted = df_sorted.tail(constants.NUMBER_OF_WORLD_COUNTRIES + len(constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
+    df_sorted = df_sorted.tail(
+        constants.NUMBER_OF_WORLD_COUNTRIES + len(constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA))
     for field in field_list:
         if country_selected in constants.LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA:
             total_text_values = ['N/D'] * 4
@@ -902,6 +903,19 @@ def get_last_df_data_update(df, date_property_name):
     return string_date_update
 
 
+def add_variation_new_swabs_column_df_italy(df):
+    df['nuovi_tamponi'] = 0
+    previous_row = ""
+    for index, row in df.iterrows():
+        if index == 0:
+            previous_row = row
+        else:
+            variation_value = row['tamponi'] - previous_row['tamponi']
+            df.at[index, "nuovi_tamponi"] = variation_value
+            previous_row = row
+    return df
+
+
 def add_variation_columns_for_world_aggregate_data(df):
     df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
     for index, row in df.iterrows():
@@ -968,6 +982,8 @@ def load_national_data():
     elif current_update_content_national_data != last_update_content_national_data:
         log.info('National data update required')
         df_national_data = load_csv(constants.URL_CSV_ITALY_DATA, constants.DATE_PROPERTY_NAME_IT)
+        df_national_data = add_variation_new_swabs_column_df_italy(df_national_data)
+        print(df_national_data)
         date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
@@ -1003,12 +1019,14 @@ def load_country_world_data():
 def load_worldwide_aggregate_data():
     global df_worldwide_aggregate_data, date_last_update_world_aggregate, last_update_content_worldwide_aggregate_data
     # Check if updates for Worldwide Aggregate data is required
-    current_update_content_worldwide_aggregate_data = int(get_content_length(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA))
+    current_update_content_worldwide_aggregate_data = int(
+        get_content_length(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA))
     if current_update_content_worldwide_aggregate_data == -1:
         log.info("Provider's server for Worldwide Aggregate data is unresponsive, retrying later")
     elif current_update_content_worldwide_aggregate_data != last_update_content_worldwide_aggregate_data:
         log.info('Worldwide Aggregate data update required')
-        df_worldwide_aggregate_data = load_csv(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA, constants.DATE_PROPERTY_NAME_EN)
+        df_worldwide_aggregate_data = load_csv(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA,
+                                               constants.DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
                                                       (df_worldwide_aggregate_data['Recovered'] +
                                                        df_worldwide_aggregate_data['Deaths'])
@@ -1075,5 +1093,5 @@ def show_application_started_messages():
 
 if __name__ == '__main__':
     show_application_started_messages()
-    time.sleep(0.01) # Sleep for few milliseconds otherwise log messages get messed up with the app running
+    time.sleep(0.01)  # Sleep for few milliseconds otherwise log messages get messed up with the app running
     app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
