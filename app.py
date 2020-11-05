@@ -983,7 +983,8 @@ def load_national_data():
         log.info('National data update required')
         df_national_data = load_csv(constants.URL_CSV_ITALY_DATA, constants.DATE_PROPERTY_NAME_IT)
         df_national_data = add_variation_new_swabs_column_df_italy(df_national_data)
-        print(df_national_data)
+        df_national_data['ratio_n_pos_tamponi'] = round(((df_national_data['nuovi_positivi'] /
+                                                          df_national_data['nuovi_tamponi'])*100), 2)
         date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
