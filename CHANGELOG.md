@@ -1,3 +1,9 @@
+# 3.0.3
+#### Added
+*  Italy Tab: 2 new cards are now available:
+    * ratio new positives / new swabs
+    * ICU pressure
+
 # 3.0.2
 #### Fixed
 * Fixed a bug that in specific cases, did not perform a correct association of nations to available population

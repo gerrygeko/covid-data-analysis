@@ -69,6 +69,7 @@ def load_geojson(url):
 
 
 italy_regional_population = load_csv_from_file('assets/italy_region_population_2020.csv')
+#italy_ICU = load_csv_from_file('assets/italian_intensive_care_19_ottobre_2020.csv')
 world_population = load_csv_from_file('assets/worldwide_population_2020.csv')
 geojson_province = load_geojson(constants.URL_GEOJSON_REGIONS)
 last_update_content_regional_data = 0
@@ -429,30 +430,37 @@ def update_regional_graph_active_cases(region_selected):
                Output('total_recovered_text', 'children'),
                Output('total_deaths_text', 'children'),
                Output('total_icu_text', 'children'),
+               Output('pressure_ICU_text', 'children'),
                Output('total_swabs_text', 'children'),
+               Output('ratio_n_pos_tamponi_text', 'children'),
                Output('total_cases_variation', 'children'),
                Output('total_positive_variation', 'children'),
                Output('total_recovered_variation', 'children'),
                Output('total_deaths_variation', 'children'),
                Output('total_icu_variation', 'children'),
+               Output('pressure_ICU_variation', 'children'),
                Output('total_swabs_variation', 'children'),
+               Output('ratio_n_pos_tamponi_variation', 'children'),
                Output('sub_header_italian_update', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_text(self):
     log.info('Updating cards')
     sub_header_italian_text = load_resource('header_last_update_italy') + \
-                              get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
-    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
+        get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
+                  'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
+    percentage_list = ['ratio_n_pos_tamponi', 'pressure_ICU']
     total_text_values = []
     variation_text_values = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        total_text = f'{card_value:n}'
+        percentage = ' %' if field in percentage_list else ''
+        total_text = f'{card_value:n}{percentage}'
         total_text_values.append(total_text)
         sign = '+' if variation_previous_day > 0 else ''
-        variation_text = f'{sign}{variation_previous_day:n}'
+        variation_text = f'{sign}{variation_previous_day:n}{percentage}'
         variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values), sub_header_italian_text
 
@@ -462,10 +470,13 @@ def update_national_cards_text(self):
                Output('total_recovered_variation', 'style'),
                Output('total_deaths_variation', 'style'),
                Output('total_icu_variation', 'style'),
-               Output('total_swabs_variation', 'style')
+               Output('pressure_ICU_variation', 'style'),
+               Output('total_swabs_variation', 'style'),
+               Output('ratio_n_pos_tamponi_variation', 'style')
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_color(self):
-    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti', 'terapia_intensiva', 'tamponi']
+    field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
+                  'terapia_intensiva', 'ratio_n_pos_tamponi', 'tamponi', 'pressure_ICU']
     color_cards_list = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
@@ -474,7 +485,9 @@ def update_national_cards_color(self):
         if variation_previous_day > 0 and field == 'dimessi_guariti' or \
                 variation_previous_day > 0 and field == 'tamponi' or \
                 variation_previous_day < 0 and field == 'terapia_intensiva' or \
-                variation_previous_day < 0 and field == 'totale_positivi':
+                variation_previous_day < 0 and field == 'totale_positivi' or \
+                variation_previous_day < 0 and field == 'pressure_ICU' or \
+                variation_previous_day < 0 and field == 'ratio_n_pos_tamponi':
             color = 'limegreen'
             color_cards_list.append(color)
         else:
@@ -485,7 +498,9 @@ def update_national_cards_color(self):
                         {'color': color_cards_list[2]},
                         {'color': color_cards_list[3]},
                         {'color': color_cards_list[4]},
-                        {'color': color_cards_list[5]}]
+                        {'color': color_cards_list[5]},
+                        {'color': color_cards_list[6]},
+                        {'color': color_cards_list[7]}]
     return dictionary_color
 
 
@@ -984,7 +999,9 @@ def load_national_data():
         df_national_data = load_csv(constants.URL_CSV_ITALY_DATA, constants.DATE_PROPERTY_NAME_IT)
         df_national_data = add_variation_new_swabs_column_df_italy(df_national_data)
         df_national_data['ratio_n_pos_tamponi'] = round(((df_national_data['nuovi_positivi'] /
-                                                          df_national_data['nuovi_tamponi'])*100), 2)
+                                                          df_national_data['nuovi_tamponi']) * 100), 2)
+        df_national_data['pressure_ICU'] = round(((df_national_data['terapia_intensiva'] /
+                                                   constants.TOTAL_ICU_ITALY) * 100), 2)
         date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")

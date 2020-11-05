@@ -334,6 +334,13 @@ def create_italy_tab(df_regional_data):
                                                     html.P(load_resource('dimessi_guariti'))],
                                                    id="total_recovered",
                                                    className="mini_container",
+                                               ),
+                                               html.Div(
+                                                   [html.H6(id="total_deaths_text", children=''),
+                                                    html.H6(id="total_deaths_variation", children=''),
+                                                    html.P(load_resource('deceduti'))],
+                                                   id="total_deaths",
+                                                   className="mini_container",
                                                )
                                            ],
                                            id="info-container",
@@ -347,13 +354,6 @@ def create_italy_tab(df_regional_data):
                                        html.Div(
                                            [
                                                html.Div(
-                                                   [html.H6(id="total_deaths_text", children=''),
-                                                    html.H6(id="total_deaths_variation", children=''),
-                                                    html.P(load_resource('deceduti'))],
-                                                   id="total_deaths",
-                                                   className="mini_container",
-                                               ),
-                                               html.Div(
                                                    [html.H6(id="total_icu_text", children=''),
                                                     html.H6(id="total_icu_variation", children=''),
                                                     html.P(load_resource('terapia_intensiva'))],
@@ -361,10 +361,24 @@ def create_italy_tab(df_regional_data):
                                                    className="mini_container",
                                                ),
                                                html.Div(
+                                                   [html.H6(id="pressure_ICU_text", children=''),
+                                                    html.H6(id="pressure_ICU_variation", children=''),
+                                                    html.P(load_resource('pressure_ICU'))],
+                                                   id="pressure_ICU",
+                                                   className="mini_container",
+                                               ),
+                                               html.Div(
                                                    [html.H6(id="total_swabs_text", children=''),
                                                     html.H6(id="total_swabs_variation", children=''),
                                                     html.P(load_resource('tamponi'))],
                                                    id="total_swabs",
+                                                   className="mini_container",
+                                               ),
+                                               html.Div(
+                                                   [html.H6(id="ratio_n_pos_tamponi_text", children=''),
+                                                    html.H6(id="ratio_n_pos_tamponi_variation", children=''),
+                                                    html.P(load_resource('ratio_n_pos_tamponi'))],
+                                                   id="ratio_n_pos_tamponi",
                                                    className="mini_container",
                                                )
                                            ],
