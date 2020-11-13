@@ -69,7 +69,7 @@ def load_geojson(url):
 
 
 italy_regional_population = load_csv_from_file('assets/italy_region_population_2020.csv')
-#italy_ICU = load_csv_from_file('assets/italian_intensive_care_19_ottobre_2020.csv')
+italy_ICU = load_csv_from_file('assets/italian_ICU_19_10_2020.csv')
 world_population = load_csv_from_file('assets/worldwide_population_2020.csv')
 geojson_province = load_geojson(constants.URL_GEOJSON_REGIONS)
 last_update_content_regional_data = 0
@@ -446,7 +446,7 @@ def update_regional_graph_active_cases(region_selected):
 def update_national_cards_text(self):
     log.info('Updating cards')
     sub_header_italian_text = load_resource('header_last_update_italy') + \
-        get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+                              get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     percentage_list = ['ratio_n_pos_tamponi', 'pressure_ICU']
@@ -610,16 +610,16 @@ def update_data_table_national(data_selected):
                Output('total_positive_text_tab2', 'children'),
                Output('total_recovered_text_tab2', 'children'),
                Output('total_deaths_text_tab2', 'children'),
-               Output('total_hospitalized_w_symptoms_text_tab2', 'children'),
                Output('total_icu_text_tab2', 'children'),
+               Output('pressure_ICU_text_tab2', 'children'),
                Output('total_isolation_text_tab2', 'children'),
                Output('total_swabs_text_tab2', 'children'),
                Output('total_cases_variation_tab2', 'children'),
                Output('total_positive_variation_tab2', 'children'),
                Output('total_recovered_variation_tab2', 'children'),
                Output('total_deaths_variation_tab2', 'children'),
-               Output('total_hospitalized_w_symptoms_variation_tab2', 'children'),
                Output('total_icu_variation_tab2', 'children'),
+               Output('pressure_ICU_variation_tab2', 'children'),
                Output('total_isolation_variation_tab2', 'children'),
                Output('total_swabs_variation_tab2', 'children'),
                Output('sub_header_ita_regions_update', 'children'),
@@ -627,9 +627,9 @@ def update_data_table_national(data_selected):
 def update_regional_cards_text(region_selected):
     log.info('Updating regional cards')
     sub_header_ita_regions_text = load_resource('header_last_update_italy') + \
-                                  get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
+        get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
-                  'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
+                  'terapia_intensiva', 'pressure_ICU', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
     variation_text_values = []
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
@@ -637,10 +637,11 @@ def update_regional_cards_text(region_selected):
         card_value = df[field].iloc[-1]
         card_value_previous_day = df[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        total_text = f'{card_value:n}'
+        percentage = ' %' if field == 'pressure_ICU' else ''
+        total_text = f'{card_value:n}{percentage}'
         total_text_values.append(total_text)
         sign = '+' if variation_previous_day > 0 else ''
-        variation_text = f'{sign}{variation_previous_day:n}'
+        variation_text = f'{sign}{variation_previous_day:n}{percentage}'
         variation_text_values.append(variation_text)
     return (*total_text_values), (*variation_text_values), sub_header_ita_regions_text
 
@@ -649,14 +650,14 @@ def update_regional_cards_text(region_selected):
                Output('total_positive_variation_tab2', 'style'),
                Output('total_recovered_variation_tab2', 'style'),
                Output('total_deaths_variation_tab2', 'style'),
-               Output('total_hospitalized_w_symptoms_variation_tab2', 'style'),
                Output('total_icu_variation_tab2', 'style'),
+               Output('pressure_ICU_variation_tab2', 'style'),
                Output('total_isolation_variation_tab2', 'style'),
                Output('total_swabs_variation_tab2', 'style')
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_color(region_selected):
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
-                  'ricoverati_con_sintomi', 'terapia_intensiva', 'isolamento_domiciliare', 'tamponi']
+                  'terapia_intensiva', 'pressure_ICU', 'isolamento_domiciliare', 'tamponi']
     color_cards_list = []
     df = df_regional_data[df_regional_data['denominazione_regione'] == region_selected]
     for field in field_list:
@@ -672,7 +673,8 @@ def update_regional_cards_color(region_selected):
                 variation_previous_day < 0 and field == 'ricoverati_con_sintomi' or \
                 variation_previous_day < 0 and field == 'terapia_intensiva' or \
                 variation_previous_day < 0 and field == 'isolamento_domiciliare' or \
-                variation_previous_day > 0 and field == 'tamponi':
+                variation_previous_day > 0 and field == 'tamponi' or \
+                variation_previous_day < 0 and field == 'pressure_ICU':
             color = 'limegreen'
             color_cards_list.append(color)
         else:
@@ -856,6 +858,17 @@ def load_region_rate_data_frame(df):
     return df_sb
 
 
+def load_region_available_ICU(df_sb):
+    df_sb['available_ICU'] = ''
+    for index, row in df_sb.iterrows():
+        region_name = row["denominazione_regione"]
+        if region_name not in italy_ICU:
+            continue
+        available_ICU = int(italy_ICU[region_name])
+        df_sb.at[index, 'available_ICU'] = available_ICU
+    return df_sb
+
+
 def adjust_df_world_to_geojson(df):
     df['Country'] = df['Country'].replace(['US', 'Congo (Kinshasa)', 'Congo (Brazzaville)', 'Korea, South',
                                            'Cote d\'Ivoire', 'Czechia', 'Serbia', 'Taiwan*', 'Tanzania',
@@ -979,7 +992,13 @@ def load_regional_data():
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
         log.info('Regional data update required')
         df_regional_data = load_csv(constants.URL_CSV_REGIONAL_DATA, constants.DATE_PROPERTY_NAME_IT)
+        df_regional_data = load_region_available_ICU(df_regional_data)
+        df_regional_data['available_ICU'] = pd.to_numeric(df_regional_data['available_ICU'], downcast='float')
+        df_regional_data['pressure_ICU'] = round(((df_regional_data['terapia_intensiva'] /
+                                                   df_regional_data['available_ICU']) * 100), 2)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
+        # df_regional_data['available_ICU'] = list(italy_ICU.values())
+        #print(df_regional_data[['denominazione_regione','available_ICU']].tail(42))
         date_last_update_regional = get_content_date_last_download_data(constants.URL_CSV_REGIONAL_DATA)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")

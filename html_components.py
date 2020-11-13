@@ -558,22 +558,22 @@ def create_regions_tab(df_regional_data):
                                        html.Div(
                                            [
                                                html.Div(
-                                                   [html.H6(
-                                                       id="total_hospitalized_w_symptoms_text_tab2",
-                                                       children=''),
-                                                       html.H6(
-                                                           id="total_hospitalized_w_symptoms_variation_tab2",
-                                                           children=''),
-                                                       html.P(load_resource('totale_ospedalizzati'))],
-                                                   id="total_hospitalized_w_symptoms_tab2",
-                                                   className="mini_container",
-                                               ),
-                                               html.Div(
                                                    [html.H6(id="total_icu_text_tab2", children=''),
                                                     html.H6(id="total_icu_variation_tab2",
                                                             children=''),
                                                     html.P(load_resource('terapia_intensiva'))],
                                                    id="total_icu_tab2",
+                                                   className="mini_container",
+                                               ),
+                                               html.Div(
+                                                   [html.H6(
+                                                       id="pressure_ICU_text_tab2",
+                                                       children=''),
+                                                       html.H6(
+                                                           id="pressure_ICU_variation_tab2",
+                                                           children=''),
+                                                       html.P(load_resource('pressure_ICU'))],
+                                                   id="pressure_ICU_tab2",
                                                    className="mini_container",
                                                ),
                                                html.Div(
