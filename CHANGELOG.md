@@ -1,6 +1,6 @@
 # 3.0.4
 #### Added
-* Introduced card that shows the pressure in the ICU
+* Introduced card that shows the pressure in the ICU also in the regional tab
 
 #### Fixed
 * Fixed a bug in the translation library that was preventing the website to be available
