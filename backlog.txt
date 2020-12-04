@@ -23,6 +23,7 @@ NEW FEATURES AND BUG TO SOLVE
 - Add http security headers (check internet.nl for diagnosis)
 - Make header title (and image) of the website hyperlink to the root of the website
 - Localize also the date format if language has changed
+- Use master version of googletrans library as soon as the bug on their side has been fixed. (see: https://github.com/ssut/py-googletrans/issues/234)
 - Translate all the keys used in the resource dict from Italian to English
 
 -------------------------------------------------------------------------------------------------
