@@ -27,6 +27,12 @@ from utils import is_debug_mode_enabled
 
 app_start_time = time.time()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
+logger.initialize_logger()
+log = logger.get_logger()
+debug_mode_enabled = is_debug_mode_enabled()
+
+if not debug_mode_enabled:
+    start_translation()
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
@@ -35,9 +41,7 @@ app = dash.Dash(
                          {"property": "og:description", "content": "SARS-CoV-2-Gellex"},
                          {"property": "og:url", "content": "https://www.data-covid.com/"}]
 )
-logger.initialize_logger()
-log = logger.get_logger()
-debug_mode_enabled = is_debug_mode_enabled()
+
 server = app.server
 
 field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensiva',
@@ -1113,8 +1117,7 @@ app.clientside_callback(
 )
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
-if not debug_mode_enabled:
-    start_translation()
+
 
 
 def get_boot_time():
