@@ -1,10 +1,15 @@
+# 3.0.4
+#### Added
+* Introduced card that shows the pressure in the ICU
+
+#### Fixed
+* Fixed a bug in the translation library that was preventing the website to be available
+
 # 3.0.3
 #### Added
 * Italy Tab: 2 new cards are now available:
     * ratio new positives / new swabs
     * ICU pressure
-#### Fixed
-* Fixed a bug in the translation library that was preventing the website to be available
 
 # 3.0.2
 #### Fixed
