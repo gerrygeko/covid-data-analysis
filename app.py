@@ -450,7 +450,7 @@ def update_regional_graph_active_cases(region_selected):
 def update_national_cards_text(self):
     log.info('Updating cards')
     sub_header_italian_text = load_resource('header_last_update_italy') + \
-                              get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+        get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     percentage_list = ['ratio_n_pos_tamponi', 'pressure_ICU']
@@ -481,17 +481,15 @@ def update_national_cards_text(self):
 def update_national_cards_color(self):
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'ratio_n_pos_tamponi', 'tamponi', 'pressure_ICU']
+    green_positive_results = ['tamponi', 'dimessi_guariti']
+    green_negative_results = ['terapia_intensiva', 'totale_positivi', 'ratio_n_pos_tamponi', 'pressure_ICU']
     color_cards_list = []
     for field in field_list:
         card_value = df_national_data[field].iloc[-1]
         card_value_previous_day = df_national_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        if variation_previous_day > 0 and field == 'dimessi_guariti' or \
-                variation_previous_day > 0 and field == 'tamponi' or \
-                variation_previous_day < 0 and field == 'terapia_intensiva' or \
-                variation_previous_day < 0 and field == 'totale_positivi' or \
-                variation_previous_day < 0 and field == 'pressure_ICU' or \
-                variation_previous_day < 0 and field == 'ratio_n_pos_tamponi':
+        if field in green_positive_results and variation_previous_day > 0 or \
+                field in green_negative_results and variation_previous_day < 0:
             color = 'limegreen'
             color_cards_list.append(color)
         else:
@@ -631,7 +629,7 @@ def update_data_table_national(data_selected):
 def update_regional_cards_text(region_selected):
     log.info('Updating regional cards')
     sub_header_ita_regions_text = load_resource('header_last_update_italy') + \
-        get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
+                                  get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
@@ -1002,7 +1000,7 @@ def load_regional_data():
                                                    df_regional_data['available_ICU']) * 100), 2)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
         # df_regional_data['available_ICU'] = list(italy_ICU.values())
-        #print(df_regional_data[['denominazione_regione','available_ICU']].tail(42))
+        # print(df_regional_data[['denominazione_regione','available_ICU']].tail(42))
         date_last_update_regional = get_content_date_last_download_data(constants.URL_CSV_REGIONAL_DATA)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
