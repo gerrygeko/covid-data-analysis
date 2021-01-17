@@ -1,3 +1,8 @@
+# 3.0.5
+#### Fixed
+* Replaced "googletrans" lib with "pygoogletranslation" to resolve issues caused by some changes on the 
+  Google Translation API
+
 # 3.0.4
 #### Added
 * Introduced card that shows the pressure in the ICU also in the regional tab
