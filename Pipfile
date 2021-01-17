@@ -15,7 +15,7 @@ dash = "*"
 plotly = "*"
 urllib3 = "*"
 schedule = "*"
-googletrans = "==4.0.0-rc1"
+pygoogletranslation = "==2.0.4"
 
 [requires]
 python_version = "3.7"

@@ -1,15 +1,15 @@
-from googletrans import Translator
+from pygoogletranslation import Translator
 
 import logger
 from constants import DEFAULT_LANGUAGE
 
 language_list = [{'label': 'Italiano', 'value': 'IT'},
                  {'label': 'English', 'value': 'EN'},
-                 # {'label': 'Dutch', 'value': 'NL'},
-                 # {'label': 'German', 'value': 'DE'},
-                 # {'label': 'French', 'value': 'FR'},
-                 # {'label': 'Spanish', 'value': 'ES'},
-                 # {'label': 'Portuguese', 'value': 'PT'}
+                  {'label': 'Dutch', 'value': 'NL'},
+                  {'label': 'German', 'value': 'DE'},
+                  {'label': 'French', 'value': 'FR'},
+                  {'label': 'Spanish', 'value': 'ES'},
+                  {'label': 'Portuguese', 'value': 'PT'}
                  ]
 
 
