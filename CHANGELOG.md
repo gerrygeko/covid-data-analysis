@@ -1,3 +1,7 @@
+# 3.0.6
+#### Fixed
+* Update of URL World Data repository to make a correct loading of the data starting from January 1, 2021
+
 # 3.0.5
 #### Fixed
 * Replaced "googletrans" lib with "pygoogletranslation" to resolve issues caused by some changes on the 
