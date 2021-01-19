@@ -19,9 +19,9 @@ URL_CSV_ITALY_DATA = \
     "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale" \
     "/dpc-covid19-ita-andamento-nazionale.csv"
 URL_CSV_WORLD_COUNTRIES_DATA = \
-    "https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv"
+    "https://raw.githubusercontent.com/datasets/covid-19/main/data/countries-aggregated.csv"
 URL_CSV_WORLDWIDE_AGGREGATE_DATA = \
-    "https://raw.githubusercontent.com/datasets/covid-19/master/data/worldwide-aggregate.csv"
+    "https://raw.githubusercontent.com/datasets/covid-19/main/data/worldwide-aggregate.csv"
 URL_GEOJSON_REGIONS = \
     "https://raw.githubusercontent.com/openpolis/geojson-italy/master/geojson/limits_IT_regions.geojson"
 URL_GEOJSON_WORLD_COUNTRIES = \
