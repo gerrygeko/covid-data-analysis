@@ -92,6 +92,7 @@ def create_tabs(df_country_world_data, df_regional_data):
         create_world_tab(df_country_world_data),
         create_italy_tab(df_regional_data),
         create_regions_tab(df_regional_data),
+        create_vaccines_italy_tab()
     ])
 
 
@@ -616,6 +617,44 @@ def create_regions_tab(df_regional_data):
                            ],
                            className="row flex-display",
                        )
+                   ])
+
+
+def create_vaccines_italy_tab():
+    return dcc.Tab(label=load_resource('label_tab_vaccines_italy'), value='tab_vaccines_italy',
+                   children=[
+                       html.Div(
+                           [html.H5(id="sub_header_vaccines_italy_update", children='', className='sub_title')]
+                       ),
+                       html.Div(
+                           [
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               html.Div(
+                                                   [html.H6(id="administered_doses_text", children=''),
+                                                    html.P(load_resource('administered_doses'))],
+                                                   id="administered_doses",
+                                                   className="mini_container",
+                                               ),
+                                               html.Div(
+                                                   [html.H6(id="delivered_doses_text", children=''),
+                                                    html.P(load_resource('delivered_doses'))],
+                                                   id="delivered_doses",
+                                                   className="mini_container",
+                                               )
+                                           ],
+                                           id="info-container-vaccines-ita",
+                                           className="row container-display",
+                                       ),
+                                   ],
+                                   className="ghosty_container six columns",
+                               ),
+                           ],
+                           className="row flex-display",
+                       )
+
                    ])
 
 

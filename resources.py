@@ -49,6 +49,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_tab_master_worldwide': 'Mondo',
     'label_tab_master_ita': 'Italia',
     'label_tab_master_ita_regions': 'Regioni Italiane',
+    'label_tab_vaccines_italy': 'Vaccini ITA (New)',
     'label_select_data': 'Seleziona il dato da analizzare:',
     'label_select_multiregion': 'Seleziona una o più regioni italiane da confrontare:',
     'label_select_multicountry': 'Seleziona uno o più Paesi da confrontare:',
@@ -62,6 +63,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_contact_us': 'Contattaci',
     'header_last_update_world':'Ultimo rilascio dati DataHub:',
     'header_last_update_italy':'Ultimo rilascio dati Protezione Civile Italiana:',
+    'header_last_update_vaccines_italy':'Ultimo rilascio dati Ministero della Salute:',
     'label_last_news_update':'Ultimo aggiornamento: ',
     'label_last_check_update': 'Ultimo controllo dati:',
     'label_map': 'N° casi ogni 100K abitanti',
@@ -84,7 +86,10 @@ resources = {DEFAULT_LANGUAGE: {
     'New Confirmed': 'Nuovi Positivi',
     'New Recovered': 'Nuovi Guariti',
     'New Deaths': 'Nuovi Decessi',
-    'Active_cases': 'Casi Attivi'
+    'Active_cases': 'Casi Attivi',
+    'administered_doses': 'Dosi Somministrate',
+    'delivered_doses': 'Dosi Consegnate',
+
     }
 }
 
