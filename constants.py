@@ -28,9 +28,11 @@ URL_GEOJSON_WORLD_COUNTRIES = \
     "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
 URL_NEWS_UPDATE = "http://newsapi.org/v2/top-headlines?country=it&category=science&apiKey=b20640c581554761baab24317b8331e7"
 
-URL_VACCINI_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/vaccini-summary-latest.csv"
-
-URL_SOMMINISTRAZIONI_VACCINI_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-summary-latest.csv"
+URL_VACCINES_ITA_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/vaccini-summary-latest.csv"
+URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-summary-latest.csv"
+URL_VACCINES_ITA_ADMINISTRATIONS = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv"
+URL_VACCINES_ITA_DELIVERIES = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv"
+URL_VACCINES_ITA_ADMINISTRATION_POINT = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/punti-somministrazione-latest.csv"
 
 LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
 LIST_OF_WORLD_FIELDS = ('Confirmed', 'Recovered', 'Deaths', 'New Confirmed', 'New Recovered', 'New Deaths', 'Active_cases')

@@ -1,6 +1,7 @@
 from pygoogletranslation import Translator
 
 import logger
+import time
 from constants import DEFAULT_LANGUAGE
 
 language_list = [{'label': 'Italiano', 'value': 'IT'},
@@ -116,7 +117,9 @@ def start_translation():
 
     for language in languages_code_list:
         if language != DEFAULT_LANGUAGE:
+            start_time = time.time()
             translations = translator.translate(default_language_string_list, src=DEFAULT_LANGUAGE, dest=language)
             add_translations_to_resource_dict(translations, language)
+            log.info(f"The {language} translation has taken {time.time()-start_time} seconds")
             log.info(f"End of loading for resources for: {language}")
 
