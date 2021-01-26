@@ -895,6 +895,14 @@ def create_credits(app):
                     id="istat-image",
                 ),
                 href="http://dati.istat.it/",
+            ),
+            html.A(
+                children=html.Img(
+                    src=app.get_asset_url("logo_vax.png"),
+                    className='credits_icon',
+                    id="vax-image",
+                ),
+                href="https://github.com/italia/covid19-opendata-vaccini",
             )
         ]
     )
