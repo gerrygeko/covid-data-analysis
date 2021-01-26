@@ -678,6 +678,41 @@ def create_vaccines_italy_tab():
                            ],
                            className="row flex-display",
                        ),
+                       ######################################################################
+                       html.Div(
+                           [
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               dcc.Graph(id="bar_chart_vaccines_italy")
+                                           ],
+                                           className="pretty_container six columns",
+                                       ),
+                                       html.Div(
+                                           [html.H5(id='xxx_italy_map_header', children=load_resource('label_map'),
+                                                    className='sub_title'),
+                                            dcc.Graph(id="xxx_italy_map")],
+                                           className="pretty_container six columns",
+                                       ),
+                                   ],
+                                   className="row flex-display",
+                               ),
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               dcc.Graph(id="xxx_table_tab_italy")
+                                           ],
+                                           className="pretty_container four columns",
+                                       )
+                                   ],
+                                   className="row flex-display",
+                               )
+                           ],
+                           className="pretty_container twelve columns",
+                       )
+                       ######################################################################
                    ])
 
 

@@ -797,6 +797,31 @@ def update_vaccines_italy_cards_text(self):
     return (*total_text_values),  sub_header_vaccines_italy_text
 
 
+@app.callback(Output('bar_chart_vaccines_italy', 'figure'), [Input("i_news", "n_intervals")])
+def update_bar_chart_vaccines_italy(self):
+    layout_count = copy.deepcopy(layout)
+    df = df_vaccines_italy_registry_summary_latest
+
+    color_bar = "rgb(123, 199, 255)"
+    data = [
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["totale"],
+            name="All Wells",
+            marker=dict(color=color_bar),
+        )
+    ]
+
+    layout_count["title"] = load_resource('administrations_by_age')
+    layout_count["dragmode"] = "select"
+    layout_count["showlegend"] = False
+    layout_count["autosize"] = True
+
+    figure = dict(data=data, layout=layout_count)
+    return figure
+
+
 @app.callback(Output('mainContainer', 'children'),
               [Input('dropdown_language_selected', 'value')])
 def update_language(language):
