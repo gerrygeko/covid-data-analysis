@@ -787,28 +787,28 @@ def update_country_world_cards_color(country_selected):
 @app.callback([Output('administered_doses_text', 'children'),
                Output('delivered_doses_text', 'children'),
                Output('total_people_vaccinated_text', 'children'),
-               Output('total_administration_points_text', 'children'),
+               Output('percentage_vaccinated_population_text', 'children'),
                Output('sub_header_vaccines_italy_update', 'children')
                ], [Input("i_news", "n_intervals")])
 def update_vaccines_italy_cards_text(self):
     log.info('Updating cards')
     sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + \
         get_last_df_data_update(df_vaccines_italy_summary_latest, constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
-    field_list = ['dosi_somministrate', 'dosi_consegnate', 'seconda_dose', 'presidio_ospedaliero']
+    field_list = ['dosi_somministrate', 'dosi_consegnate', 'seconda_dose']
     df_custom = pd.concat([df_vaccines_italy_summary_latest[field_list[0]],
                            df_vaccines_italy_summary_latest[field_list[1]],
-                           df_vaccines_italy_registry_summary_latest[field_list[2]],
-                           df_vaccines_italy_administration_point[field_list[3]]], axis=1,
-                          keys=[field_list[0], field_list[1], field_list[2], field_list[3]])
+                           df_vaccines_italy_registry_summary_latest[field_list[2]]], axis=1,
+                          keys=[field_list[0], field_list[1], field_list[2]])
     df_custom = df_custom.fillna(0)
     total_text_values = []
     for field in field_list:
-        if field == 'presidio_ospedaliero':
-            card_value = df_custom[field].count()
-        else:
-            card_value = int(df_custom[field].sum())
+        card_value = int(df_custom[field].sum())
         total_text = f'{card_value:n}'
         total_text_values.append(total_text)
+    card_value = round((float(df_custom['seconda_dose'].sum()) / constants.ITALIAN_POPULATION)*100, 2)
+    percentage = ' %'
+    total_text = f'{card_value:n}{percentage}'
+    total_text_values.append(total_text)
     return (*total_text_values),  sub_header_vaccines_italy_text
 
 

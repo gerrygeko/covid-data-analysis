@@ -90,7 +90,7 @@ resources = {DEFAULT_LANGUAGE: {
     'administered_doses': 'Dosi Somministrate',
     'delivered_doses': 'Dosi Consegnate',
     'total_people_vaccinated': 'Totale Persone Vaccinate',
-    'total_administration_points': 'N° Punti di Somministrazione Attivi'
+    'percentage_vaccinated_population': 'Percentuale Popolazione Vaccinata'
     }
 }
 

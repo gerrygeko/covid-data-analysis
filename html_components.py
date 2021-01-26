@@ -662,9 +662,9 @@ def create_vaccines_italy_tab():
                                                    className="mini_container",
                                                ),
                                                html.Div(
-                                                   [html.H6(id="total_administration_points_text", children=''),
-                                                    html.P(load_resource('total_administration_points'))],
-                                                   id="total_administration_points",
+                                                   [html.H6(id="percentage_vaccinated_population_text", children=''),
+                                                    html.P(load_resource('percentage_vaccinated_population'))],
+                                                   id="percentage_vaccinated_population",
                                                    className="mini_container",
                                                )
                                            ],
