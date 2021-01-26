@@ -651,10 +651,32 @@ def create_vaccines_italy_tab():
                                    ],
                                    className="ghosty_container six columns",
                                ),
+                               html.Div(
+                                   [
+                                       html.Div(
+                                           [
+                                               html.Div(
+                                                   [html.H6(id="total_people_vaccinated_text", children=''),
+                                                    html.P(load_resource('total_people_vaccinated'))],
+                                                   id="total people vaccinated",
+                                                   className="mini_container",
+                                               ),
+                                               html.Div(
+                                                   [html.H6(id="total_administration_points_text", children=''),
+                                                    html.P(load_resource('total_administration_points'))],
+                                                   id="total_administration_points",
+                                                   className="mini_container",
+                                               )
+                                           ],
+                                           id="info-container-vaccines-ita-2",
+                                           className="row container-display",
+                                       ),
+                                   ],
+                                   className="ghosty_container six columns",
+                               ),
                            ],
                            className="row flex-display",
-                       )
-
+                       ),
                    ])
 
 

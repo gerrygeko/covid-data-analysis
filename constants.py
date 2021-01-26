@@ -5,6 +5,7 @@ TOTAL_ICU_ITALY = 6458
 
 DATE_PROPERTY_NAME_IT = 'data'
 DATE_PROPERTY_NAME_EN = 'Date'
+DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE = 'ultimo_aggiornamento'
 PAGE_TITLE = "Coronavirus (SARS-CoV-2)"
 REPO_NAME = "covid-data-analysis"
 DEFAULT_LANGUAGE = "IT"
@@ -29,6 +30,7 @@ URL_GEOJSON_WORLD_COUNTRIES = \
 URL_NEWS_UPDATE = "http://newsapi.org/v2/top-headlines?country=it&category=science&apiKey=b20640c581554761baab24317b8331e7"
 
 URL_VACCINES_ITA_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/vaccini-summary-latest.csv"
+URL_VACCINES_ITA_REGISTRY_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/anagrafica-vaccini-summary-latest.csv"
 URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-summary-latest.csv"
 URL_VACCINES_ITA_ADMINISTRATIONS = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv"
 URL_VACCINES_ITA_DELIVERIES = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv"

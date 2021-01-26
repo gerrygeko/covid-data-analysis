@@ -80,8 +80,12 @@ last_update_content_regional_data = 0
 last_update_content_national_data = 0
 last_update_content_worldwide_aggregate_data = 0
 last_update_content_country_world_data = 0
+last_update_content_vaccines_italy_data = 0
 df_regional_data = None
 df_national_data = None
+df_vaccines_italy_summary_latest = None
+df_vaccines_italy_registry_summary_latest = None
+df_vaccines_italy_administration_point = None
 df_worldwide_aggregate_data = None
 df_country_world_data = None
 df_rate_regional = None
@@ -89,6 +93,7 @@ df_rate_country_world = None
 date_last_update_world_aggregate = None
 date_last_update_italy = None
 date_last_update_regional = None
+date_last_update_vaccines_italy = None
 last_check_for_update = None
 
 layout = dict(
@@ -779,6 +784,34 @@ def update_country_world_cards_color(country_selected):
     return dictionary_color
 
 
+@app.callback([Output('administered_doses_text', 'children'),
+               Output('delivered_doses_text', 'children'),
+               Output('total_people_vaccinated_text', 'children'),
+               Output('total_administration_points_text', 'children'),
+               Output('sub_header_vaccines_italy_update', 'children')
+               ], [Input("i_news", "n_intervals")])
+def update_vaccines_italy_cards_text(self):
+    log.info('Updating cards')
+    sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + \
+        get_last_df_data_update(df_vaccines_italy_summary_latest, constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+    field_list = ['dosi_somministrate', 'dosi_consegnate', 'seconda_dose', 'presidio_ospedaliero']
+    df_custom = pd.concat([df_vaccines_italy_summary_latest[field_list[0]],
+                           df_vaccines_italy_summary_latest[field_list[1]],
+                           df_vaccines_italy_registry_summary_latest[field_list[2]],
+                           df_vaccines_italy_administration_point[field_list[3]]], axis=1,
+                          keys=[field_list[0], field_list[1], field_list[2], field_list[3]])
+    df_custom = df_custom.fillna(0)
+    total_text_values = []
+    for field in field_list:
+        if field == 'presidio_ospedaliero':
+            card_value = df_custom[field].count()
+        else:
+            card_value = int(df_custom[field].sum())
+        total_text = f'{card_value:n}'
+        total_text_values.append(total_text)
+    return (*total_text_values),  sub_header_vaccines_italy_text
+
+
 @app.callback(Output('mainContainer', 'children'),
               [Input('dropdown_language_selected', 'value')])
 def update_language(language):
@@ -979,6 +1012,7 @@ def load_data_from_web():
     load_country_world_data()
     load_national_data()
     load_regional_data()
+    load_vaccines_italy_data()
 
     global last_check_for_update
     last_check_for_update = get_last_data_check()
@@ -1077,6 +1111,29 @@ def load_worldwide_aggregate_data():
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
     else:
         log.info('No updates required for Worldwide Aggregate data')
+
+
+def load_vaccines_italy_data():
+    global df_vaccines_italy_summary_latest, date_last_update_vaccines_italy, last_update_content_vaccines_italy_data,\
+        df_vaccines_italy_registry_summary_latest, df_vaccines_italy_summary_latest, \
+        df_vaccines_italy_administration_point
+    # Check if updates for National data is required
+    current_update_content_vaccines_italy_data = int(get_content_length(constants.URL_VACCINES_ITA_SUMMARY_LATEST))
+    if current_update_content_vaccines_italy_data == -1:
+        log.info("Provider's server for Italian Vaccines data is unresponsive, retrying later")
+    elif current_update_content_vaccines_italy_data != last_update_content_vaccines_italy_data:
+        log.info('Italian Vaccines data update required')
+        df_vaccines_italy_summary_latest = load_csv(constants.URL_VACCINES_ITA_SUMMARY_LATEST,
+                                                    constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+        df_vaccines_italy_registry_summary_latest = load_csv(constants.URL_VACCINES_ITA_REGISTRY_SUMMARY_LATEST,
+                                                             constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+        df_vaccines_italy_administration_point = pd.read_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
+        date_last_update_vaccines_italy = get_content_date_last_download_data(constants.URL_VACCINES_ITA_SUMMARY_LATEST)
+        log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
+        log.info(f"New Content-length: {current_update_content_vaccines_italy_data} bytes")
+        last_update_content_vaccines_italy_data = current_update_content_vaccines_italy_data
+    else:
+        log.info('No updates required for Italian Vaccines data')
 
 
 def app_layout():
