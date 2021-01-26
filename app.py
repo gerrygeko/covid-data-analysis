@@ -23,7 +23,7 @@ import logger
 import constants
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation
-from utils import is_debug_mode_enabled
+from utils import is_debug_mode_enabled, layout
 
 app_start_time = time.time()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
@@ -95,21 +95,6 @@ date_last_update_italy = None
 date_last_update_regional = None
 date_last_update_vaccines_italy = None
 last_check_for_update = None
-
-layout = dict(
-    autosize=True,
-    automargin=True,
-    margin=dict(l=30, r=30, b=20, t=40),
-    hovermode="closest",
-    plot_bgcolor="#F9F9F9",
-    paper_bgcolor="#F9F9F9",
-    legend=dict(font=dict(size=10), orientation="h"),
-    mapbox=dict(
-        style="light",
-        center=dict(lon=-78.05, lat=42.54),
-        zoom=7,
-    ),
-)
 
 
 def format_value_string_to_locale(value):

@@ -11,7 +11,7 @@ import logger
 from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
     LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
 from resources import language_list, load_resource, locale_language
-from utils import get_options_from_list, get_options, get_version
+from utils import get_options_from_list, get_options, get_version, style_vaccines_italy_tab
 
 encoded_image_gerardo = base64.b64encode(open('assets/gerardo.png', 'rb').read()).decode('ascii')
 encoded_image_nicola = base64.b64encode(open('assets/nicola.png', 'rb').read()).decode('ascii')
@@ -622,6 +622,7 @@ def create_regions_tab(df_regional_data):
 
 def create_vaccines_italy_tab():
     return dcc.Tab(label=load_resource('label_tab_vaccines_italy'), value='tab_vaccines_italy',
+                   style=style_vaccines_italy_tab, selected_style=style_vaccines_italy_tab,
                    children=[
                        html.Div(
                            [html.H5(id="sub_header_vaccines_italy_update", children='', className='sub_title')]

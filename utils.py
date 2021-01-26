@@ -84,3 +84,29 @@ def get_version():
     log.info(f"Application version: {version}")
 
     return version
+
+
+#component style
+layout = dict(
+    autosize=True,
+    automargin=True,
+    margin=dict(l=30, r=30, b=20, t=40),
+    hovermode="closest",
+    plot_bgcolor="#F9F9F9",
+    paper_bgcolor="#F9F9F9",
+    legend=dict(font=dict(size=10), orientation="h"),
+    mapbox=dict(
+        style="light",
+        center=dict(lon=-78.05, lat=42.54),
+        zoom=7,
+    ),
+)
+
+
+style_vaccines_italy_tab = {
+    'background-image': 'url("/assets/logo_vax.png")',
+    'background-position': 'right center',
+    'background-size': '50px 50px',
+    'background-repeat': 'no-repeat',
+    'color': 'dodgerblue'
+}
