@@ -104,8 +104,8 @@ layout = dict(
 
 
 style_vaccines_italy_tab = {
-    'background-image': 'url("/assets/logo_vax.png")',
-    'background-position': 'right center',
+    'background-image': 'url("/assets/new.png")',
+    'background-position': 'right top',
     'background-size': '50px 50px',
     'background-repeat': 'no-repeat',
     'color': 'dodgerblue'
