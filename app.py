@@ -85,6 +85,8 @@ df_regional_data = None
 df_national_data = None
 df_vaccines_italy_summary_latest = None
 df_vaccines_italy_registry_summary_latest = None
+df_vaccines_italy_admin_summary_latest = None
+df_vaccines_italy_admin_summary_latest_grouped_by_ITA = None
 df_vaccines_italy_administration_point = None
 df_worldwide_aggregate_data = None
 df_country_world_data = None
@@ -440,7 +442,7 @@ def update_regional_graph_active_cases(region_selected):
 def update_national_cards_text(self):
     log.info('Updating cards')
     sub_header_italian_text = load_resource('header_last_update_italy') + \
-        get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+                              get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     percentage_list = ['ratio_n_pos_tamponi', 'pressure_ICU']
@@ -778,7 +780,8 @@ def update_country_world_cards_color(country_selected):
 def update_vaccines_italy_cards_text(self):
     log.info('Updating cards')
     sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + \
-        get_last_df_data_update(df_vaccines_italy_summary_latest, constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+                                     get_last_df_data_update(df_vaccines_italy_summary_latest,
+                                                             constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
     field_list = ['dosi_somministrate', 'dosi_consegnate', 'seconda_dose']
     df_custom = pd.concat([df_vaccines_italy_summary_latest[field_list[0]],
                            df_vaccines_italy_summary_latest[field_list[1]],
@@ -790,16 +793,16 @@ def update_vaccines_italy_cards_text(self):
         card_value = int(df_custom[field].sum())
         total_text = f'{card_value:n}'
         total_text_values.append(total_text)
-    card_value = round((float(df_custom['seconda_dose'].sum()) / constants.ITALIAN_POPULATION)*100, 2)
+    card_value = round((float(df_custom['seconda_dose'].sum()) / constants.ITALIAN_POPULATION) * 100, 2)
     percentage = ' %'
     total_text = f'{card_value:n}{percentage}'
     total_text_values.append(total_text)
-    return (*total_text_values),  sub_header_vaccines_italy_text
+    return (*total_text_values), sub_header_vaccines_italy_text
 
 
-@app.callback(Output('bar_chart_vaccines_italy', 'figure'), [Input("i_news", "n_intervals")])
-def update_bar_chart_vaccines_italy(self):
-    layout_count = copy.deepcopy(layout)
+@app.callback(Output('bar_chart_administrations_by_age', 'figure'), [Input("i_news", "n_intervals")])
+def update_bar_chart_vaccines_italy_administrations_by_age(self):
+    layout_administrations_by_age = copy.deepcopy(layout)
     df = df_vaccines_italy_registry_summary_latest
 
     color_bar = "rgb(123, 199, 255)"
@@ -808,17 +811,58 @@ def update_bar_chart_vaccines_italy(self):
             type="bar",
             x=df["fascia_anagrafica"],
             y=df["totale"],
-            name="All Wells",
+            name=load_resource('administrations_by_age'),
             marker=dict(color=color_bar),
         )
     ]
 
-    layout_count["title"] = load_resource('administrations_by_age')
-    layout_count["dragmode"] = "select"
-    layout_count["showlegend"] = False
-    layout_count["autosize"] = True
+    layout_administrations_by_age["title"] = load_resource('administrations_by_age')
+    layout_administrations_by_age["showlegend"] = True
+    layout_administrations_by_age["autosize"] = True
 
-    figure = dict(data=data, layout=layout_count)
+    figure = dict(data=data, layout=layout_administrations_by_age)
+    return figure
+
+
+@app.callback(Output('bar_chart_daily_administrations', 'figure'), [Input("i_news", "n_intervals")])
+def update_bar_chart_vaccines_italy_daily_administrations(self):
+    layout_administrations_by_day = copy.deepcopy(layout)
+    df_by_day = df_vaccines_italy_admin_summary_latest
+    df_by_day_ITA = df_vaccines_italy_admin_summary_latest_grouped_by_ITA
+    colors = ["rgb(123, 199, 255)", "rgb(4, 74, 152)"]
+    data = [
+        dict(
+            type="bar",
+            x=df_by_day["data_somministrazione"],
+            y=df_by_day["totale"],
+            name=load_resource('administrations_by_day'),
+            marker=dict(color=colors[0]),
+            yaxis='y1'
+        ),
+        dict(
+            type="scatter",
+            mode="markers",
+            x=df_by_day_ITA["data_somministrazione"],
+            y=df_by_day_ITA["total_on_today"],
+            name=load_resource('total_administrations'),
+            marker=dict(color=colors[1]),
+            yaxis='y2'
+        )
+    ]
+
+    layout_administrations_by_day["title"] = load_resource('administrations_by_day')
+    layout_administrations_by_day["showlegend"] = True
+    layout_administrations_by_day["autosize"] = True
+    layout_administrations_by_day["yaxis"] = dict(color=colors[0])
+    layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
+                                                   side='right',
+                                                   showgrid=False,
+                                                   showline=False,
+                                                   zeroline=False,
+                                                   color=colors[1]
+                                                   )
+
+    figure = dict(data=data, layout=layout_administrations_by_day)
     return figure
 
 
@@ -1015,6 +1059,14 @@ def add_variation_columns_for_world_countries(df):
     return df
 
 
+def add_total_on_day_administrations_vaccines_italy(df):
+    df['total_on_today'] = 0
+    df = df.groupby('data_somministrazione').sum()
+    df.reset_index(inplace=True)
+    df['total_on_today'] = df['totale'].cumsum()
+    return df
+
+
 def load_data_from_web():
     log.info('Start scheduled task to check data updates')
 
@@ -1124,9 +1176,10 @@ def load_worldwide_aggregate_data():
 
 
 def load_vaccines_italy_data():
-    global df_vaccines_italy_summary_latest, date_last_update_vaccines_italy, last_update_content_vaccines_italy_data,\
+    global df_vaccines_italy_summary_latest, date_last_update_vaccines_italy, last_update_content_vaccines_italy_data, \
         df_vaccines_italy_registry_summary_latest, df_vaccines_italy_summary_latest, \
-        df_vaccines_italy_administration_point
+        df_vaccines_italy_admin_summary_latest, df_vaccines_italy_administration_point, \
+        df_vaccines_italy_admin_summary_latest_grouped_by_ITA
     # Check if updates for National data is required
     current_update_content_vaccines_italy_data = int(get_content_length(constants.URL_VACCINES_ITA_SUMMARY_LATEST))
     if current_update_content_vaccines_italy_data == -1:
@@ -1137,6 +1190,10 @@ def load_vaccines_italy_data():
                                                     constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
         df_vaccines_italy_registry_summary_latest = load_csv(constants.URL_VACCINES_ITA_REGISTRY_SUMMARY_LATEST,
                                                              constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+        df_vaccines_italy_admin_summary_latest = \
+            load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST, "data_somministrazione")
+        df_vaccines_italy_admin_summary_latest_grouped_by_ITA = \
+            add_total_on_day_administrations_vaccines_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_administration_point = pd.read_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
         date_last_update_vaccines_italy = get_content_date_last_download_data(constants.URL_VACCINES_ITA_SUMMARY_LATEST)
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
@@ -1182,7 +1239,6 @@ app.clientside_callback(
 )
 app.title = "SARS-CoV-2-Gellex"
 app_layout()
-
 
 
 def get_boot_time():

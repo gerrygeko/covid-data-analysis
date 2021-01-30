@@ -36,6 +36,8 @@ URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST = "https://raw.githubusercontent
 URL_VACCINES_ITA_ADMINISTRATIONS = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/somministrazioni-vaccini-latest.csv"
 URL_VACCINES_ITA_DELIVERIES = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/consegne-vaccini-latest.csv"
 URL_VACCINES_ITA_ADMINISTRATION_POINT = "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/punti-somministrazione-latest.csv"
+URL_VACCINES_WORLD = "https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations"
+
 
 LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
 LIST_OF_WORLD_FIELDS = ('Confirmed', 'Recovered', 'Deaths', 'New Confirmed', 'New Recovered', 'New Deaths', 'Active_cases')

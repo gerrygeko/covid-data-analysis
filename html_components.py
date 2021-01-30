@@ -685,14 +685,15 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="bar_chart_vaccines_italy")
+                                               dcc.Graph(id="bar_chart_administrations_by_age")
                                            ],
                                            className="pretty_container six columns",
                                        ),
                                        html.Div(
-                                           [html.H5(id='xxx_italy_map_header', children=load_resource('label_map'),
-                                                    className='sub_title'),
-                                            dcc.Graph(id="xxx_italy_map")],
+
+                                           [
+                                               dcc.Graph(id="bar_chart_daily_administrations")
+                                           ],
                                            className="pretty_container six columns",
                                        ),
                                    ],
@@ -701,10 +702,10 @@ def create_vaccines_italy_tab():
                                html.Div(
                                    [
                                        html.Div(
-                                           [
-                                               dcc.Graph(id="xxx_table_tab_italy")
-                                           ],
-                                           className="pretty_container four columns",
+                                           [html.H5(id='xxx_italy_map_header', children=load_resource('label_map'),
+                                                    className='sub_title'),
+                                            dcc.Graph(id="xxx_italy_map")],
+                                           className="pretty_container six columns",
                                        )
                                    ],
                                    className="row flex-display",

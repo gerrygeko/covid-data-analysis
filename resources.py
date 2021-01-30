@@ -91,7 +91,9 @@ resources = {DEFAULT_LANGUAGE: {
     'delivered_doses': 'Dosi Consegnate',
     'total_people_vaccinated': 'Totale Persone Vaccinate',
     'percentage_vaccinated_population': 'Percentuale Popolazione Vaccinata',
-    'administrations_by_age': 'Somministrazioni per fasce di età'
+    'administrations_by_age': 'Somministrazioni per fasce di età',
+    'administrations_by_day': 'Somministrazioni giornaliere',
+    'total_administrations': 'Somministrazioni totali'
     }
 }
 
