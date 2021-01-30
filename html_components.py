@@ -711,7 +711,7 @@ def create_vaccines_italy_tab():
                                    className="row flex-display",
                                )
                            ],
-                           className="pretty_container twelve columns",
+                           className="ghosty_container twelve columns",
                        )
                        ######################################################################
                    ])
