@@ -800,6 +800,65 @@ def update_vaccines_italy_cards_text(self):
     return (*total_text_values), sub_header_vaccines_italy_text
 
 
+# @app.callback(Output('chart_vaccination_italy_phases', 'figure'), [Input("i_news", "n_intervals")])
+# def update_vaccination_italy_phases_line_chart(self):
+#     layout_vaccination_phases = copy.deepcopy(layout)
+#     df = add_percentage_vaccination_italy_phases(df_vaccines_italy_admin_summary_latest)
+#     colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
+#     one_to_ninety = pd.Series(range(1, 90))
+#     x = df['percentage_vaccinated_population']
+#     y = df['percentage_vaccinated_population']
+#     data = [
+#         dict(
+#             type="scatter",
+#             mode="lines+markers",
+#             x=x,
+#             y=y,
+#             name="ciao",
+#             fill='tozeroy',
+#             marker=dict(color=colors[2]),
+#         )
+#     ]
+#
+#     annotations = []
+#
+#     annotation_phase_1 = {
+#         'x': 5,
+#         'y': 0,
+#         'xref': 'x',
+#         'yref': 'y',
+#         'text': load_resource('vaccine_phase_1'),
+#         'align': 'center',
+#         'ax': 0,
+#         'ay': -60,
+#         'opacity': 0,
+#     }
+#
+#     annotation_phase_2 = {
+#         'x': 15,
+#         'y': 0,
+#         'xref': 'x',
+#         'yref': 'y',
+#         'text': load_resource('vaccine_phase_2'),
+#         'align': 'center',
+#         'ax': 0,
+#         'ay': -60,
+#         'opacity': 0,
+#     }
+#     annotations.append(annotation_phase_1)
+#     annotations.append(annotation_phase_2)
+#
+#     updated_annotations = list(map(lambda ann: {**ann, 'opacity': 1.0}, annotations))
+#     layout_vaccination_phases["showlegend"] = True
+#     layout_vaccination_phases["autosize"] = True
+#     # layout_vaccination_phases["annotations"] = ANNOTATIONS
+#     layout_vaccination_phases = go.Layout(annotations=updated_annotations)
+#     figure = dict(data=data, layout=layout_vaccination_phases)
+#
+#     log.info('Updating Italian vaccinations phases')
+#     return figure
+
+
 @app.callback(Output('bar_chart_administrations_by_age', 'figure'), [Input("i_news", "n_intervals")])
 def update_bar_chart_vaccines_italy_administrations_by_age(self):
     layout_administrations_by_age = copy.deepcopy(layout)
@@ -1064,6 +1123,15 @@ def add_total_on_day_administrations_vaccines_italy(df):
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
     df['total_on_today'] = df['totale'].cumsum()
+    return df
+
+
+def add_percentage_vaccination_italy_phases(df):
+    df['percentage_vaccinated_population'] = 0
+    df = df.groupby('data_somministrazione').sum()
+    df.reset_index(inplace=True)
+    df['percentage_vaccinated_population'] = round((df['seconda_dose'] / constants.ITALIAN_POPULATION) * 100, 2)
+    df['percentage_vaccinated_population'] = df['percentage_vaccinated_population'].cumsum()
     return df
 
 
