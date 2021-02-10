@@ -859,25 +859,93 @@ def update_vaccines_italy_cards_text(self):
 #     return figure
 
 
-@app.callback(Output('bar_chart_administrations_by_age', 'figure'), [Input("i_news", "n_intervals")])
-def update_bar_chart_vaccines_italy_administrations_by_age(self):
+@app.callback(Output('bar_chart_administrations_by_age', 'figure'),
+              [Input("checkboxes_italian_vaccines_data", "value")])
+def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     layout_administrations_by_age = copy.deepcopy(layout)
     df = df_vaccines_italy_registry_summary_latest
 
-    color_bar = "rgb(123, 199, 255)"
-    data = [
+    colors = ["rgb(123, 199, 255)", "rgb(4, 74, 152)", "rgb(244, 0, 161)", "rgb(204, 51, 0)"]
+    data_list = [
         dict(
             type="bar",
             x=df["fascia_anagrafica"],
             y=df["totale"],
             name=load_resource('administrations_by_age'),
-            marker=dict(color=color_bar),
+            marker=dict(color=colors[0]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["sesso_maschile"],
+            name=load_resource('sex_male'),
+            marker=dict(color=colors[1]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["sesso_femminile"],
+            name=load_resource('sex_female'),
+            marker=dict(color=colors[2]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["categoria_operatori_sanitari_sociosanitari"],
+            name=load_resource('health_care_and_social_workers'),
+            marker=dict(color=colors[0]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["categoria_personale_non_sanitario"],
+            name=load_resource('civil_population'),
+            marker=dict(color=colors[1]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["categoria_ospiti_rsa"],
+            name=load_resource('rsa_guests'),
+            marker=dict(color=colors[2]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["categoria_over80"],
+            name=load_resource('over_80'),
+            marker=dict(color=colors[3]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["prima_dose"],
+            name=load_resource('first_vaccine_dose'),
+            marker=dict(color=colors[0]),
+        ),
+        dict(
+            type="bar",
+            x=df["fascia_anagrafica"],
+            y=df["seconda_dose"],
+            name=load_resource('second_vaccine_dose'),
+            marker=dict(color=colors[3]),
         )
     ]
 
     layout_administrations_by_age["title"] = load_resource('administrations_by_age')
     layout_administrations_by_age["showlegend"] = True
     layout_administrations_by_age["autosize"] = True
+
+    if data_selected == 'totale':
+        data = [data_list[0]]
+    elif data_selected == 'sex_group':
+        # layout_administrations_by_age["barmode"] = 'group'
+        # layout_administrations_by_age["xaxis_tickangle"] = -45
+        data = [data_list[1], data_list[2]]
+    elif data_selected == 'categories_group':
+        data = [data_list[3], data_list[4], data_list[5], data_list[6]]
+    elif data_selected == 'doses_group':
+        data = [data_list[7], data_list[8]]
 
     figure = dict(data=data, layout=layout_administrations_by_age)
     return figure

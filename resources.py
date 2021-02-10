@@ -71,9 +71,10 @@ resources = {DEFAULT_LANGUAGE: {
     'label_hover_map': 'per regione (ogni cento mila abitanti)',
     'label_hover_world_map': 'per nazione (ogni cento mila abitanti)',
     'label_persone': 'Persone',
-    'fase_1': 'Fase 1',
-    'fase_2': 'Fase 2',
-    'fase_3': 'Fase 3',
+    'vaccine_phase_1': 'Fase 1',
+    'vaccine_phase_2': 'Fase 2',
+    'vaccine_phase_3': 'Fase 3',
+    'vaccine_phase_4': 'Fase 4',
     'label_credits': 'Crediti',
     'confirmed_worldwide_aggregate': 'Totale Casi',
     'recovered_worldwide_aggregate': 'Guariti',
@@ -93,7 +94,20 @@ resources = {DEFAULT_LANGUAGE: {
     'percentage_vaccinated_population': 'Percentuale Popolazione Vaccinata',
     'administrations_by_age': 'Somministrazioni per fasce di età',
     'administrations_by_day': 'Somministrazioni giornaliere',
-    'total_administrations': 'Somministrazioni totali'
+    'total_administrations': 'Somministrazioni totali',
+    'filter_by': 'Filtra per:',
+    'total_vaccines': 'Totale',
+    'sex': 'Sesso',
+    'categories': 'Categorie',
+    'doses': 'Dosi',
+    'sex_male': 'Maschi',
+    'sex_female': 'Femmine',
+    'health_care_and_social_workers': 'Operatori Sanitari',
+    'civil_population': 'Popolazione civile',
+    'rsa_guests': 'Ospiti RSA',
+    'over_80': 'Over 80',
+    'first_vaccine_dose': 'Prima dose',
+    'second_vaccine_dose': 'Seconda dose'
     }
 }
 

@@ -685,7 +685,20 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="bar_chart_administrations_by_age")
+                                               dcc.Graph(id="bar_chart_administrations_by_age"),
+                                               html.P(load_resource('filter_by'), className="control_label"),
+                                               dcc.RadioItems(
+                                                   id="checkboxes_italian_vaccines_data",
+                                                   options=[
+                                                       {'label': load_resource('total_vaccines'), 'value': 'totale'},
+                                                       {'label': load_resource('sex'), 'value': 'sex_group'},
+                                                       {'label': load_resource('categories'),
+                                                        'value': 'categories_group'},
+                                                       {'label': load_resource('doses'), 'value': 'doses_group'}
+                                                   ],
+                                                   value='totale',
+                                                   labelStyle={'display': 'inline-block'}
+                                               )
                                            ],
                                            className="pretty_container six columns",
                                        ),
@@ -702,14 +715,21 @@ def create_vaccines_italy_tab():
                                html.Div(
                                    [
                                        html.Div(
-                                           [html.H5(id='xxx_italy_map_header', children=load_resource('label_map'),
-                                                    className='sub_title'),
-                                            dcc.Graph(id="xxx_italy_map")],
+                                           [
+                                               dcc.Graph(id="chart_vaccination_italy_phases")
+                                           ],
                                            className="pretty_container six columns",
-                                       )
+                                       ),
+                                       html.Div(
+
+                                           [
+                                               dcc.Graph(id="xxxxbar_chart_daily_administrations")
+                                           ],
+                                           className="pretty_container six columns",
+                                       ),
                                    ],
                                    className="row flex-display",
-                               )
+                               ),
                            ],
                            className="ghosty_container twelve columns",
                        )
