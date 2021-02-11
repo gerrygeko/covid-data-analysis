@@ -408,16 +408,6 @@ def create_italy_tab(df_regional_data):
                                                    value='nuovi_positivi',
                                                    className='dcc_control'
                                                ),
-                                           ],
-                                           className="ghosty_container six columns",
-                                       ),
-                                   ],
-                                   className="row flex-display",
-                               ),
-                               html.Div(
-                                   [
-                                       html.Div(
-                                           [
                                                dcc.Graph(id="linear_chart_italy")
                                            ],
                                            className="pretty_container six columns",
@@ -435,24 +425,20 @@ def create_italy_tab(df_regional_data):
                                    [
                                        html.Div(
                                            [
-                                               html.Div(
-                                                   [
-                                                       html.P(load_resource('label_select_multiregion'),
-                                                              className="control_label"),
-                                                       dcc.Dropdown(id='dropdown_region_list_selected',
-                                                                    options=get_options(
-                                                                        df_regional_data[
-                                                                            'denominazione_regione'].unique()),
-                                                                    multi=True,
-                                                                    className='dcc_control'
-                                                                    ),
-                                                       dcc.Graph(id='regional_timeseries_linear')
-                                                   ],
-                                                   className="pretty_container",
-                                               ),
+
+                                               html.P(load_resource('label_select_multiregion'),
+                                                      className="control_label"),
+                                               dcc.Dropdown(id='dropdown_region_list_selected',
+                                                            options=get_options(
+                                                                df_regional_data[
+                                                                    'denominazione_regione'].unique()),
+                                                            multi=True,
+                                                            className='dcc_control'
+                                                            ),
+                                               dcc.Graph(id='regional_timeseries_linear')
+
                                            ],
-                                           id="right-column",
-                                           className="eight columns",
+                                           className="pretty_container eight columns",
                                        ),
                                        html.Div(
                                            [
@@ -464,7 +450,7 @@ def create_italy_tab(df_regional_data):
                                    className="row flex-display",
                                )
                            ],
-                           className="pretty_container twelve columns",
+                           className="ghosty_container twelve columns",
                        )
                    ])
 

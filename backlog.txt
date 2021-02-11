@@ -1,8 +1,8 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Enlarge the world_map for covering and so optimizing the unused white space at the top
 - Set a light mode for mobile access
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
-- Enlarge the world_map for covering and so optimizing the unused white space at the top
 - Switch country News repository in line with language selection
 - Log messages for updating components are not consistent at all. They all use different namings
 - Italian Tab: calculate the ratio(percentage) between new positives and swabs N.B. include color control for < or > 3%
@@ -31,6 +31,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Enlarge the italy_map for covering and so optimizing the unused white space at the top
 - Change the input data of update_bar_chart_vaccines_italy_administrations_by_age with radioitem to select different filtered data
 - Show dinamically the top 3 italian regions based on the selected data (like World Tab Line Chart)
 - Fix datetime format (from UTC to CET) of (footer) last check update
