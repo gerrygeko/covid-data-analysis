@@ -174,20 +174,9 @@ def create_world_tab(df_country_world_data):
                                                    value='New Confirmed',
                                                    className='dcc_control'
                                                ),
-                                           ],
-                                           className="ghosty_container four columns",
-                                       ),
-                                   ],
-                                   className="row flex-display",
-                               ),
-                               html.Div(
-                                   [
-                                       html.Div(
-                                           [
-
                                                dcc.Graph(id="linear_chart_world")
                                            ],
-                                           className="pretty_container four columns",
+                                           className="pretty_container five columns",
                                        ),
                                        html.Div(
                                            [
@@ -195,7 +184,7 @@ def create_world_tab(df_country_world_data):
                                                        className='sub_title'),
                                                dcc.Graph(id="world_map")
                                            ],
-                                           className="pretty_container eight columns",
+                                           className="pretty_container seven columns",
                                        ),
                                    ],
                                    className="row flex-display",
@@ -229,7 +218,7 @@ def create_world_tab(df_country_world_data):
                                    className="row flex-display",
                                ),
                            ],
-                           className="pretty_container",
+                           className="ghosty_container twelve columns",
                        ),
                        html.Div(
                            [
