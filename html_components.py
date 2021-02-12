@@ -679,7 +679,6 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="bar_chart_administrations_by_age"),
                                                html.P(load_resource('filter_by'), className="control_label"),
                                                dcc.RadioItems(
                                                    id="checkboxes_italian_vaccines_data",
@@ -692,7 +691,8 @@ def create_vaccines_italy_tab():
                                                    ],
                                                    value='totale',
                                                    labelStyle={'display': 'inline-block'}
-                                               )
+                                               ),
+                                               dcc.Graph(id="bar_chart_administrations_by_age")
                                            ],
                                            className="pretty_container six columns",
                                        ),
