@@ -107,7 +107,9 @@ resources = {DEFAULT_LANGUAGE: {
     'rsa_guests': 'Ospiti RSA',
     'over_80': 'Over 80',
     'first_vaccine_dose': 'Prima dose',
-    'second_vaccine_dose': 'Seconda dose'
+    'second_vaccine_dose': 'Seconda dose',
+    'daily_vaccinated': ' Persone vaccinate giornalmente',
+    'rolling_average_7_days': 'Media mobile a 7 giorni'
     }
 }
 

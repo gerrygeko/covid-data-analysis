@@ -660,20 +660,8 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="bar_chart_administrations_by_age"),
-                                               html.P(load_resource('filter_by'), className="control_label"),
-                                               dcc.RadioItems(
-                                                   id="checkboxes_italian_vaccines_data",
-                                                   options=[
-                                                       {'label': load_resource('total_vaccines'), 'value': 'totale'},
-                                                       {'label': load_resource('sex'), 'value': 'sex_group'},
-                                                       {'label': load_resource('categories'),
-                                                        'value': 'categories_group'},
-                                                       {'label': load_resource('doses'), 'value': 'doses_group'}
-                                                   ],
-                                                   value='totale',
-                                                   labelStyle={'display': 'inline-block'}
-                                               )
+                                               dcc.Graph(id="bar_chart_vaccination_daily_total")
+
                                            ],
                                            className="pretty_container six columns",
                                        ),
@@ -691,7 +679,20 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
-                                               dcc.Graph(id="chart_vaccination_italy_phases")
+                                               dcc.Graph(id="bar_chart_administrations_by_age"),
+                                               html.P(load_resource('filter_by'), className="control_label"),
+                                               dcc.RadioItems(
+                                                   id="checkboxes_italian_vaccines_data",
+                                                   options=[
+                                                       {'label': load_resource('total_vaccines'), 'value': 'totale'},
+                                                       {'label': load_resource('sex'), 'value': 'sex_group'},
+                                                       {'label': load_resource('categories'),
+                                                        'value': 'categories_group'},
+                                                       {'label': load_resource('doses'), 'value': 'doses_group'}
+                                                   ],
+                                                   value='totale',
+                                                   labelStyle={'display': 'inline-block'}
+                                               )
                                            ],
                                            className="pretty_container six columns",
                                        ),

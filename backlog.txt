@@ -1,5 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Prediction of the date of achievement of the 70% vaccinated people target
 - Set a light mode for mobile access
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
 - Switch country News repository in line with language selection
