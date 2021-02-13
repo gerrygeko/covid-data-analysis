@@ -1,5 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Tab switched to Italy when changing language
 - Replace all the df drop func with head(-n) to increase process of these executions
 - Prediction of the date of achievement of the 70% vaccinated people target
 - Set a light mode for mobile access
