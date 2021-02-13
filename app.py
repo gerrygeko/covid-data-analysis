@@ -864,7 +864,7 @@ def update_vaccines_italy_cards_text(self):
 def update_bar_chart_vaccines_italy_daily_total(self):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
-    colors = ["rgb(123, 199, 255)", "rgb(4, 74, 152)"]
+    colors = ["rgb(123, 199, 255)", "rgb(244, 0, 161)"]
     data = [
         dict(
             type="bar",
@@ -875,7 +875,8 @@ def update_bar_chart_vaccines_italy_daily_total(self):
             yaxis='y1'
         ),
         dict(
-            type="scatter",
+            scatter="lines+markers",
+            mode="lines+markers",
             x=df_by_day["data_somministrazione"],
             y=df_by_day["mov_avg"],
             name=load_resource('rolling_average_7_days'),
@@ -893,6 +894,7 @@ def update_bar_chart_vaccines_italy_daily_total(self):
                                                    showgrid=False,
                                                    showline=False,
                                                    zeroline=False,
+                                                   showticklabels=False,
                                                    color=colors[1]
                                                    )
 
