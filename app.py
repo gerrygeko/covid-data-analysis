@@ -1045,6 +1045,30 @@ def update_bar_chart_vaccines_italy_daily_administrations(self):
     return figure
 
 
+@app.callback(Output('table_italy_vaccines', 'figure'), [Input("i_news", "n_intervals")])
+def update_data_table_italy_vaccines(self):
+    df = df_vaccines_italy_summary_latest
+    df = df.sort_values(by=['percentuale_somministrazione'], ascending=False)
+    figure = go.Figure(data=[go.Table(
+        header=dict(values=(load_resource('denominazione_regione'), load_resource('percentage_administrations'),
+                            load_resource('delivered_doses'), load_resource('administered_doses')
+                            ),
+                    fill_color='lightskyblue',
+                    font_color='white',
+                    font_size=15,
+                    align='left'),
+        cells=dict(values=[df['nome_area'], df['percentuale_somministrazione'], df['dosi_consegnate'],
+                           df['dosi_somministrate']
+                           ],
+                   fill_color='whitesmoke',
+                   align='center',
+                   font_size=13,
+                   height=20))
+    ])
+    figure.update_layout(height=450, margin=dict(l=0, r=0, b=0, t=0))
+    return figure
+
+
 @app.callback(Output('mainContainer', 'children'),
               [Input('dropdown_language_selected', 'value')])
 def update_language(language):

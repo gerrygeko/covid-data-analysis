@@ -701,7 +701,7 @@ def create_vaccines_italy_tab():
                                        html.Div(
 
                                            [
-                                               dcc.Graph(id="xxxxbar_chart_daily_administrations")
+                                               dcc.Graph(id="table_italy_vaccines")
                                            ],
                                            className="pretty_container six columns",
                                        ),

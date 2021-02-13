@@ -95,6 +95,7 @@ resources = {DEFAULT_LANGUAGE: {
     'administrations_by_age': 'Somministrazioni per fasce di età',
     'administrations_by_day': 'Somministrazioni giornaliere',
     'total_administrations': 'Somministrazioni totali',
+    'percentage_administrations': 'Percentuale somministrazione',
     'filter_by': 'Filtra per:',
     'total_vaccines': 'Totale',
     'sex': 'Sesso',
