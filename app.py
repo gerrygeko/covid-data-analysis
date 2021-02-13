@@ -61,8 +61,11 @@ def load_csv_from_file(path):
     return d
 
 
-def load_csv(url, data_string):
-    data_loaded = pd.read_csv(url, parse_dates=[data_string])
+def load_csv(url, data_string=None):
+    if data_string is not None:
+        data_loaded = pd.read_csv(url, parse_dates=[data_string])
+    else:
+        data_loaded = pd.read_csv(url)
     log.info(f"Data loaded at {datetime.datetime.now().time()}")
     return data_loaded
 
@@ -1419,8 +1422,7 @@ def load_vaccines_italy_data():
             add_total_on_day_administrations_vaccines_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA = \
             add_daily_total_vaccines_italy(df_vaccines_italy_admin_summary_latest)
-        calculate_date_of_herd_immunity()
-        df_vaccines_italy_administration_point = pd.read_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
+        df_vaccines_italy_administration_point = load_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
         date_last_update_vaccines_italy = get_content_date_last_download_data(constants.URL_VACCINES_ITA_SUMMARY_LATEST)
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
         log.info(f"New Content-length: {current_update_content_vaccines_italy_data} bytes")
