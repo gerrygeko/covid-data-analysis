@@ -18,6 +18,7 @@ import requests
 import schedule
 from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
+from datetime import timedelta
 
 import logger
 import constants
@@ -776,10 +777,12 @@ def update_country_world_cards_color(country_selected):
                Output('delivered_doses_text', 'children'),
                Output('total_people_vaccinated_text', 'children'),
                Output('percentage_vaccinated_population_text', 'children'),
-               Output('sub_header_vaccines_italy_update', 'children')
+               Output('sub_header_vaccines_italy_update', 'children'),
+               Output('herd_immunity_date', 'children'),
                ], [Input("i_news", "n_intervals")])
 def update_vaccines_italy_cards_text(self):
     log.info('Updating cards')
+    herd_immunity_date = load_resource('string_italy_herd_immunity') + calculate_date_of_herd_immunity()
     sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + \
                                      get_last_df_data_update(df_vaccines_italy_summary_latest,
                                                              constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
@@ -798,7 +801,8 @@ def update_vaccines_italy_cards_text(self):
     percentage = ' %'
     total_text = f'{card_value:n}{percentage}'
     total_text_values.append(total_text)
-    return (*total_text_values), sub_header_vaccines_italy_text
+
+    return (*total_text_values), sub_header_vaccines_italy_text, herd_immunity_date
 
 
 # @app.callback(Output('chart_vaccination_italy_phases', 'figure'), [Input("i_news", "n_intervals")])
@@ -864,6 +868,9 @@ def update_vaccines_italy_cards_text(self):
 def update_bar_chart_vaccines_italy_daily_total(self):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
+    #by convention, we exclude the data of last day, which could be partial
+    #we use head funct 'cause is  about 6 times fasting than drop func
+    df_by_day = df_by_day.head(-1)
     colors = ["rgb(123, 199, 255)", "rgb(244, 0, 161)"]
     data = [
         dict(
@@ -875,7 +882,7 @@ def update_bar_chart_vaccines_italy_daily_total(self):
             yaxis='y1'
         ),
         dict(
-            scatter="lines+markers",
+            type="scatter",
             mode="lines+markers",
             x=df_by_day["data_somministrazione"],
             y=df_by_day["mov_avg"],
@@ -1255,6 +1262,25 @@ def add_daily_total_vaccines_italy(df):
     return df
 
 
+def calculate_date_of_herd_immunity():
+    df = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
+    df = df.head(-1)
+    first_useful_date = df['data_somministrazione'].iloc[0]
+    last_update_vaccinated_people = df['vaccinated_people'].iloc[-1]
+    last_update_rolling_avg = df['mov_avg'].iloc[-1]
+    people_to_immunize = (constants.ITALIAN_POPULATION * 70) / 100
+    days_to_her_immunity = round((people_to_immunize - last_update_vaccinated_people)/last_update_rolling_avg, 0)
+    date_herd_immunity = (first_useful_date + timedelta(days=days_to_her_immunity)).strftime('%d/%m/%Y')
+    pd.set_option("display.max_rows", None, "display.max_columns", None)
+    print(df)
+    print(last_update_vaccinated_people, '' , last_update_rolling_avg)
+    print('First useful date', first_useful_date)
+    print('People to immunize:', people_to_immunize)
+    print('The days to immunity are:', days_to_her_immunity)
+    print('The herd immunity date will be:', date_herd_immunity)
+    return date_herd_immunity
+
+
 def add_percentage_vaccination_italy_phases(df):
     df['percentage_vaccinated_population'] = 0
     df = df.groupby('data_somministrazione').sum()
@@ -1393,6 +1419,7 @@ def load_vaccines_italy_data():
             add_total_on_day_administrations_vaccines_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA = \
             add_daily_total_vaccines_italy(df_vaccines_italy_admin_summary_latest)
+        calculate_date_of_herd_immunity()
         df_vaccines_italy_administration_point = pd.read_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
         date_last_update_vaccines_italy = get_content_date_last_download_data(constants.URL_VACCINES_ITA_SUMMARY_LATEST)
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")

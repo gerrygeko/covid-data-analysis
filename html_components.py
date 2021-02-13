@@ -11,7 +11,8 @@ import logger
 from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
     LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
 from resources import language_list, load_resource, locale_language
-from utils import get_options_from_list, get_options, get_version, style_vaccines_italy_tab
+from utils import get_options_from_list, get_options, get_version, style_vaccines_italy_tab, \
+    style_vaccines_italy_herd_immunity
 
 encoded_image_gerardo = base64.b64encode(open('assets/gerardo.png', 'rb').read()).decode('ascii')
 encoded_image_nicola = base64.b64encode(open('assets/nicola.png', 'rb').read()).decode('ascii')
@@ -660,6 +661,7 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
+                                               html.P(id="herd_immunity_date", style=style_vaccines_italy_herd_immunity),
                                                dcc.Graph(id="bar_chart_vaccination_daily_total")
 
                                            ],

@@ -110,3 +110,11 @@ style_vaccines_italy_tab = {
     'background-repeat': 'no-repeat',
     'color': 'dodgerblue'
 }
+
+style_vaccines_italy_herd_immunity = {
+    'background-image': 'url("/assets/logo_vax.png")',
+    'background-position': 'right center',
+    'background-size': '20px 20px',
+    'background-repeat': 'no-repeat',
+    'color': 'crimson'
+}
