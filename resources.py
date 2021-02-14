@@ -111,7 +111,7 @@ resources = {DEFAULT_LANGUAGE: {
     'second_vaccine_dose': 'Seconda dose',
     'daily_vaccinated': ' Persone vaccinate giornalmente',
     'rolling_average_7_days': 'Media mobile a 7 giorni',
-    'string_italy_herd_immunity': 'Presunta immunità di gregge (70% della popolazione): '
+    'string_italy_herd_immunity': 'Data Immunità di Gregge (70% Popolazione): '
     }
 }
 
