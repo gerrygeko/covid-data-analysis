@@ -1,3 +1,12 @@
+# 4.0.0
+#### Added
+* Italy Vaccines Tab: the web application now shows italian data about Vaccination Campaign report.
+    * Data Cards Italy: administered doses, delivered doses, total people vaccinated, percentage vaccinated population
+    * Daily vaccinated people (presumed date of attainment of herd immunity)
+    * Daily administrations
+    * Administrations by age
+    * Regional Data
+
 # 3.0.6
 #### Fixed
 * Update of URL World Data repository to make a correct loading of the data starting from January 1, 2021
