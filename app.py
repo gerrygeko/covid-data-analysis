@@ -1051,6 +1051,8 @@ def update_data_table_italy_vaccines(self):
     df['dosi_consegnate'] = df['dosi_consegnate'].apply(format_value_string_to_locale)
     df['dosi_somministrate'] = df['dosi_somministrate'].apply(format_value_string_to_locale)
     df = df.sort_values(by=['percentuale_somministrazione'], ascending=False)
+    df['percentuale_somministrazione'] = df['percentuale_somministrazione'].astype(str) + '%'
+    df['percentuale_somministrazione'] = [x.replace('.', ',') for x in df['percentuale_somministrazione']]
     figure = go.Figure(data=[go.Table(
         header=dict(values=(load_resource('denominazione_regione'), load_resource('percentage_administrations'),
                             load_resource('delivered_doses'), load_resource('administered_doses')
@@ -1084,7 +1086,7 @@ def update_language(language):
 
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
-def update_news(input):
+def update_news(self):
     log.info('Updating news')
     return create_news()
 
@@ -1302,11 +1304,12 @@ def calculate_date_of_herd_immunity():
     date_herd_immunity = (first_useful_date + timedelta(days=days_to_her_immunity)).strftime('%d/%m/%Y')
     pd.set_option("display.max_rows", None, "display.max_columns", None)
     print(df)
-    print(last_update_vaccinated_people, '' , last_update_rolling_avg)
+    print(last_update_vaccinated_people, '', last_update_rolling_avg)
     print('First useful date', first_useful_date)
     print('People to immunize:', people_to_immunize)
     print('The days to immunity are:', days_to_her_immunity)
     print('The herd immunity date will be:', date_herd_immunity)
+
     return date_herd_immunity
 
 
