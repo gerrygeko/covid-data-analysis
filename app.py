@@ -1302,14 +1302,13 @@ def calculate_date_of_herd_immunity():
     people_to_immunize = (constants.ITALIAN_POPULATION * 70) / 100
     days_to_her_immunity = round((people_to_immunize - last_update_vaccinated_people)/last_update_rolling_avg, 0)
     date_herd_immunity = (first_useful_date + timedelta(days=days_to_her_immunity)).strftime('%d/%m/%Y')
-    pd.set_option("display.max_rows", None, "display.max_columns", None)
-    print(df)
-    print(last_update_vaccinated_people, '', last_update_rolling_avg)
-    print('First useful date', first_useful_date)
-    print('People to immunize:', people_to_immunize)
-    print('The days to immunity are:', days_to_her_immunity)
-    print('The herd immunity date will be:', date_herd_immunity)
-
+    # pd.set_option("display.max_rows", None, "display.max_columns", None)
+    # print(df)
+    # print(last_update_vaccinated_people, '', last_update_rolling_avg)
+    # print('First useful date', first_useful_date)
+    # print('People to immunize:', people_to_immunize)
+    # print('The days to immunity are:', days_to_her_immunity)
+    # print('The herd immunity date will be:', date_herd_immunity)
     return date_herd_immunity
 
 
