@@ -635,7 +635,7 @@ def create_vaccines_italy_tab():
                                                html.Div(
                                                    [html.H6(id="total_people_vaccinated_text", children=''),
                                                     html.P(load_resource('total_people_vaccinated'))],
-                                                   id="total people vaccinated",
+                                                   id="total_people_vaccinated",
                                                    className="mini_container",
                                                ),
                                                html.Div(
