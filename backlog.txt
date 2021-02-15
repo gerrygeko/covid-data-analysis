@@ -2,6 +2,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 - Streamline app.py class
 - Tab switched to Italy when changing language
+- Change the style/implementation of all tables
 - Replace all the df drop func with head(-n) to increase process of these executions
 - Set a light mode for mobile access
 - Fix a visualization mean/max data card bug for tablet mode (e.g. IPad)(2)
