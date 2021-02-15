@@ -1047,7 +1047,7 @@ def update_bar_chart_vaccines_italy_daily_administrations(self):
 
 @app.callback(Output('table_italy_vaccines', 'figure'), [Input("i_news", "n_intervals")])
 def update_data_table_italy_vaccines(self):
-    df = df_vaccines_italy_summary_latest
+    df = df_vaccines_italy_summary_latest.copy()
     df['dosi_consegnate'] = df['dosi_consegnate'].apply(format_value_string_to_locale)
     df['dosi_somministrate'] = df['dosi_somministrate'].apply(format_value_string_to_locale)
     df = df.sort_values(by=['percentuale_somministrazione'], ascending=False)
