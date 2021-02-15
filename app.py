@@ -1431,9 +1431,9 @@ def load_worldwide_aggregate_data():
 
 def load_vaccines_italy_data():
     global df_vaccines_italy_summary_latest, date_last_update_vaccines_italy, last_update_content_vaccines_italy_data, \
-        df_vaccines_italy_registry_summary_latest, df_vaccines_italy_summary_latest, \
-        df_vaccines_italy_admin_summary_latest, df_vaccines_italy_administration_point, \
-        df_vaccines_italy_admin_summary_latest_grouped_by_ITA, df_vaccines_italy_daily_summary_latest_grouped_by_ITA
+        df_vaccines_italy_registry_summary_latest, df_vaccines_italy_admin_summary_latest, \
+        df_vaccines_italy_administration_point, df_vaccines_italy_admin_summary_latest_grouped_by_ITA, \
+        df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     # Check if updates for National data is required
     current_update_content_vaccines_italy_data = int(get_content_length(constants.URL_VACCINES_ITA_SUMMARY_LATEST))
     if current_update_content_vaccines_italy_data == -1:
