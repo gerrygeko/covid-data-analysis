@@ -7,9 +7,10 @@ import pandas as pd
 import requests
 from pytz import timezone
 
+import constants
 import logger
 from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
-    LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
+    LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE, COPYRIGHT
 from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, get_version, style_vaccines_italy_tab, \
     style_vaccines_italy_herd_immunity
@@ -661,7 +662,8 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
-                                               html.P(id="herd_immunity_date", style=style_vaccines_italy_herd_immunity),
+                                               html.P(id="herd_immunity_date",
+                                                      style=style_vaccines_italy_herd_immunity),
                                                dcc.Graph(id="bar_chart_vaccination_daily_total")
 
                                            ],
@@ -1005,14 +1007,15 @@ def create_footer():
     return html.Footer(id="footer",
                        children=[
                            create_last_update_info(),
-                           create_version_link()
+                           create_version_link(),
+                           create_copyright_string()
                        ])
 
 
 def create_last_update_info():
     return html.P(
         id="last_check_update_text",
-        className="p-version changelog",
+        className="footer_info",
         children=''
     )
 
@@ -1021,8 +1024,15 @@ def create_version_link():
     return html.A(
         html.P(
             id="version_text",
-            className="p-version changelog",
+            className="footer_info",
             children=[get_version()]
         ),
         href="https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md"
     )
+
+
+def create_copyright_string():
+    return html.P(id="copyright_text",
+                  className="footer_info",
+                  children=[constants.COPYRIGHT]
+                  )

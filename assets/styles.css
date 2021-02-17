@@ -124,13 +124,7 @@ body {
   text-align: center;
 }
 
-#version_text {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 15px;
-}
-
-#last_check_update_text {
+.footer_info {
     text-align: center;
     margin-top: 10px;
     font-size: 12px;
