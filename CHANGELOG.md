@@ -1,3 +1,8 @@
+# 4.0.1
+#### Added
+* "#datiBeneComune" references in the Credits section
+* Copyright
+
 # 4.0.0
 #### Added
 * Italy Vaccines Tab: the web application now shows italian data about Vaccination Campaign report.
