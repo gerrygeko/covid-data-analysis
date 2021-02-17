@@ -1001,7 +1001,7 @@ def update_data_table_italy_vaccines(self):
                     fill_color='lightskyblue',
                     font_color='white',
                     font_size=15,
-                    align='left'),
+                    align='center'),
         cells=dict(values=[df['nome_area'], df['percentuale_somministrazione'], df['dosi_consegnate'],
                            df['dosi_somministrate']
                            ],

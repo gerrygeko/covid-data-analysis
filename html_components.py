@@ -938,6 +938,14 @@ def create_credits(app):
                     id="vax-image",
                 ),
                 href="https://github.com/italia/covid19-opendata-vaccini",
+            ),
+            html.A(
+                children=html.Img(
+                    src=app.get_asset_url("dbc_logo.png"),
+                    className='credits_icon',
+                    id="dbc-image",
+                ),
+                href="https://datibenecomune.it/",
             )
         ]
     )
