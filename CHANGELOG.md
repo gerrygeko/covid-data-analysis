@@ -1,4 +1,7 @@
 # 4.0.1
+#### Fixed
+* Fixed a bug in the italian cards which not show the correct color control for Pressure ICU and Positive/Swabs Ratio
+
 #### Added
 * "#datiBeneComune" references in the Credits section
 * Copyright
