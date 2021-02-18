@@ -477,7 +477,7 @@ def update_national_cards_text(self):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_color(self):
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
-                  'terapia_intensiva', 'ratio_n_pos_tamponi', 'tamponi', 'pressure_ICU']
+                  'terapia_intensiva', 'pressure_ICU', 'tamponi','ratio_n_pos_tamponi']
     green_positive_results = ['tamponi', 'dimessi_guariti']
     green_negative_results = ['terapia_intensiva', 'totale_positivi', 'ratio_n_pos_tamponi', 'pressure_ICU']
     color_cards_list = []
