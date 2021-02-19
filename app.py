@@ -1220,17 +1220,16 @@ def add_daily_administrations_italy(df):
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
     df['administrated_people'] = df['totale'].cumsum()
-    df['variation_administrated_people'] = 0
     previous_row = ""
     for index, row in df.iterrows():
         if index == 0:
             previous_row = row
         else:
             variation_value = row['administrated_people'] - previous_row['administrated_people']
-            df.at[index, "variation_administrated_people"] = variation_value
+            df.at[index, "totale"] = variation_value
             previous_row = row
     #df.drop(df[df.seconda_dose == 0].index, inplace=True)
-    df['mov_avg'] = round(df.variation_administrated_people.rolling(window=7, min_periods=1).mean(), 0)
+    df['mov_avg'] = round(df.totale.rolling(window=7, min_periods=1).mean(), 0)
     return df
 
 
