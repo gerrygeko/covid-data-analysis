@@ -664,7 +664,7 @@ def create_vaccines_italy_tab():
                                            [
                                                html.P(id="herd_immunity_date",
                                                       style=style_vaccines_italy_herd_immunity),
-                                               dcc.Graph(id="bar_chart_vaccination_daily_total")
+                                               dcc.Graph(id="bar_chart_administrations_daily_total")
 
                                            ],
                                            className="pretty_container six columns",

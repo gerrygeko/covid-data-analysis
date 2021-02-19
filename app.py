@@ -808,8 +808,8 @@ def update_vaccines_italy_cards_text(self):
     return (*total_text_values), sub_header_vaccines_italy_text, herd_immunity_date
 
 
-@app.callback(Output('bar_chart_vaccination_daily_total', 'figure'), [Input("i_news", "n_intervals")])
-def update_bar_chart_vaccines_italy_daily_total(self):
+@app.callback(Output('bar_chart_administrations_daily_total', 'figure'), [Input("i_news", "n_intervals")])
+def update_bar_chart_administrations_italy_daily_total(self):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     #by convention, we exclude the data of last day, which could be partial
@@ -820,8 +820,8 @@ def update_bar_chart_vaccines_italy_daily_total(self):
         dict(
             type="bar",
             x=df_by_day["data_somministrazione"],
-            y=df_by_day["seconda_dose"],
-            name=load_resource('daily_vaccinated'),
+            y=df_by_day["totale"],
+            name=load_resource('daily_administrations'),
             marker=dict(color=colors[0]),
             yaxis='y1'
         ),
@@ -836,7 +836,7 @@ def update_bar_chart_vaccines_italy_daily_total(self):
         )
     ]
 
-    layout_administrations_by_day["title"] = load_resource('daily_vaccinated')
+    layout_administrations_by_day["title"] = load_resource('daily_administrations')
     layout_administrations_by_day["showlegend"] = True
     layout_administrations_by_day["autosize"] = True
     layout_administrations_by_day["yaxis"] = dict(color=colors[0])
@@ -1215,22 +1215,22 @@ def add_total_on_day_administrations_vaccines_italy(df):
     return df
 
 
-def add_daily_total_vaccines_italy(df):
-    df['vaccinated_people'] = 0
+def add_daily_administrations_italy(df):
+    df['administrated_people'] = 0
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
-    df['vaccinated_people'] = df['seconda_dose'].cumsum()
-    df['variation_vaccinated_people'] = 0
+    df['administrated_people'] = df['totale'].cumsum()
+    df['variation_administrated_people'] = 0
     previous_row = ""
     for index, row in df.iterrows():
         if index == 0:
             previous_row = row
         else:
-            variation_value = row['vaccinated_people'] - previous_row['vaccinated_people']
-            df.at[index, "variation_vaccinated_people"] = variation_value
+            variation_value = row['administrated_people'] - previous_row['administrated_people']
+            df.at[index, "variation_administrated_people"] = variation_value
             previous_row = row
-    df.drop(df[df.seconda_dose == 0].index, inplace=True)
-    df['mov_avg'] = round(df.variation_vaccinated_people.rolling(window=7, min_periods=1).mean(), 0)
+    #df.drop(df[df.seconda_dose == 0].index, inplace=True)
+    df['mov_avg'] = round(df.variation_administrated_people.rolling(window=7, min_periods=1).mean(), 0)
     return df
 
 
@@ -1238,10 +1238,10 @@ def calculate_date_of_herd_immunity():
     df = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     df = df.head(-1)
     first_useful_date = df['data_somministrazione'].iloc[0]
-    last_update_vaccinated_people = df['vaccinated_people'].iloc[-1]
+    last_update_administrated_people = df['administrated_people'].iloc[-1]
     last_update_rolling_avg = df['mov_avg'].iloc[-1]
     people_to_immunize = (constants.ITALIAN_POPULATION * 70) / 100
-    days_to_her_immunity = round((people_to_immunize - last_update_vaccinated_people)/last_update_rolling_avg, 0)
+    days_to_her_immunity = round((people_to_immunize - last_update_administrated_people) / last_update_rolling_avg, 0)
     date_herd_immunity = (first_useful_date + timedelta(days=days_to_her_immunity)).strftime('%d/%m/%Y')
     return date_herd_immunity
 
@@ -1381,7 +1381,7 @@ def load_vaccines_italy_data():
         df_vaccines_italy_admin_summary_latest_grouped_by_ITA = \
             add_total_on_day_administrations_vaccines_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA = \
-            add_daily_total_vaccines_italy(df_vaccines_italy_admin_summary_latest)
+            add_daily_administrations_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_administration_point = load_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
         date_last_update_vaccines_italy = get_content_date_last_download_data(constants.URL_VACCINES_ITA_SUMMARY_LATEST)
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
