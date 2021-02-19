@@ -1,3 +1,7 @@
+# 4.0.2
+#### Changed
+* Changed the strategy to predict Herd Immunity Date; now the calculation takes into account the daily administrations and not exclusively the number of second doses
+
 # 4.0.1
 #### Fixed
 * Fixed a bug in the italian cards which not show the correct color control for Pressure ICU and Positive/Swabs Ratio
