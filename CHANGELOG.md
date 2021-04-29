@@ -1,3 +1,10 @@
+# 4.0.3
+#### Changed
+* Updated categories showed in the vaccines charts (grouped by age)
+
+#### Fixed
+* Fixed a bug showing an incorrect herd immunity prediction
+
 # 4.0.2
 #### Changed
 * Changed the strategy to predict Herd Immunity Date; now the calculation takes into account the daily administrations and not exclusively the number of second doses
