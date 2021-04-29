@@ -1260,7 +1260,7 @@ def calculate_date_of_herd_immunity():
     df = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     df = df.head(-1)
     pd.set_option("display.max_rows", None, "display.max_columns", None)
-    first_useful_date = df['data_somministrazione'].iloc[0]
+    first_useful_date = df['data_somministrazione'].iloc[-1]
     last_update_administrated_people = df['administrated_people'].iloc[-1]
     last_update_rolling_avg = df['mov_avg'].iloc[-1]
     remaining_administrations = round(((constants.ITALIAN_POPULATION * 70) / 100) * 2, 0)
