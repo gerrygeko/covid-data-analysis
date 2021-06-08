@@ -99,20 +99,12 @@ resources = {DEFAULT_LANGUAGE: {
     'filter_by': 'Filtra per:',
     'total_vaccines': 'Totale',
     'sex': 'Sesso',
-    'categories': 'Categorie',
     'doses': 'Dosi',
     'sex_male': 'Maschi',
     'sex_female': 'Femmine',
-    'health_care_and_social_workers': 'Operatori Sanitari',
-    'civil_population': 'Popolazione civile',
-    'rsa_guests': 'Ospiti RSA',
     'age_60_69': 'Età 60-69',
     'age_70_79': 'Età 70-79',
     'over_80': 'Over 80',
-    'fragile_health_people': 'Soggetti fragili e Caregiver',
-    'school_staff':'Personale scolastico',
-    'armed_forces': 'Forze armate',
-    'other_category': 'Altro',
     'first_vaccine_dose': 'Prima dose',
     'second_vaccine_dose': 'Seconda dose',
     'daily_administrations': ' Somministrazioni',
@@ -126,6 +118,17 @@ locale_language = LocaleLanguage(DEFAULT_LANGUAGE)
 
 
 def load_resource(name):
+    try:
+        resource = find_resource(name)
+    except KeyError:
+        resource = "Label not available"
+    return resource
+
+
+def find_resource(name):
+    if locale_language.language not in resources.keys():
+        raise KeyError(
+            f"The language selected is not loaded: {locale_language.language}. Maybe you are running in debug mode ")
     if name not in resources[locale_language.language].keys():
         raise KeyError(f"The resource you are trying to load is not present. Resource: {name}")
     return resources[locale_language.language][name]
