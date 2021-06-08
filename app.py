@@ -79,7 +79,6 @@ def load_geojson(url):
 italy_regional_population = load_csv_from_file('assets/italy_region_population_2020.csv')
 italy_ICU = load_csv_from_file('assets/italian_ICU_19_10_2020.csv')
 world_population = load_csv_from_file('assets/worldwide_population_2020.csv')
-geojson_province = load_geojson(constants.URL_GEOJSON_REGIONS)
 last_update_content_regional_data = 0
 last_update_content_national_data = 0
 last_update_content_worldwide_aggregate_data = 0
@@ -283,8 +282,8 @@ def update_world_map(data_selected):
             xref='paper',
             yref='paper',
             text=f"*{load_resource(data_selected)} <br>"
-                 f"{load_resource('label_hover_world_map')} <br>"
-                 f"{date_string}",
+            f"{load_resource('label_hover_world_map')} <br>"
+            f"{date_string}",
             showarrow=False
         )]
     )
@@ -477,7 +476,7 @@ def update_national_cards_text(self):
                ], [Input("i_news", "n_intervals")])
 def update_national_cards_color(self):
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
-                  'terapia_intensiva', 'pressure_ICU', 'tamponi','ratio_n_pos_tamponi']
+                  'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     green_positive_results = ['tamponi', 'dimessi_guariti']
     green_negative_results = ['terapia_intensiva', 'totale_positivi', 'ratio_n_pos_tamponi', 'pressure_ICU']
     color_cards_list = []
@@ -812,8 +811,8 @@ def update_vaccines_italy_cards_text(self):
 def update_bar_chart_administrations_italy_daily_total(self):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
-    #by convention, we exclude the data of last day, which could be partial
-    #we use head funct 'cause is  about 6 times fasting than drop func
+    # by convention, we exclude the data of last day, which could be partial
+    # we use head funct 'cause is  about 6 times fasting than drop func
     df_by_day = df_by_day.head(-1)
     colors = ["rgb(123, 199, 255)", "rgb(244, 0, 161)"]
     data = [
@@ -854,118 +853,49 @@ def update_bar_chart_administrations_italy_daily_total(self):
 
 
 @app.callback(Output('bar_chart_administrations_by_age', 'figure'),
-              [Input("checkboxes_italian_vaccines_data", "value")])
+              [Input("radio_buttons_italian_vaccines_data", "value")])
 def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     layout_administrations_by_age = copy.deepcopy(layout)
     df = df_vaccines_italy_registry_summary_latest
 
-    colors = ["rgb(123, 199, 255)", "rgb(4, 74, 152)", "rgb(244, 0, 161)", "rgb(204, 51, 0)",
-              "rgb(77, 166, 255)", "rgb(223, 128, 255)", "rgb(255, 153, 102)"]
-    data_list = [
-        dict(
-            type="bar", #0
-            x=df["fascia_anagrafica"],
-            y=df["totale"],
-            name=load_resource('administrations_by_age'),
-            marker=dict(color=colors[0]),
-        ),
-        dict(
-            type="bar",#1
-            x=df["fascia_anagrafica"],
-            y=df["sesso_maschile"],
-            name=load_resource('sex_male'),
-            marker=dict(color=colors[1]),
-        ),
-        dict(
-            type="bar",#2
-            x=df["fascia_anagrafica"],
-            y=df["sesso_femminile"],
-            name=load_resource('sex_female'),
-            marker=dict(color=colors[2]),
-        ),
-        dict(
-            type="bar",#3
-            x=df["fascia_anagrafica"],
-            y=df["categoria_operatori_sanitari_sociosanitari"],
-            name=load_resource('health_care_and_social_workers'),
-            marker=dict(color=colors[0]),
-        ),
-        dict(
-            type="bar",#4
-            x=df["fascia_anagrafica"],
-            y=df["categoria_personale_non_sanitario"],
-            name=load_resource('civil_population'),
-            marker=dict(color=colors[1]),
-        ),
-        dict(
-            type="bar",#5
-            x=df["fascia_anagrafica"],
-            y=df["categoria_ospiti_rsa"],
-            name=load_resource('rsa_guests'),
-            marker=dict(color=colors[2]),
-        ),
-        dict(
-            type="bar",#6
-            x=df["fascia_anagrafica"],
-            y=df["categoria_soggetti_fragili"],
-            name=load_resource('fragile_health_people'),
-            marker=dict(color=colors[3]),
-        ),
-        dict(
-            type="bar",  # 7
-            x=df["fascia_anagrafica"],
-            y=df["categoria_personale_scolastico"],
-            name=load_resource('school_staff'),
-            marker=dict(color=colors[4]),
-        ),
-        dict(
-            type="bar",#8
-            x=df["fascia_anagrafica"],
-            y=df["categoria_forze_armate"],
-            name=load_resource('armed_forces'),
-            marker=dict(color=colors[5]),
-        ),
-        dict(
-            type="bar",#9
-            x=df["fascia_anagrafica"],
-            y=df["categoria_altro"],
-            name=load_resource('other_category'),
-            marker=dict(color=colors[6]),
-        ),
-        dict(
-            type="bar",#10
-            x=df["fascia_anagrafica"],
-            y=df["prima_dose"],
-            name=load_resource('first_vaccine_dose'),
-            marker=dict(color=colors[0]),
-        ),
-        dict(
-            type="bar",#11
-            x=df["fascia_anagrafica"],
-            y=df["seconda_dose"],
-            name=load_resource('second_vaccine_dose'),
-            marker=dict(color=colors[1]),
-        )
-    ]
+    colors = dict(light_blue="rgb(123, 199, 255)",
+                  dark_blue="rgb(4, 74, 152)",
+                  pink="rgb(244, 0, 161)")
+
+    bar_total = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["totale"],
+                                         name=load_resource('administrations_by_age'), color=colors.get("light_blue"))
+    bar_men = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["sesso_maschile"],
+                                       name=load_resource('sex_male'), color=colors.get("dark_blue"))
+    bar_women = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
+                                         name=load_resource('sex_female'), color=colors.get("pink"))
+    bar_first_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["prima_dose"],
+                                              name=load_resource('first_vaccine_dose'), color=colors.get("light_blue"))
+    bar_second_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["seconda_dose"],
+                                               name=load_resource('second_vaccine_dose'), color=colors.get("dark_blue"))
 
     layout_administrations_by_age["title"] = load_resource('administrations_by_age')
     layout_administrations_by_age["showlegend"] = True
     layout_administrations_by_age["autosize"] = True
 
     if data_selected == 'totale':
-        data = [data_list[0]]
+        data = [bar_total]
     elif data_selected == 'sex_group':
-        # layout_administrations_by_age["barmode"] = 'group'
-        # layout_administrations_by_age["xaxis_tickangle"] = -45
-        data = [data_list[1], data_list[2]]
-    elif data_selected == 'categories_group':
-        data = [data_list[3], data_list[4], data_list[5],
-                data_list[6], data_list[7], data_list[8], data_list[9]]
+        data = [bar_men, bar_women]
     elif data_selected == 'doses_group':
-        data = [data_list[10], data_list[11]]
+        data = [bar_first_dose, bar_second_dose]
 
     figure = dict(data=data, layout=layout_administrations_by_age)
     return figure
+
+
+def create_data_dict_for_bar(data_x=None, data_y=None, color=None, name=""):
+    return dict(
+        type="bar",  # 11
+        x=data_x,
+        y=data_y,
+        name=name,
+        marker=dict(color=color),
+    )
 
 
 @app.callback(Output('bar_chart_daily_administrations', 'figure'), [Input("i_news", "n_intervals")])
@@ -1251,7 +1181,7 @@ def add_daily_administrations_italy(df):
             variation_value = row['administrated_people'] - previous_row['administrated_people']
             df.at[index, "totale"] = variation_value
             previous_row = row
-    #df.drop(df[df.seconda_dose == 0].index, inplace=True)
+    # df.drop(df[df.seconda_dose == 0].index, inplace=True)
     df['mov_avg'] = round(df.totale.rolling(window=7, min_periods=1).mean(), 0)
     return df
 

@@ -685,12 +685,10 @@ def create_vaccines_italy_tab():
                                            [
                                                html.P(load_resource('filter_by'), className="control_label"),
                                                dcc.RadioItems(
-                                                   id="checkboxes_italian_vaccines_data",
+                                                   id="radio_buttons_italian_vaccines_data",
                                                    options=[
                                                        {'label': load_resource('total_vaccines'), 'value': 'totale'},
                                                        {'label': load_resource('sex'), 'value': 'sex_group'},
-                                                       {'label': load_resource('categories'),
-                                                        'value': 'categories_group'},
                                                        {'label': load_resource('doses'), 'value': 'doses_group'}
                                                    ],
                                                    value='totale',

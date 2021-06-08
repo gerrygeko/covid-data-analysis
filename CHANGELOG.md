@@ -1,3 +1,7 @@
+# 4.0.4
+#### Fixed
+* Removed field "categories" from vaccines charts since is not contained anymore in the open data used for this project
+
 # 4.0.3
 #### Changed
 * Updated categories showed in the vaccines charts (grouped by age)
