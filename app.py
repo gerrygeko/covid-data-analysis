@@ -1,12 +1,10 @@
 import copy
-import csv
 import datetime
-import json as js
 import locale
+import threading
 import time
 from email.utils import parsedate_to_datetime
 from threading import Thread
-from urllib.request import urlopen
 
 import dash
 import dash_html_components as html
@@ -27,13 +25,16 @@ from resources import load_resource, start_translation
 from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
+threading.current_thread().name = "main-thread"
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
 
+
 if not debug_mode_enabled:
-    start_translation()
+    t = Thread(name="translation-thread", target=start_translation)
+    t.start()
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
@@ -1341,8 +1342,8 @@ def run_schedule():
 
 def initialize_thread():
     log.info('Starting schedule thread')
-    t = Thread(target=run_schedule)
-    t.start()
+    schedule_thread = Thread(name="scheduled2-thread", target=run_schedule)
+    schedule_thread.start()
 
 
 initialize_thread()

@@ -1,5 +1,5 @@
 import logging
-
+import threading
 
 WERKZEUG_LOG_LEVEL = logging.ERROR
 
@@ -9,7 +9,7 @@ def initialize_logger():
     fh.setLevel(logging.INFO)
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s',
                         level=logging.INFO,
                         handlers=[fh, ch])
     logger = logging.getLogger('dash_app')

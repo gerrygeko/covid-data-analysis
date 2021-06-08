@@ -159,3 +159,5 @@ def start_translation():
             log.info(f"The {language} translation has taken {time.time()-start_time} seconds")
             log.info(f"End of loading for resources for: {language}")
 
+    log.info(f"Translation for all languages is completed")
+
