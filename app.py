@@ -24,7 +24,7 @@ import logger
 import constants
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation
-from utils import is_debug_mode_enabled, layout
+from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
@@ -50,31 +50,6 @@ field_list_to_rate_italian_regions = ['ricoverati_con_sintomi', 'terapia_intensi
                                       'totale_positivi', 'nuovi_positivi', 'dimessi_guariti',
                                       'deceduti', 'casi_da_sospetto_diagnostico', 'casi_da_screening', 'totale_casi',
                                       'tamponi', 'casi_testati']
-
-
-def load_csv_from_file(path):
-    reader = csv.reader(open(path, 'r'))
-    d = {}
-    for row in reader:
-        k, v = row
-        d[k] = v
-    return d
-
-
-def load_csv(url, data_string=None):
-    if data_string is not None:
-        data_loaded = pd.read_csv(url, parse_dates=[data_string])
-    else:
-        data_loaded = pd.read_csv(url)
-    log.info(f"Data loaded at {datetime.datetime.now().time()}")
-    return data_loaded
-
-
-def load_geojson(url):
-    with urlopen(url) as response:
-        json = js.load(response)
-    return json
-
 
 italy_regional_population = load_csv_from_file('assets/italy_region_population_2020.csv')
 italy_ICU = load_csv_from_file('assets/italian_ICU_19_10_2020.csv')

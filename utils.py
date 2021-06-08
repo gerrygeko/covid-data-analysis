@@ -1,8 +1,12 @@
+import csv
 import json
 import os
+from urllib.request import urlopen
 
+import datetime
 import requests
-
+import pandas as pd
+import json as js
 import logger
 from constants import GITHUB_USER_ENV_VAR, GITHUB_ACCESS_TOKEN_ENV_VAR, DEBUG_MODE_ENV_VAR, REPO_NAME
 from resources import load_resource
@@ -84,6 +88,30 @@ def get_version():
     log.info(f"Application version: {version}")
 
     return version
+
+
+def load_csv_from_file(path):
+    reader = csv.reader(open(path, 'r'))
+    d = {}
+    for row in reader:
+        k, v = row
+        d[k] = v
+    return d
+
+
+def load_csv(url, data_string=None):
+    if data_string is not None:
+        data_loaded = pd.read_csv(url, parse_dates=[data_string])
+    else:
+        data_loaded = pd.read_csv(url)
+    log.info(f"Data loaded at {datetime.datetime.now().time()}")
+    return data_loaded
+
+
+def load_geojson(url):
+    with urlopen(url) as response:
+        json = js.load(response)
+    return json
 
 
 #component style
