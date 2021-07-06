@@ -109,7 +109,7 @@ resources = {DEFAULT_LANGUAGE: {
     'second_vaccine_dose': 'Seconda dose',
     'daily_administrations': ' Somministrazioni',
     'rolling_average_7_days': 'Media mobile a 7 giorni',
-    'string_italy_herd_immunity': 'Data Immunità di Gregge (70% Popolazione): '
+    'string_italy_herd_immunity': 'Data Immunità di Gregge (80% Popolazione): '
     }
 }
 
