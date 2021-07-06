@@ -1,3 +1,7 @@
+# 4.0.5
+#### Changed
+* Updated the italian population according to the latest ISTAT updates
+
 # 4.0.4
 #### Fixed
 * Removed field "categories" from vaccines charts since is not contained anymore in the open data used for this project
