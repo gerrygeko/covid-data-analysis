@@ -1,3 +1,7 @@
+# 4.0.6
+#### Added
+* "Buy Me a coffee" button- Support the project :)
+
 # 4.0.5
 #### Changed
 * Updated the italian population according to the latest ISTAT updates

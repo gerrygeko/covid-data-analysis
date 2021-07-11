@@ -36,6 +36,7 @@ def create_page_components(app, df_regional_data, df_country_world_data):
         dcc.Interval(id="i_news", interval=900 * SECONDS_FOR_NEWS_UPDATE, n_intervals=0),
         # empty Div to trigger javascript file for graph resizing
         html.Div(id="output-clientside"),
+        create_donate_button(app),
         create_logo_and_header(app),
         create_tabs(df_country_world_data, df_regional_data),
         create_bottom_line(app),
@@ -61,7 +62,6 @@ def create_logo_and_header(app):
                             "padding-bottom": "5%",
                         }
                     ),
-
                 ],
                 id="href-logos",
                 className="four columns",
@@ -85,6 +85,32 @@ def create_logo_and_header(app):
             ),
         ],
         id="header",
+        className="row flex-display"
+    )
+
+
+def create_donate_button(app):
+    return html.Div(
+        [
+            html.A(
+                children=html.Img(
+                    src=app.get_asset_url("kofi.png"),
+                    className='credits_icon',
+                    id="kofi-image",
+                    style={
+                        "height": "30px",
+                        "width": "auto",
+                        "margin-top": "0px",
+                        "margin-bottom": "auto",
+                        "display": "block",
+                        "margin-left": "0px",
+                        "margin-right": "auto"
+                    }
+                ),
+                href="https://ko-fi.com/gellex",
+            ),
+        ],
+        id="donate",
         className="row flex-display"
     )
 
