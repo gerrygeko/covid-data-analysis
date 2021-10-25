@@ -6,11 +6,11 @@ from constants import DEFAULT_LANGUAGE
 
 language_list = [{'label': 'Italiano', 'value': 'IT'},
                  {'label': 'English', 'value': 'EN'},
-                  {'label': 'Dutch', 'value': 'NL'},
-                  {'label': 'German', 'value': 'DE'},
-                  {'label': 'French', 'value': 'FR'},
-                  {'label': 'Spanish', 'value': 'ES'},
-                  {'label': 'Portuguese', 'value': 'PT'}
+                 {'label': 'Dutch', 'value': 'NL'},
+                 {'label': 'German', 'value': 'DE'},
+                 {'label': 'French', 'value': 'FR'},
+                 {'label': 'Spanish', 'value': 'ES'},
+                 {'label': 'Portuguese', 'value': 'PT'}
                  ]
 
 
@@ -61,10 +61,10 @@ resources = {DEFAULT_LANGUAGE: {
     'label_casi_attivi': 'Casi Attivi',
     'label_news': 'News Scienza - Italia',
     'label_contact_us': 'Contattaci',
-    'header_last_update_world':'Ultimo rilascio dati DataHub:',
-    'header_last_update_italy':'Ultimo rilascio dati Protezione Civile Italiana:',
-    'header_last_update_vaccines_italy':'Ultimo rilascio dati Ministero della Salute:',
-    'label_last_news_update':'Ultimo aggiornamento: ',
+    'header_last_update_world': 'Ultimo rilascio dati DataHub:',
+    'header_last_update_italy': 'Ultimo rilascio dati Protezione Civile Italiana:',
+    'header_last_update_vaccines_italy': 'Ultimo rilascio dati Ministero della Salute:',
+    'label_last_news_update': 'Ultimo aggiornamento: ',
     'label_last_check_update': 'Ultimo controllo dati:',
     'label_map': 'N° casi ogni 100K abitanti',
     'label_top_ten': 'Top 10 Regioni:',
@@ -100,6 +100,8 @@ resources = {DEFAULT_LANGUAGE: {
     'total_vaccines': 'Totale',
     'sex': 'Sesso',
     'doses': 'Dosi',
+    'doses_first_second': 'Prime e seconde dosi',
+    'additional_doses': 'Dosi addizionali',
     'sex_male': 'Maschi',
     'sex_female': 'Femmine',
     'age_60_69': 'Età 60-69',
@@ -107,10 +109,13 @@ resources = {DEFAULT_LANGUAGE: {
     'over_80': 'Over 80',
     'first_vaccine_dose': 'Prima dose',
     'second_vaccine_dose': 'Seconda dose',
+    'previous_infection_vaccine_dose': 'Dose unica per pregressa infezione',
+    'additional_vaccine_dose': 'Dose aggiuntiva',
+    'booster_vaccine_dose': 'Dose richiamo',
     'daily_administrations': ' Somministrazioni',
     'rolling_average_7_days': 'Media mobile a 7 giorni',
     'string_italy_herd_immunity': 'Data Immunità di Gregge (80% Popolazione): '
-    }
+}
 }
 
 log = logger.get_logger()
@@ -156,8 +161,7 @@ def start_translation():
             start_time = time.time()
             translations = translator.translate(default_language_string_list, src=DEFAULT_LANGUAGE, dest=language)
             add_translations_to_resource_dict(translations, language)
-            log.info(f"The {language} translation has taken {time.time()-start_time} seconds")
+            log.info(f"The {language} translation has taken {time.time() - start_time} seconds")
             log.info(f"End of loading for resources for: {language}")
 
     log.info(f"Translation for all languages is completed")
-

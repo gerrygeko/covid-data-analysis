@@ -1,3 +1,7 @@
+# 4.0.7
+#### Added
+* Added additional doses group chart (grouped by age)
+
 # 4.0.6
 #### Added
 * "Buy Me a coffee" button- Support the project :)

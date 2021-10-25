@@ -836,7 +836,9 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
 
     colors = dict(light_blue="rgb(123, 199, 255)",
                   dark_blue="rgb(4, 74, 152)",
-                  pink="rgb(244, 0, 161)")
+                  pink="rgb(244, 0, 161)",
+                  aqua="rgb(0, 204, 153)",
+                  azure="rgb(51, 133, 255)")
 
     bar_total = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["totale"],
                                          name=load_resource('administrations_by_age'), color=colors.get("light_blue"))
@@ -848,6 +850,14 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
                                               name=load_resource('first_vaccine_dose'), color=colors.get("light_blue"))
     bar_second_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["seconda_dose"],
                                                name=load_resource('second_vaccine_dose'), color=colors.get("dark_blue"))
+    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["pregressa_infezione"],
+                                                   name=load_resource('previous_infection_vaccine_dose'),
+                                                   color=colors.get("pink"))
+    bar_additional_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["dose_aggiuntiva"],
+                                               name=load_resource('additional_vaccine_dose'), color=colors.get("aqua"))
+    bar_booster_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["dose_booster"],
+                                                   name=load_resource('booster_vaccine_dose'),
+                                                   color=colors.get("azure"))
 
     layout_administrations_by_age["title"] = load_resource('administrations_by_age')
     layout_administrations_by_age["showlegend"] = True
@@ -857,8 +867,10 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
         data = [bar_total]
     elif data_selected == 'sex_group':
         data = [bar_men, bar_women]
-    elif data_selected == 'doses_group':
+    elif data_selected == 'first_second_doses_group':
         data = [bar_first_dose, bar_second_dose]
+    elif data_selected == 'additional_doses_group':
+        data = [bar_previous_infection_vaccine_dose, bar_additional_dose, bar_booster_dose]
 
     figure = dict(data=data, layout=layout_administrations_by_age)
     return figure

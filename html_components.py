@@ -715,7 +715,10 @@ def create_vaccines_italy_tab():
                                                    options=[
                                                        {'label': load_resource('total_vaccines'), 'value': 'totale'},
                                                        {'label': load_resource('sex'), 'value': 'sex_group'},
-                                                       {'label': load_resource('doses'), 'value': 'doses_group'}
+                                                       {'label': load_resource('doses_first_second'),
+                                                        'value': 'first_second_doses_group'},
+                                                       {'label': load_resource('additional_doses'),
+                                                        'value': 'additional_doses_group'}
                                                    ],
                                                    value='totale',
                                                    labelStyle={'display': 'inline-block'}
