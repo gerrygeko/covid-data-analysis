@@ -1,6 +1,8 @@
 # 4.0.7
 #### Added
-* Added additional doses group chart (grouped by age)
+* Additional doses group chart (grouped by age)
+#### Changed
+* Calculation of the series shown in the administrated vaccines chart
 
 # 4.0.6
 #### Added

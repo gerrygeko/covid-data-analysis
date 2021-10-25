@@ -114,7 +114,7 @@ resources = {DEFAULT_LANGUAGE: {
     'booster_vaccine_dose': 'Dose richiamo',
     'daily_administrations': ' Somministrazioni',
     'rolling_average_7_days': 'Media mobile a 7 giorni',
-    'string_italy_herd_immunity': 'Data Immunità di Gregge (80% Popolazione): '
+    'string_italy_herd_immunity': 'Data raggiungimento 90% popolazione vaccinabile: '
 }
 }
 

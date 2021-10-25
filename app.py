@@ -775,7 +775,7 @@ def update_vaccines_italy_cards_text(self):
         card_value = int(df_custom[field].sum())
         total_text = f'{card_value:n}'
         total_text_values.append(total_text)
-    card_value = round((float(df_custom['seconda_dose'].sum()) / constants.ITALIAN_POPULATION) * 100, 2)
+    card_value = round((float(df_custom['seconda_dose'].sum()) / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
     percentage = ' %'
     total_text = f'{card_value:n}{percentage}'
     total_text_values.append(total_text)
@@ -1160,7 +1160,7 @@ def add_daily_administrations_italy(df):
     df['administrated_people'] = 0
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
-    df['administrated_people'] = df['totale'].cumsum()
+    df['administrated_people'] = df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
     previous_row = ""
     for index, row in df.iterrows():
         if index == 0:
@@ -1181,7 +1181,7 @@ def calculate_date_of_herd_immunity():
     first_useful_date = df['data_somministrazione'].iloc[-1]
     last_update_administrated_people = df['administrated_people'].iloc[-1]
     last_update_rolling_avg = df['mov_avg'].iloc[-1]
-    remaining_administrations = round(((constants.ITALIAN_POPULATION * 80) / 100) * 2, 0)
+    remaining_administrations = round(((constants.VACCINABLE_ITALIAN_POPULATION * 90) / 100) * 2, 0)
     days_to_herd_immunity = round((remaining_administrations - last_update_administrated_people) /
                                   last_update_rolling_avg, 0)
     date_herd_immunity = (first_useful_date + timedelta(days=days_to_herd_immunity)).strftime('%d/%m/%Y')
@@ -1192,7 +1192,8 @@ def add_percentage_vaccination_italy_phases(df):
     df['percentage_vaccinated_population'] = 0
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
-    df['percentage_vaccinated_population'] = round((df['seconda_dose'] / constants.ITALIAN_POPULATION) * 100, 2)
+    df['percentage_vaccinated_population'] = round(((df['seconda_dose'] + df['pregressa_infezione'])
+                                                   / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
     df['percentage_vaccinated_population'] = df['percentage_vaccinated_population'].cumsum()
     return df
 
