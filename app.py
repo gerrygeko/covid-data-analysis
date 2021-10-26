@@ -1181,7 +1181,7 @@ def calculate_date_of_herd_immunity():
     first_useful_date = df['data_somministrazione'].iloc[-1]
     last_update_administrated_people = df['administrated_people'].iloc[-1]
     last_update_rolling_avg = df['mov_avg'].iloc[-1]
-    remaining_administrations = round(((constants.VACCINABLE_ITALIAN_POPULATION * 90) / 100) * 2, 0)
+    remaining_administrations = round(((constants.VACCINABLE_ITALIAN_POPULATION * 90) / 100), 0)
     days_to_herd_immunity = round((remaining_administrations - last_update_administrated_people) /
                                   last_update_rolling_avg, 0)
     date_herd_immunity = (first_useful_date + timedelta(days=days_to_herd_immunity)).strftime('%d/%m/%Y')
