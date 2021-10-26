@@ -3,6 +3,10 @@
 * Additional doses group chart (grouped by age)
 #### Changed
 * Calculation of the series shown in the administrated vaccines chart
+* Target of Italian vaccination campain is now focused on 90% of vaccinable population 
+*N.B.The vaccinable Italian population is represented by the over 12s. The audience (~ 54 million people) is based on 
+the data of the holders of health cards or health certificates such as the "foreigners temporarily present" card 
+recognized to irregular migrants*
 
 # 4.0.6
 #### Added
