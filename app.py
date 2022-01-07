@@ -26,9 +26,7 @@ from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
-#locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
-curr = locale.getdefaultlocale()
-locale.setlocale(locale.LC_ALL, curr)
+locale.setlocale(locale.LC_ALL, 'it_IT.utf8') # remove # before commit
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
@@ -855,15 +853,13 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     bar_previous_infection_vaccine_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["pregressa_infezione"],
                                                    name=load_resource('previous_infection_vaccine_dose'),
                                                    color=colors.get("pink"))
-    bar_additional_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["dose_aggiuntiva"],
+    bar_additional_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["dose_addizionale_booster"],
                                                name=load_resource('additional_vaccine_dose'), color=colors.get("aqua"))
-    bar_booster_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["dose_booster"],
-                                                   name=load_resource('booster_vaccine_dose'),
-                                                   color=colors.get("azure"))
 
     layout_administrations_by_age["title"] = load_resource('administrations_by_age')
     layout_administrations_by_age["showlegend"] = True
     layout_administrations_by_age["autosize"] = True
+    layout_administrations_by_age["xaxis"] = dict(type='category')
 
     if data_selected == 'totale':
         data = [bar_total]
@@ -872,7 +868,7 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     elif data_selected == 'first_second_doses_group':
         data = [bar_first_dose, bar_second_dose]
     elif data_selected == 'additional_doses_group':
-        data = [bar_previous_infection_vaccine_dose, bar_additional_dose, bar_booster_dose]
+        data = [bar_previous_infection_vaccine_dose, bar_additional_dose]
 
     figure = dict(data=data, layout=layout_administrations_by_age)
     return figure
