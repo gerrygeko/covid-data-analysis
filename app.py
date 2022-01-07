@@ -26,7 +26,7 @@ from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
-locale.setlocale(locale.LC_ALL, 'it_IT.utf8') # remove # before commit
+locale.setlocale(locale.LC_ALL, '') # remove # before commit
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
@@ -1158,7 +1158,7 @@ def add_daily_administrations_italy(df):
     df['administrated_people'] = 0
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
-    df['administrated_people'] = df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
+    df['administrated_people'] = df['prima_dose'].cumsum() + df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
     previous_row = ""
     for index, row in df.iterrows():
         if index == 0:
