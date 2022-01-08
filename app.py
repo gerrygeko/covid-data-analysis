@@ -26,7 +26,8 @@ from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
-#locale.setlocale(locale.LC_ALL, 'it_IT.utf8') # remove # before commit
+curr = locale.getdefaultlocale()
+locale.setlocale(locale.LC_ALL, curr) # remove # before commit
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
@@ -64,6 +65,7 @@ df_regional_data = None
 df_national_data = None
 df_vaccines_italy_summary_latest = None
 df_vaccines_italy_registry_summary_latest = None
+df_vaccines_italy_administration = None
 df_vaccines_italy_admin_summary_latest = None
 df_vaccines_italy_admin_summary_latest_grouped_by_ITA = None
 df_vaccines_italy_daily_summary_latest_grouped_by_ITA = None
@@ -884,12 +886,18 @@ def create_data_dict_for_bar(data_x=None, data_y=None, color=None, name=""):
     )
 
 
-@app.callback(Output('bar_chart_daily_administrations', 'figure'), [Input("i_news", "n_intervals")])
-def update_bar_chart_vaccines_italy_daily_administrations(self):
+@app.callback(Output('bar_chart_daily_administrations', 'figure'),
+              [Input('radio_buttons_italian_vaccines_daily_administrations', 'value')])
+def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day_ITA = df_vaccines_italy_admin_summary_latest_grouped_by_ITA
+    df_ITA_admin = df_vaccines_italy_administration.groupby('fornitore').sum()
+    df_ITA_admin.reset_index(inplace=True)
+    df_ITA_admin['total_administrations'] = df_ITA_admin["prima_dose"] + df_ITA_admin["seconda_dose"] \
+                                            + df_ITA_admin["dose_addizionale_booster"]
     colors = ["rgb(123, 199, 255)", "rgb(4, 74, 152)"]
-    data = [
+    print(df_ITA_admin[["fornitore", "prima_dose", "seconda_dose", "dose_addizionale_booster", "total_administrations"]])
+    bar_scatter_totale_admin = [
         dict(
             type="bar",
             x=df_by_day_ITA["data_somministrazione"],
@@ -909,17 +917,28 @@ def update_bar_chart_vaccines_italy_daily_administrations(self):
         )
     ]
 
-    layout_administrations_by_day["title"] = load_resource('administrations_by_day')
-    layout_administrations_by_day["showlegend"] = True
-    layout_administrations_by_day["autosize"] = True
-    layout_administrations_by_day["yaxis"] = dict(color=colors[0])
-    layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
-                                                   side='right',
-                                                   showgrid=False,
-                                                   showline=False,
-                                                   zeroline=False,
-                                                   color=colors[1]
-                                                   )
+    bar_suppliers = create_data_dict_for_bar(data_x=df_ITA_admin["fornitore"], data_y=df_ITA_admin["total_administrations"],
+                                       name=load_resource('suppliers'))
+
+    if data_selected == 'totale':
+        data = bar_scatter_totale_admin
+        layout_administrations_by_day["title"] = load_resource('administrations_by_day')
+        layout_administrations_by_day["showlegend"] = True
+        layout_administrations_by_day["autosize"] = True
+        layout_administrations_by_day["yaxis"] = dict(color=colors[0])
+        layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
+                                                       side='right',
+                                                       showgrid=False,
+                                                       showline=False,
+                                                       zeroline=False,
+                                                       color=colors[1]
+                                                       )
+    elif data_selected == 'fornitore':
+        data = [bar_suppliers]
+        layout_administrations_by_day["title"] = load_resource('administered_doses')
+        layout_administrations_by_day["showlegend"] = True
+        layout_administrations_by_day["autosize"] = True
+        layout_administrations_by_day["xaxis"] = dict(type='category')
 
     figure = dict(data=data, layout=layout_administrations_by_day)
     return figure
@@ -1306,7 +1325,7 @@ def load_vaccines_italy_data():
     global df_vaccines_italy_summary_latest, date_last_update_vaccines_italy, last_update_content_vaccines_italy_data, \
         df_vaccines_italy_registry_summary_latest, df_vaccines_italy_admin_summary_latest, \
         df_vaccines_italy_administration_point, df_vaccines_italy_admin_summary_latest_grouped_by_ITA, \
-        df_vaccines_italy_daily_summary_latest_grouped_by_ITA
+        df_vaccines_italy_daily_summary_latest_grouped_by_ITA, df_vaccines_italy_administration
     # Check if updates for National data is required
     current_update_content_vaccines_italy_data = int(get_content_length(constants.URL_VACCINES_ITA_SUMMARY_LATEST))
     if current_update_content_vaccines_italy_data == -1:
@@ -1319,6 +1338,8 @@ def load_vaccines_italy_data():
                                                              constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
         df_vaccines_italy_admin_summary_latest = \
             load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST, "data_somministrazione")
+        df_vaccines_italy_administration = \
+            load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS, "data_somministrazione")
         df_vaccines_italy_admin_summary_latest_grouped_by_ITA = \
             add_total_on_day_administrations_vaccines_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA = \

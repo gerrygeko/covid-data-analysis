@@ -98,6 +98,7 @@ resources = {DEFAULT_LANGUAGE: {
     'percentage_administrations': 'Percentuale somministrazione',
     'filter_by': 'Filtra per:',
     'total_vaccines': 'Totale',
+    'suppliers': 'Fornitori',
     'sex': 'Sesso',
     'doses': 'Dosi',
     'doses_first_second': 'Prime e seconde dosi',

@@ -698,6 +698,15 @@ def create_vaccines_italy_tab():
                                        html.Div(
 
                                            [
+                                               dcc.RadioItems(
+                                                   id="radio_buttons_italian_vaccines_daily_administrations",
+                                                   options=[
+                                                       {'label': load_resource('total_vaccines'), 'value': 'totale'},
+                                                       {'label': load_resource('suppliers'), 'value': 'fornitore'}
+                                                   ],
+                                                   value='totale',
+                                                   labelStyle={'display': 'inline-block'}
+                                               ),
                                                dcc.Graph(id="bar_chart_daily_administrations")
                                            ],
                                            className="pretty_container six columns",
