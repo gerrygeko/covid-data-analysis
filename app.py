@@ -21,17 +21,16 @@ from datetime import timedelta
 import logger
 import constants
 from html_components import create_news, create_page_components, locale_language
-from resources import load_resource, start_translation
+from resources import load_resource, start_translation, standard_colors
 from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
 curr = locale.getdefaultlocale()
-locale.setlocale(locale.LC_ALL, curr) # remove # before commit
+locale.setlocale(locale.LC_ALL, curr)  # remove # before commit
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
-
 
 if not debug_mode_enabled:
     t = Thread(name="translation-thread", target=start_translation)
@@ -260,8 +259,8 @@ def update_world_map(data_selected):
             xref='paper',
             yref='paper',
             text=f"*{load_resource(data_selected)} <br>"
-            f"{load_resource('label_hover_world_map')} <br>"
-            f"{date_string}",
+                 f"{load_resource('label_hover_world_map')} <br>"
+                 f"{date_string}",
             showarrow=False
         )]
     )
@@ -334,7 +333,6 @@ def update_world_line_chart(data_selected):
     df = df_worldwide_aggregate_data
     y_list_1 = df[data_selected].values.tolist()
     x_list = df[constants.DATE_PROPERTY_NAME_EN]
-    colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
     data = [
         dict(
             type="scatter",
@@ -342,7 +340,7 @@ def update_world_line_chart(data_selected):
             y=y_list_1,
             name=load_resource(data_selected),
             fill='tozeroy',
-            marker=dict(color=colors[2])
+            marker=dict(color=standard_colors.get("light_blue"))
         )
     ]
 
@@ -366,7 +364,6 @@ def update_regional_graph_active_cases(region_selected):
     y_list_2 = df['ricoverati_con_sintomi'].values.tolist()
     y_list_3 = df['isolamento_domiciliare'].values.tolist()
     x_list = df['data']
-    colors = ["rgb(204, 51, 0)", "rgb(4, 74, 152)", "rgb(123, 199, 255)"]
     data = [
         dict(
             type="scatter",
@@ -374,7 +371,7 @@ def update_regional_graph_active_cases(region_selected):
             y=y_list_3,
             name=load_resource('isolamento_domiciliare'),
             fill='tozeroy',
-            marker=dict(color=colors[2]),
+            marker=dict(color=standard_colors.get("light_blue")),
         ),
         dict(
             type="scatter",
@@ -382,7 +379,7 @@ def update_regional_graph_active_cases(region_selected):
             y=y_list_2,
             name=load_resource('ricoverati_con_sintomi'),
             fill='tozeroy',
-            marker=dict(color=colors[1])
+            marker=dict(color=standard_colors.get("dark_blue"))
         ),
         dict(
             type="scatter",
@@ -390,7 +387,7 @@ def update_regional_graph_active_cases(region_selected):
             y=y_list_1,
             name=load_resource('terapia_intensiva'),
             fill='tozeroy',
-            marker=dict(color=colors[0]),
+            marker=dict(color=standard_colors.get("red")),
         )
     ]
 
@@ -792,14 +789,13 @@ def update_bar_chart_administrations_italy_daily_total(self):
     # by convention, we exclude the data of last day, which could be partial
     # we use head funct 'cause is  about 6 times fasting than drop func
     df_by_day = df_by_day.head(-1)
-    colors = ["rgb(123, 199, 255)", "rgb(244, 0, 161)"]
     data = [
         dict(
             type="bar",
             x=df_by_day["data_somministrazione"],
             y=df_by_day["totale"],
             name=load_resource('daily_administrations'),
-            marker=dict(color=colors[0]),
+            marker=dict(color=standard_colors.get("light_blue")),
             yaxis='y1'
         ),
         dict(
@@ -808,7 +804,7 @@ def update_bar_chart_administrations_italy_daily_total(self):
             x=df_by_day["data_somministrazione"],
             y=df_by_day["mov_avg"],
             name=load_resource('rolling_average_7_days'),
-            marker=dict(color=colors[1]),
+            marker=dict(color=standard_colors.get("pink")),
             yaxis='y2'
         )
     ]
@@ -816,14 +812,14 @@ def update_bar_chart_administrations_italy_daily_total(self):
     layout_administrations_by_day["title"] = load_resource('daily_administrations')
     layout_administrations_by_day["showlegend"] = True
     layout_administrations_by_day["autosize"] = True
-    layout_administrations_by_day["yaxis"] = dict(color=colors[0])
+    layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("light_blue"))
     layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
                                                    side='right',
                                                    showgrid=False,
                                                    showline=False,
                                                    zeroline=False,
                                                    showticklabels=False,
-                                                   color=colors[1]
+                                                   color=standard_colors.get("pink")
                                                    )
 
     figure = dict(data=data, layout=layout_administrations_by_day)
@@ -836,27 +832,28 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     layout_administrations_by_age = copy.deepcopy(layout)
     df = df_vaccines_italy_registry_summary_latest
 
-    colors = dict(light_blue="rgb(123, 199, 255)",
-                  dark_blue="rgb(4, 74, 152)",
-                  pink="rgb(244, 0, 161)",
-                  aqua="rgb(0, 204, 153)",
-                  azure="rgb(51, 133, 255)")
-
-    bar_total = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["totale"],
-                                         name=load_resource('administrations_by_age'), color=colors.get("light_blue"))
-    bar_men = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["sesso_maschile"],
-                                       name=load_resource('sex_male'), color=colors.get("dark_blue"))
-    bar_women = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
-                                         name=load_resource('sex_female'), color=colors.get("pink"))
-    bar_first_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["prima_dose"],
-                                              name=load_resource('first_vaccine_dose'), color=colors.get("light_blue"))
-    bar_second_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["seconda_dose"],
-                                               name=load_resource('second_vaccine_dose'), color=colors.get("dark_blue"))
-    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["pregressa_infezione"],
-                                                   name=load_resource('previous_infection_vaccine_dose'),
-                                                   color=colors.get("pink"))
-    bar_additional_dose = create_data_dict_for_bar(data_x=df["fascia_anagrafica"], data_y=df["dose_addizionale_booster"],
-                                               name=load_resource('additional_vaccine_dose'), color=colors.get("aqua"))
+    bar_total = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["totale"],
+                                         name=load_resource('administrations_by_age'),
+                                         color=standard_colors.get("light_blue"))
+    bar_men = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_maschile"],
+                                       name=load_resource('sex_male'), color=standard_colors.get("dark_blue"))
+    bar_women = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
+                                         name=load_resource('sex_female'), color=standard_colors.get("pink"))
+    bar_first_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["prima_dose"],
+                                              name=load_resource('first_vaccine_dose'),
+                                              color=standard_colors.get("light_blue"))
+    bar_second_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["seconda_dose"],
+                                               name=load_resource('second_vaccine_dose'),
+                                               color=standard_colors.get("dark_blue"))
+    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"],
+                                                                   data_y=df["pregressa_infezione"],
+                                                                   name=load_resource(
+                                                                       'previous_infection_vaccine_dose'),
+                                                                   color=standard_colors.get("pink"))
+    bar_additional_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"],
+                                                   data_y=df["dose_addizionale_booster"],
+                                                   name=load_resource('additional_vaccine_dose'),
+                                                   color=standard_colors.get("aqua"))
 
     layout_administrations_by_age["title"] = load_resource('administrations_by_age')
     layout_administrations_by_age["showlegend"] = True
@@ -876,13 +873,15 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     return figure
 
 
-def create_data_dict_for_bar(data_x=None, data_y=None, color=None, name=""):
+def create_data_dict_for_bar(type="", data_x=None, data_y=None, color=None, name="", mode="", yaxis=""):
     return dict(
-        type="bar",  # 11
+        type=type,  # 11
         x=data_x,
         y=data_y,
         name=name,
+        mode=mode,
         marker=dict(color=color),
+        yaxis=yaxis
     )
 
 
@@ -895,43 +894,33 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     df_ITA_admin.reset_index(inplace=True)
     df_ITA_admin['total_administrations'] = df_ITA_admin["prima_dose"] + df_ITA_admin["seconda_dose"] \
                                             + df_ITA_admin["dose_addizionale_booster"]
-    colors = ["rgb(123, 199, 255)", "rgb(4, 74, 152)"]
-    print(df_ITA_admin[["fornitore", "prima_dose", "seconda_dose", "dose_addizionale_booster", "total_administrations"]])
-    bar_scatter_totale_admin = [
-        dict(
-            type="bar",
-            x=df_by_day_ITA["data_somministrazione"],
-            y=df_by_day_ITA["totale"],
-            name=load_resource('administrations_by_day'),
-            marker=dict(color=colors[0]),
-            yaxis='y1'
-        ),
-        dict(
-            type="scatter",
-            mode="markers",
-            x=df_by_day_ITA["data_somministrazione"],
-            y=df_by_day_ITA["total_on_today"],
-            name=load_resource('total_administrations'),
-            marker=dict(color=colors[1]),
-            yaxis='y2'
-        )
-    ]
 
-    bar_suppliers = create_data_dict_for_bar(data_x=df_ITA_admin["fornitore"], data_y=df_ITA_admin["total_administrations"],
-                                       name=load_resource('suppliers'))
+    scatter_total_admin = create_data_dict_for_bar(type="scatter", data_x=df_by_day_ITA["data_somministrazione"],
+                                                   data_y=df_by_day_ITA["total_on_today"],
+                                                   name=load_resource('total_administrations'),
+                                                   mode="markers", color=standard_colors.get("dark_blue"), yaxis='y2')
+
+    bar_total_admin = create_data_dict_for_bar(type="bar", data_x=df_by_day_ITA["data_somministrazione"],
+                                               data_y=df_by_day_ITA["totale"],
+                                               name=load_resource('administrations_by_day'),
+                                               color=standard_colors.get("light_blue"), yaxis='y1')
+
+    bar_suppliers = create_data_dict_for_bar(type="bar", data_x=df_ITA_admin["fornitore"],
+                                             data_y=df_ITA_admin["total_administrations"],
+                                             name=load_resource('suppliers'))
 
     if data_selected == 'totale':
-        data = bar_scatter_totale_admin
+        data = [scatter_total_admin, bar_total_admin]
         layout_administrations_by_day["title"] = load_resource('administrations_by_day')
         layout_administrations_by_day["showlegend"] = True
         layout_administrations_by_day["autosize"] = True
-        layout_administrations_by_day["yaxis"] = dict(color=colors[0])
+        layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("light_blue"))
         layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
                                                        side='right',
                                                        showgrid=False,
                                                        showline=False,
                                                        zeroline=False,
-                                                       color=colors[1]
+                                                       color=standard_colors.get("dark_blue")
                                                        )
     elif data_selected == 'fornitore':
         data = [bar_suppliers]
@@ -1177,7 +1166,8 @@ def add_daily_administrations_italy(df):
     df['administrated_people'] = 0
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
-    df['administrated_people'] = df['prima_dose'].cumsum() + df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
+    df['administrated_people'] = df['prima_dose'].cumsum() + df['seconda_dose'].cumsum() + df[
+        'pregressa_infezione'].cumsum()
     previous_row = ""
     for index, row in df.iterrows():
         if index == 0:
@@ -1210,7 +1200,7 @@ def add_percentage_vaccination_italy_phases(df):
     df = df.groupby('data_somministrazione').sum()
     df.reset_index(inplace=True)
     df['percentage_vaccinated_population'] = round(((df['seconda_dose'] + df['pregressa_infezione'])
-                                                   / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
+                                                    / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
     df['percentage_vaccinated_population'] = df['percentage_vaccinated_population'].cumsum()
     return df
 

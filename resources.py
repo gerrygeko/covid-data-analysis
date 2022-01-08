@@ -13,6 +13,13 @@ language_list = [{'label': 'Italiano', 'value': 'IT'},
                  {'label': 'Portuguese', 'value': 'PT'}
                  ]
 
+standard_colors = dict(light_blue="rgb(123, 199, 255)",
+                       dark_blue="rgb(4, 74, 152)",
+                       pink="rgb(244, 0, 161)",
+                       aqua="rgb(0, 204, 153)",
+                       azure="rgb(51, 133, 255)",
+                       red="rgb(204, 51, 0)")
+
 
 class LocaleLanguage:
 
