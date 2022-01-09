@@ -1168,6 +1168,8 @@ def add_daily_administrations_italy(df):
     df.reset_index(inplace=True)
     df['administrated_people'] = df['prima_dose'].cumsum() + df['seconda_dose'].cumsum() + df[
         'pregressa_infezione'].cumsum()
+    # we need to consider only the audience of people actually immunized
+    df['remaining_administrations'] = df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
     previous_row = ""
     for index, row in df.iterrows():
         if index == 0:
@@ -1186,12 +1188,12 @@ def calculate_date_of_herd_immunity():
     df = df.head(-1)
     pd.set_option("display.max_rows", None, "display.max_columns", None)
     first_useful_date = df['data_somministrazione'].iloc[-1]
-    last_update_administrated_people = df['administrated_people'].iloc[-1]
+    remaining_administrations = df['remaining_administrations'].iloc[-1]
     last_update_rolling_avg = df['mov_avg'].iloc[-1]
-    remaining_administrations = round(((constants.VACCINABLE_ITALIAN_POPULATION * 90) / 100), 0)
-    days_to_herd_immunity = round((remaining_administrations - last_update_administrated_people) /
-                                  last_update_rolling_avg, 0)
-    date_herd_immunity = (first_useful_date + timedelta(days=days_to_herd_immunity)).strftime('%d/%m/%Y')
+    target_audience_people = round(((constants.VACCINABLE_ITALIAN_POPULATION * 90) / 100), 0)
+    days_to_target_immunity = round((target_audience_people - remaining_administrations) /
+                                    last_update_rolling_avg, 0)
+    date_herd_immunity = (first_useful_date + timedelta(days=days_to_target_immunity)).strftime('%d/%m/%Y')
     return date_herd_immunity
 
 
