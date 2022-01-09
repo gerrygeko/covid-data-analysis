@@ -26,8 +26,8 @@ from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
-curr = locale.getdefaultlocale()
-locale.setlocale(locale.LC_ALL, curr)  # remove # before commit
+#curr = locale.getdefaultlocale()
+locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
