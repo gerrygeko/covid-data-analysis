@@ -1,3 +1,15 @@
+# 4.0.8
+#### Fixed
+* The chart of administrations by age is back online
+#### Changed
+* Changed the calculation of the target of 90% of possible vaccinations. 
+The number of days needed to reach the desired information, in line with current government target, is made by the division between the number of doses remaining to be administered and 
+the average number (7-day rolling average) of first, second, single-dose, and prior infections each day.
+#### Updated
+* Updated the information of total of vaccinated people and percentage cards
+#### Added
+* Added more infos on administration chart about administrated vaccines grouped by suppliers
+
 # 4.0.7
 #### Added
 * Additional doses group chart (grouped by age)
