@@ -1,6 +1,7 @@
 import base64
 from datetime import datetime
 
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
@@ -19,6 +20,8 @@ encoded_image_gerardo = base64.b64encode(open('assets/gerardo.png', 'rb').read()
 encoded_image_nicola = base64.b64encode(open('assets/nicola.png', 'rb').read()).decode('ascii')
 
 log = logger.get_logger()
+
+external_stylesheets = [dbc.themes.BOOTSTRAP] # Change theme here. Must be in all-caps
 
 italian_field_list_complete = ['ricoverati_con_sintomi', 'terapia_intensiva',
                                'totale_ospedalizzati', 'isolamento_domiciliare',
