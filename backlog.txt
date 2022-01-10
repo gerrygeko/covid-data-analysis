@@ -1,5 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- IMPORTANT: Use fixed version of dependencies in the Pipfile, so dependabot can check for vulnerabilities
 - Add detailed information about each vaccine brand
 - Streamline app.py class
 - Tab switched to Italy when changing language
