@@ -3,11 +3,12 @@ import datetime
 import locale
 import threading
 import time
+from dash import html
+from datetime import timedelta
 from email.utils import parsedate_to_datetime
 from threading import Thread
 
 import dash
-import dash_html_components as html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -16,10 +17,9 @@ import requests
 import schedule
 from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
-from datetime import timedelta
 
-import logger
 import constants
+import logger
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation, standard_colors
 from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
