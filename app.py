@@ -5,7 +5,6 @@ import threading
 import time
 from dash import html
 from datetime import timedelta
-from email.utils import parsedate_to_datetime
 from threading import Thread
 
 import dash
@@ -73,10 +72,6 @@ df_worldwide_aggregate_data = None
 df_country_world_data = None
 df_rate_regional = None
 df_rate_country_world = None
-date_last_update_world_aggregate = None
-date_last_update_italy = None
-date_last_update_regional = None
-date_last_update_vaccines_italy = None
 last_check_for_update = None
 
 
@@ -1093,18 +1088,6 @@ def get_content_length(url):
     return size
 
 
-def get_content_date_last_download_data(url):
-    resp = requests.head(url)
-    if resp.status_code != 200:
-        log.error(f"Request failed trying to contact URL: {url}")
-        last_update = 'Time not available'
-    else:
-        date_update_string = resp.headers["Date"]
-        last_update = parsedate_to_datetime(date_update_string).astimezone(tz=pytz.timezone('Europe/Rome'))
-    string_date_update = last_update.strftime(" %d/%m/%Y %H:%M:%S")
-    return string_date_update
-
-
 def get_last_data_check():
     last_check_update = datetime.datetime.now(pytz.timezone('Europe/Rome')).strftime(" %d/%m/%Y %H:%M:%S")
     return last_check_update
@@ -1222,7 +1205,7 @@ def load_data_from_web():
 
 
 def load_regional_data():
-    global df_regional_data, df_rate_regional, date_last_update_regional, last_update_content_regional_data
+    global df_regional_data, df_rate_regional, last_update_content_regional_data
     # Check if updates for Regional data is required
     current_update_content_regional_data = int(get_content_length(constants.URL_CSV_REGIONAL_DATA))
     if current_update_content_regional_data == -1:
@@ -1235,7 +1218,6 @@ def load_regional_data():
         df_regional_data['pressure_ICU'] = round(((df_regional_data['terapia_intensiva'] /
                                                    df_regional_data['available_ICU']) * 100), 2)
         df_rate_regional = load_region_rate_data_frame(df_regional_data)
-        date_last_update_regional = get_content_date_last_download_data(constants.URL_CSV_REGIONAL_DATA)
         log.info(f"Old Content-length: {last_update_content_regional_data} bytes")
         log.info(f"New Content-length: {current_update_content_regional_data} bytes")
         last_update_content_regional_data = current_update_content_regional_data
@@ -1244,7 +1226,7 @@ def load_regional_data():
 
 
 def load_national_data():
-    global df_national_data, date_last_update_italy, last_update_content_national_data
+    global df_national_data, last_update_content_national_data
     # Check if updates for National data is required
     current_update_content_national_data = int(get_content_length(constants.URL_CSV_ITALY_DATA))
     if current_update_content_national_data == -1:
@@ -1257,7 +1239,6 @@ def load_national_data():
                                                           df_national_data['nuovi_tamponi']) * 100), 2)
         df_national_data['pressure_ICU'] = round(((df_national_data['terapia_intensiva'] /
                                                    constants.TOTAL_ICU_ITALY) * 100), 2)
-        date_last_update_italy = get_content_date_last_download_data(constants.URL_CSV_ITALY_DATA)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
@@ -1280,8 +1261,6 @@ def load_country_world_data():
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         df_country_world_data = add_variation_columns_for_world_countries(df_country_world_data)
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
-        date_last_update_world_countries_data = get_content_date_last_download_data(
-            constants.URL_CSV_WORLD_COUNTRIES_DATA)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
         last_update_content_country_world_data = current_update_content_country_world_data
@@ -1290,7 +1269,7 @@ def load_country_world_data():
 
 
 def load_worldwide_aggregate_data():
-    global df_worldwide_aggregate_data, date_last_update_world_aggregate, last_update_content_worldwide_aggregate_data
+    global df_worldwide_aggregate_data, last_update_content_worldwide_aggregate_data
     # Check if updates for Worldwide Aggregate data is required
     current_update_content_worldwide_aggregate_data = int(
         get_content_length(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA))
@@ -1304,8 +1283,6 @@ def load_worldwide_aggregate_data():
                                                       (df_worldwide_aggregate_data['Recovered'] +
                                                        df_worldwide_aggregate_data['Deaths'])
         df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
-        date_last_update_world_aggregate = get_content_date_last_download_data(
-            constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")
         last_update_content_worldwide_aggregate_data = current_update_content_worldwide_aggregate_data
@@ -1314,7 +1291,7 @@ def load_worldwide_aggregate_data():
 
 
 def load_vaccines_italy_data():
-    global df_vaccines_italy_summary_latest, date_last_update_vaccines_italy, last_update_content_vaccines_italy_data, \
+    global df_vaccines_italy_summary_latest, last_update_content_vaccines_italy_data, \
         df_vaccines_italy_registry_summary_latest, df_vaccines_italy_admin_summary_latest, \
         df_vaccines_italy_administration_point, df_vaccines_italy_admin_summary_latest_grouped_by_ITA, \
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA, df_vaccines_italy_administration
@@ -1337,7 +1314,6 @@ def load_vaccines_italy_data():
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA = \
             add_daily_administrations_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_administration_point = load_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
-        date_last_update_vaccines_italy = get_content_date_last_download_data(constants.URL_VACCINES_ITA_SUMMARY_LATEST)
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
         log.info(f"New Content-length: {current_update_content_vaccines_italy_data} bytes")
         last_update_content_vaccines_italy_data = current_update_content_vaccines_italy_data
