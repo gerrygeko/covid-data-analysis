@@ -9,8 +9,8 @@ VACCINABLE_ITALIAN_POPULATION = 54000000 #Vaccinable population
 DATE_PROPERTY_NAME_IT = 'data'
 DATE_PROPERTY_NAME_EN = 'Date'
 DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE = 'ultimo_aggiornamento'
-PAGE_TITLE = "Coronavirus (SARS-CoV-2)"
-COPYRIGHT = "Copyright (C) 2020 | SARS-CoV-2 by Gellex"
+PAGE_TITLE = "Coronavirus Data (SARS-CoV-2)"
+COPYRIGHT = "Copyright (C) 2020 | Coronavirus Data by Gellex"
 REPO_NAME = "covid-data-analysis"
 DEFAULT_LANGUAGE = "IT"
 

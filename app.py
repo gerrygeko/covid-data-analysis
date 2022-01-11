@@ -35,11 +35,18 @@ if not debug_mode_enabled:
     t = Thread(name="translation-thread", target=start_translation)
     t.start()
 
-app = dash.Dash(
+app_title = "Coronavirus Data"
+
+app = CustomDash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
-                         {"property": "og:title", "content": "SARS-CoV-2-Gellex"},
+                         {"property": "og:title", "content": app_title},
                          {"property": "og:image", "content": "https://i.ibb.co/86dGbRM/metatag-splash-1200x630.png"},
-                         {"property": "og:description", "content": "SARS-CoV-2-Gellex"},
+                         {"property": "og:description", "content": "Coronavirus Data - Gellex: This web application "
+                                                                   "gathers and shows World data for the COVID-19, "
+                                                                   "with particular attention to the details of the "
+                                                                   "Italy country. It gives the possibility to "
+                                                                   "arrange and visualize the data in different ways "
+                                                                   "using different graphs."},
                          {"property": "og:url", "content": "https://www.data-covid.com/"}]
 )
 
@@ -1355,7 +1362,7 @@ app.clientside_callback(
     Output("output-clientside", "children"),
     [Input("regional_timeseries_linear", "figure")],
 )
-app.title = "SARS-CoV-2-Gellex"
+app.title = app_title
 app_layout()
 
 

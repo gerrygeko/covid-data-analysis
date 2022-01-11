@@ -1,16 +1,15 @@
 import base64
 from datetime import datetime
 
-import dash_core_components as dcc
-import dash_html_components as html
 import pandas as pd
 import requests
+from dash import html, dcc
 from pytz import timezone
 
 import constants
 import logger
 from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
-    LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE, COPYRIGHT
+    LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
 from resources import language_list, load_resource, locale_language
 from utils import get_options_from_list, get_options, get_version, style_vaccines_italy_tab, \
     style_vaccines_italy_herd_immunity

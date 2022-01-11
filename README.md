@@ -5,7 +5,7 @@
 This web application gathers and shows World data for the COVID-19, with particular attention to the details of the 
 Italian regions. 
 It gives the possibility to arrange and visualize the data in different ways using different graphs.
-The web application is reachable at the following link [SARS-CoV-2-Gellex](https://www.data-covid.com/)
+The web application is reachable at the following link [Coronavirus Data-Gellex](https://www.data-covid.com/)
 
 ## Data update
 - Italian Data (data of the day) is published every day from the Department of Civil Protection at about 17:30.
@@ -20,7 +20,7 @@ every 30 minutes a new attempt for check the presence of new data will be made
 (PaaS - Platform as a Service)
 
 ## Changelog
-- SARS-CoV-2-Gellex updates can be followed [here](https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md)
+- Coronavirus Data-Gellex updates can be followed [here](https://github.com/gerrygeko/covid-data-analysis/blob/master/CHANGELOG.md)
 
 ## Credits
 - Italian data is offered by [Department of Civil Protection](https://github.com/pcm-dpc/COVID-19).
