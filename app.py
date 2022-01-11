@@ -18,6 +18,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 from dash.exceptions import PreventUpdate
 
 import constants
+from custom_dash_app import CustomDash
 import logger
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation, standard_colors
