@@ -432,7 +432,7 @@ def update_national_cards_text(self):
         sign = '+' if variation_previous_day > 0 else ''
         variation_text = f'{sign}{variation_previous_day:n}{percentage}'
         variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values), sub_header_italian_text
+    return *total_text_values, *variation_text_values, sub_header_italian_text
 
 
 @app.callback([Output('total_cases_variation', 'style'),
@@ -498,7 +498,7 @@ def update_world_cards_text(self):
         sign = '+' if variation_previous_day > 0 else ''
         variation_text = f'{sign}{variation_previous_day:n}'
         variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values), sub_header_worldwide_text
+    return *total_text_values, *variation_text_values, sub_header_worldwide_text
 
 
 @app.callback([Output('confirmed_variation_worldwide_aggregate', 'style'),
@@ -611,7 +611,7 @@ def update_regional_cards_text(region_selected):
         sign = '+' if variation_previous_day > 0 else ''
         variation_text = f'{sign}{variation_previous_day:n}{percentage}'
         variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values), sub_header_ita_regions_text
+    return *total_text_values, *variation_text_values, sub_header_ita_regions_text
 
 
 @app.callback([Output('total_cases_variation_tab2', 'style'),
@@ -708,7 +708,7 @@ def update_country_world_cards_text(country_selected):
             sign = '+' if variation_previous_day > 0 else ''
             variation_text = f'{sign}{variation_previous_day:n}'
             variation_text_values.append(variation_text)
-    return (*total_text_values), (*variation_text_values),
+    return *total_text_values, *variation_text_values,
 
 
 @app.callback([Output('total_confirmed_variation_world', 'style'),
@@ -774,7 +774,7 @@ def update_vaccines_italy_cards_text(self):
     total_text = f'{card_value:n}{percentage}'
     total_text_values.append(total_text)
 
-    return (*total_text_values), sub_header_vaccines_italy_text, herd_immunity_date
+    return *total_text_values, sub_header_vaccines_italy_text, herd_immunity_date
 
 
 @app.callback(Output('bar_chart_administrations_daily_total', 'figure'), [Input("i_news", "n_intervals")])

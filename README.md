@@ -1,6 +1,6 @@
 # covid-data-analysis
 
-[![GitHub commit](https://img.shields.io/github/last-commit/gerrygeko/covid-data-analysis)](https://github.com/gerrygeko/covid-data-analysis)[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
+[![GitHub commit](https://img.shields.io/github/last-commit/gerrygeko/covid-data-analysis)](https://github.com/gerrygeko/covid-data-analysis)[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/)
 
 This web application gathers and shows World data for the COVID-19, with particular attention to the details of the 
 Italian regions. 
