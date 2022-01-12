@@ -56,7 +56,7 @@ resources = {DEFAULT_LANGUAGE: {
     'label_tab_master_worldwide': 'Mondo',
     'label_tab_master_ita': 'Italia',
     'label_tab_master_ita_regions': 'Regioni Italiane',
-    'label_tab_vaccines_italy': 'Campagna vaccinale italiana',
+    'label_tab_vaccines_italy': 'Tassi di vaccinazione Italia',
     'label_select_data': 'Seleziona il dato da analizzare:',
     'label_select_multiregion': 'Seleziona una o più regioni italiane da confrontare:',
     'label_select_multicountry': 'Seleziona uno o più Paesi da confrontare:',

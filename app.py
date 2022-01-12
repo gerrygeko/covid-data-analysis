@@ -8,7 +8,8 @@ from dash import html
 from datetime import timedelta
 from threading import Thread
 
-import dash
+from flask import request
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -81,6 +82,7 @@ df_worldwide_aggregate_data: pd.DataFrame
 df_country_world_data: pd.DataFrame
 df_rate_regional: pd.DataFrame
 df_rate_country_world: pd.DataFrame
+visitors = []
 last_check_for_update = None
 
 
