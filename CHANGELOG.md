@@ -2,13 +2,20 @@
 #### Updated
 * Python has been upgraded from version 3.7 to version 3.10 bringing in updates and security fixes
 
+#### Changed
+* Changed name of the application from "SARS-CoV-2-Gellex" to "Coronavirus Data" to describe better the purpose of the website
+
+#### Added
+* Added support for MacOS, Android and Windows platforms. Option to save the link from the browser to your home screen, now gives an app-like experience when accessed
+* It is possible to check the number of unique visitors to the platform. The new text is located at the footer of the webpage
+
 # 4.0.8
 #### Fixed
 * The chart of administrations by age is back online
 #### Changed
 * Changed the calculation of the target of 90% of possible vaccinations. 
 The number of days needed to reach the desired information, in line with current government target, is made by the division between the number of doses remaining to be administered and 
-the average number (7-day rolling average) of first, second, single-dose, and prior infections each day.
+the average number (7-day rolling average) of first, second, single-dose, and prior infections each day
 #### Updated
 * Updated the information of total of vaccinated people and percentage cards
 #### Added
