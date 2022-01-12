@@ -3,6 +3,7 @@ import datetime
 import locale
 import threading
 import time
+
 from dash import html
 from datetime import timedelta
 from threading import Thread
@@ -26,7 +27,7 @@ from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
-#curr = locale.getdefaultlocale()
+# curr = locale.getdefaultlocale()
 locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 logger.initialize_logger()
 log = logger.get_logger()
@@ -67,19 +68,19 @@ last_update_content_national_data = 0
 last_update_content_worldwide_aggregate_data = 0
 last_update_content_country_world_data = 0
 last_update_content_vaccines_italy_data = 0
-df_regional_data = None
-df_national_data = None
-df_vaccines_italy_summary_latest = None
-df_vaccines_italy_registry_summary_latest = None
-df_vaccines_italy_administration = None
-df_vaccines_italy_admin_summary_latest = None
-df_vaccines_italy_admin_summary_latest_grouped_by_ITA = None
-df_vaccines_italy_daily_summary_latest_grouped_by_ITA = None
-df_vaccines_italy_administration_point = None
-df_worldwide_aggregate_data = None
-df_country_world_data = None
-df_rate_regional = None
-df_rate_country_world = None
+df_regional_data: pd.DataFrame
+df_national_data: pd.DataFrame
+df_vaccines_italy_summary_latest: pd.DataFrame
+df_vaccines_italy_registry_summary_latest: pd.DataFrame
+df_vaccines_italy_administration: pd.DataFrame
+df_vaccines_italy_admin_summary_latest: pd.DataFrame
+df_vaccines_italy_admin_summary_latest_grouped_by_ITA: pd.DataFrame
+df_vaccines_italy_daily_summary_latest_grouped_by_ITA: pd.DataFrame
+df_vaccines_italy_administration_point: pd.DataFrame
+df_worldwide_aggregate_data: pd.DataFrame
+df_country_world_data: pd.DataFrame
+df_rate_regional: pd.DataFrame
+df_rate_country_world: pd.DataFrame
 last_check_for_update = None
 
 
@@ -421,10 +422,10 @@ def update_regional_graph_active_cases(region_selected):
                Output('ratio_n_pos_tamponi_variation', 'children'),
                Output('sub_header_italian_update', 'children')
                ], [Input("i_news", "n_intervals")])
-def update_national_cards_text(self):
+def update_national_cards_text():
     log.info('Updating cards')
-    sub_header_italian_text = load_resource('header_last_update_italy') + \
-                              get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+    last_df_data_update = get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
+    sub_header_italian_text = load_resource('header_last_update_italy') + last_df_data_update
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     percentage_list = ['ratio_n_pos_tamponi', 'pressure_ICU']
@@ -452,7 +453,7 @@ def update_national_cards_text(self):
                Output('total_swabs_variation', 'style'),
                Output('ratio_n_pos_tamponi_variation', 'style')
                ], [Input("i_news", "n_intervals")])
-def update_national_cards_color(self):
+def update_national_cards_color():
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     green_positive_results = ['tamponi', 'dimessi_guariti']
@@ -490,10 +491,10 @@ def update_national_cards_color(self):
                Output('increase_rate_variation_worldwide_aggregate', 'children'),
                Output('sub_header_worldwide_update', 'children')
                ], [Input("i_news", "n_intervals")])
-def update_world_cards_text(self):
+def update_world_cards_text():
     log.info('Updating World Cards')
-    sub_header_worldwide_text = load_resource('header_last_update_world') + \
-                                get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
+    last_df_data_update = get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
+    sub_header_worldwide_text = load_resource('header_last_update_world') + last_df_data_update
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     total_text_values = []
     variation_text_values = []
@@ -514,7 +515,7 @@ def update_world_cards_text(self):
                Output('deaths_variation_worldwide_aggregate', 'style'),
                Output('increase_rate_variation_worldwide_aggregate', 'style')
                ], [Input("i_news", "n_intervals")])
-def update_world_cards_color(self):
+def update_world_cards_color():
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     color_cards_list = []
     for field in field_list:
@@ -602,8 +603,8 @@ def update_data_table_national(data_selected):
                ], [Input("dropdown_region_selected", "value")])
 def update_regional_cards_text(region_selected):
     log.info('Updating regional cards')
-    sub_header_ita_regions_text = load_resource('header_last_update_italy') + \
-                                  get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
+    last_df_data_update = get_last_df_data_update(df_regional_data, constants.DATE_PROPERTY_NAME_IT)
+    sub_header_ita_regions_text = load_resource('header_last_update_italy') + last_df_data_update
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'isolamento_domiciliare', 'tamponi']
     total_text_values = []
@@ -760,12 +761,12 @@ def update_country_world_cards_color(country_selected):
                Output('sub_header_vaccines_italy_update', 'children'),
                Output('herd_immunity_date', 'children'),
                ], [Input("i_news", "n_intervals")])
-def update_vaccines_italy_cards_text(self):
+def update_vaccines_italy_cards_text():
     log.info('Updating cards')
     herd_immunity_date = load_resource('string_italy_herd_immunity') + calculate_date_of_herd_immunity()
-    sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + \
-                                     get_last_df_data_update(df_vaccines_italy_summary_latest,
-                                                             constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+    last_df_data_update = get_last_df_data_update(df_vaccines_italy_summary_latest,
+                                                  constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
+    sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + last_df_data_update
     field_list = ['dosi_somministrate', 'dosi_consegnate', 'seconda_dose']
     df_custom = pd.concat([df_vaccines_italy_summary_latest[field_list[0]],
                            df_vaccines_italy_summary_latest[field_list[1]],
@@ -786,7 +787,7 @@ def update_vaccines_italy_cards_text(self):
 
 
 @app.callback(Output('bar_chart_administrations_daily_total', 'figure'), [Input("i_news", "n_intervals")])
-def update_bar_chart_administrations_italy_daily_total(self):
+def update_bar_chart_administrations_italy_daily_total():
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     # by convention, we exclude the data of last day, which could be partial
@@ -835,25 +836,26 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     layout_administrations_by_age = copy.deepcopy(layout)
     df = df_vaccines_italy_registry_summary_latest
 
-    bar_total = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["totale"],
+    bar_total = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["totale"],
                                          name=load_resource('administrations_by_age'),
                                          color=standard_colors.get("light_blue"))
-    bar_men = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_maschile"],
+    bar_men = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_maschile"],
                                        name=load_resource('sex_male'), color=standard_colors.get("dark_blue"))
-    bar_women = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
+    bar_women = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
                                          name=load_resource('sex_female'), color=standard_colors.get("pink"))
-    bar_first_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["prima_dose"],
+    bar_first_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["prima_dose"],
                                               name=load_resource('first_vaccine_dose'),
                                               color=standard_colors.get("light_blue"))
-    bar_second_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"], data_y=df["seconda_dose"],
+    bar_second_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
+                                               data_y=df["seconda_dose"],
                                                name=load_resource('second_vaccine_dose'),
                                                color=standard_colors.get("dark_blue"))
-    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"],
+    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
                                                                    data_y=df["pregressa_infezione"],
                                                                    name=load_resource(
                                                                        'previous_infection_vaccine_dose'),
                                                                    color=standard_colors.get("pink"))
-    bar_additional_dose = create_data_dict_for_bar(type="bar", data_x=df["fascia_anagrafica"],
+    bar_additional_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
                                                    data_y=df["dose_addizionale_booster"],
                                                    name=load_resource('additional_vaccine_dose'),
                                                    color=standard_colors.get("aqua"))
@@ -863,6 +865,7 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     layout_administrations_by_age["autosize"] = True
     layout_administrations_by_age["xaxis"] = dict(type='category')
 
+    data = []
     if data_selected == 'totale':
         data = [bar_total]
     elif data_selected == 'sex_group':
@@ -876,9 +879,9 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     return figure
 
 
-def create_data_dict_for_bar(type="", data_x=None, data_y=None, color=None, name="", mode="", yaxis=""):
+def create_data_dict_for_bar(type_graph="", data_x=None, data_y=None, color=None, name="", mode="", yaxis=""):
     return dict(
-        type=type,  # 11
+        type=type_graph,  # 11
         x=data_x,
         y=data_y,
         name=name,
@@ -892,26 +895,27 @@ def create_data_dict_for_bar(type="", data_x=None, data_y=None, color=None, name
               [Input('radio_buttons_italian_vaccines_daily_administrations', 'value')])
 def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     layout_administrations_by_day = copy.deepcopy(layout)
-    df_by_day_ITA = df_vaccines_italy_admin_summary_latest_grouped_by_ITA
-    df_ITA_admin = df_vaccines_italy_administration.groupby('fornitore').sum()
-    df_ITA_admin.reset_index(inplace=True)
-    df_ITA_admin['total_administrations'] = df_ITA_admin["prima_dose"] + df_ITA_admin["seconda_dose"] \
-                                            + df_ITA_admin["dose_addizionale_booster"]
+    df_by_day_ita = df_vaccines_italy_admin_summary_latest_grouped_by_ITA
+    df_ita_admin = df_vaccines_italy_administration.groupby('fornitore').sum()
+    df_ita_admin.reset_index(inplace=True)
+    df_ita_admin['total_administrations'] = df_ita_admin["prima_dose"] + \
+                                            df_ita_admin["seconda_dose"] + \
+                                            df_ita_admin["dose_addizionale_booster"]
 
-    scatter_total_admin = create_data_dict_for_bar(type="scatter", data_x=df_by_day_ITA["data_somministrazione"],
-                                                   data_y=df_by_day_ITA["total_on_today"],
+    scatter_total_admin = create_data_dict_for_bar(type_graph="scatter", data_x=df_by_day_ita["data_somministrazione"],
+                                                   data_y=df_by_day_ita["total_on_today"],
                                                    name=load_resource('total_administrations'),
                                                    mode="markers", color=standard_colors.get("dark_blue"), yaxis='y2')
 
-    bar_total_admin = create_data_dict_for_bar(type="bar", data_x=df_by_day_ITA["data_somministrazione"],
-                                               data_y=df_by_day_ITA["totale"],
+    bar_total_admin = create_data_dict_for_bar(type_graph="bar", data_x=df_by_day_ita["data_somministrazione"],
+                                               data_y=df_by_day_ita["totale"],
                                                name=load_resource('administrations_by_day'),
                                                color=standard_colors.get("light_blue"), yaxis='y1')
 
-    bar_suppliers = create_data_dict_for_bar(type="bar", data_x=df_ITA_admin["fornitore"],
-                                             data_y=df_ITA_admin["total_administrations"],
+    bar_suppliers = create_data_dict_for_bar(type_graph="bar", data_x=df_ita_admin["fornitore"],
+                                             data_y=df_ita_admin["total_administrations"],
                                              name=load_resource('suppliers'))
-
+    data = []
     if data_selected == 'totale':
         data = [scatter_total_admin, bar_total_admin]
         layout_administrations_by_day["title"] = load_resource('administrations_by_day')
@@ -937,7 +941,7 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
 
 
 @app.callback(Output('table_italy_vaccines', 'figure'), [Input("i_news", "n_intervals")])
-def update_data_table_italy_vaccines(self):
+def update_data_table_italy_vaccines():
     df = df_vaccines_italy_summary_latest.copy()
     df['dosi_consegnate'] = df['dosi_consegnate'].apply(format_value_string_to_locale)
     df['dosi_somministrate'] = df['dosi_somministrate'].apply(format_value_string_to_locale)
@@ -977,13 +981,13 @@ def update_language(language):
 
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
-def update_news(self):
+def update_news():
     log.info('Updating news')
     return create_news()
 
 
 @app.callback(Output("last_check_update_text", "children"), [Input("i_news", "n_intervals")])
-def update_last_data_check(self):
+def update_last_data_check():
     log.info('Updating last data check')
     string_last_data_check = load_resource('label_last_check_update') + last_check_for_update + ' CET'
     return string_last_data_check
@@ -1045,14 +1049,14 @@ def load_region_rate_data_frame(df):
     return df_sb
 
 
-def load_region_available_ICU(df_sb):
+def load_region_available_icu(df_sb):
     df_sb['available_ICU'] = ''
     for index, row in df_sb.iterrows():
         region_name = row["denominazione_regione"]
         if region_name not in italy_ICU:
             continue
-        available_ICU = int(italy_ICU[region_name])
-        df_sb.at[index, 'available_ICU'] = available_ICU
+        available_icu = int(italy_ICU[region_name])
+        df_sb.at[index, 'available_ICU'] = available_icu
     return df_sb
 
 
@@ -1108,7 +1112,7 @@ def get_last_df_data_update(df, date_property_name):
 
 def add_variation_new_swabs_column_df_italy(df):
     df['nuovi_tamponi'] = 0
-    previous_row = ""
+    previous_row = pd.Series
     for index, row in df.iterrows():
         if index == 0:
             previous_row = row
@@ -1161,7 +1165,7 @@ def add_daily_administrations_italy(df):
         'pregressa_infezione'].cumsum()
     # we need to consider only the audience of people actually immunized
     df['remaining_administrations'] = df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
-    previous_row = ""
+    previous_row = pd.Series
     for index, row in df.iterrows():
         if index == 0:
             previous_row = row
@@ -1221,7 +1225,7 @@ def load_regional_data():
     elif current_update_content_regional_data != last_update_content_regional_data or df_rate_regional is None:
         log.info('Regional data update required')
         df_regional_data = load_csv(constants.URL_CSV_REGIONAL_DATA, constants.DATE_PROPERTY_NAME_IT)
-        df_regional_data = load_region_available_ICU(df_regional_data)
+        df_regional_data = load_region_available_icu(df_regional_data)
         df_regional_data['available_ICU'] = pd.to_numeric(df_regional_data['available_ICU'], downcast='float')
         df_regional_data['pressure_ICU'] = round(((df_regional_data['terapia_intensiva'] /
                                                    df_regional_data['available_ICU']) * 100), 2)
@@ -1263,8 +1267,8 @@ def load_country_world_data():
     elif current_update_content_country_world_data != last_update_content_country_world_data:
         log.info('Country World data update required')
         df_country_world_data = load_csv(constants.URL_CSV_WORLD_COUNTRIES_DATA, constants.DATE_PROPERTY_NAME_EN)
-        df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - \
-                                                (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
+        df_country_recovered_and_death = (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
+        df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - df_country_recovered_and_death
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         df_country_world_data = add_variation_columns_for_world_countries(df_country_world_data)
