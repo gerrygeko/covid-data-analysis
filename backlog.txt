@@ -1,6 +1,5 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- IMPORTANT: Use fixed version of dependencies in the Pipfile, so dependabot can check for vulnerabilities
 - Add detailed information about each vaccine brand
 - Streamline app.py class
 - Tab switched to Italy when changing language
@@ -35,6 +34,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- IMPORTANT: Use fixed version of dependencies in the Pipfile, so dependabot can check for vulnerabilities
 - 'Donate' button
 - Prediction of the date of achievement of the 70% vaccinated people target
 - Enlarge the world_map for covering and so optimizing the unused white space at the top
