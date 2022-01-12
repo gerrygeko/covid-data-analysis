@@ -1042,6 +1042,7 @@ def create_footer():
     return html.Footer(id="footer",
                        children=[
                            create_last_update_info(),
+                           create_unique_visitors_info(),
                            create_version_link(),
                            create_copyright_string()
                        ])
@@ -1050,6 +1051,14 @@ def create_footer():
 def create_last_update_info():
     return html.P(
         id="last_check_update_text",
+        className="footer_info",
+        children=''
+    )
+
+
+def create_unique_visitors_info():
+    return html.P(
+        id="unique_visitors_text",
         className="footer_info",
         children=''
     )

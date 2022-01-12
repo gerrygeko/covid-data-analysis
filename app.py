@@ -422,7 +422,7 @@ def update_regional_graph_active_cases(region_selected):
                Output('ratio_n_pos_tamponi_variation', 'children'),
                Output('sub_header_italian_update', 'children')
                ], [Input("i_news", "n_intervals")])
-def update_national_cards_text():
+def update_national_cards_text(self):
     log.info('Updating cards')
     last_df_data_update = get_last_df_data_update(df_national_data, constants.DATE_PROPERTY_NAME_IT)
     sub_header_italian_text = load_resource('header_last_update_italy') + last_df_data_update
@@ -453,7 +453,7 @@ def update_national_cards_text():
                Output('total_swabs_variation', 'style'),
                Output('ratio_n_pos_tamponi_variation', 'style')
                ], [Input("i_news", "n_intervals")])
-def update_national_cards_color():
+def update_national_cards_color(self):
     field_list = ['totale_casi', 'totale_positivi', 'dimessi_guariti', 'deceduti',
                   'terapia_intensiva', 'pressure_ICU', 'tamponi', 'ratio_n_pos_tamponi']
     green_positive_results = ['tamponi', 'dimessi_guariti']
@@ -491,7 +491,7 @@ def update_national_cards_color():
                Output('increase_rate_variation_worldwide_aggregate', 'children'),
                Output('sub_header_worldwide_update', 'children')
                ], [Input("i_news", "n_intervals")])
-def update_world_cards_text():
+def update_world_cards_text(self):
     log.info('Updating World Cards')
     last_df_data_update = get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
     sub_header_worldwide_text = load_resource('header_last_update_world') + last_df_data_update
@@ -515,7 +515,7 @@ def update_world_cards_text():
                Output('deaths_variation_worldwide_aggregate', 'style'),
                Output('increase_rate_variation_worldwide_aggregate', 'style')
                ], [Input("i_news", "n_intervals")])
-def update_world_cards_color():
+def update_world_cards_color(self):
     field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
     color_cards_list = []
     for field in field_list:
@@ -761,7 +761,7 @@ def update_country_world_cards_color(country_selected):
                Output('sub_header_vaccines_italy_update', 'children'),
                Output('herd_immunity_date', 'children'),
                ], [Input("i_news", "n_intervals")])
-def update_vaccines_italy_cards_text():
+def update_vaccines_italy_cards_text(self):
     log.info('Updating cards')
     herd_immunity_date = load_resource('string_italy_herd_immunity') + calculate_date_of_herd_immunity()
     last_df_data_update = get_last_df_data_update(df_vaccines_italy_summary_latest,
@@ -787,7 +787,7 @@ def update_vaccines_italy_cards_text():
 
 
 @app.callback(Output('bar_chart_administrations_daily_total', 'figure'), [Input("i_news", "n_intervals")])
-def update_bar_chart_administrations_italy_daily_total():
+def update_bar_chart_administrations_italy_daily_total(self):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     # by convention, we exclude the data of last day, which could be partial
@@ -941,7 +941,7 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
 
 
 @app.callback(Output('table_italy_vaccines', 'figure'), [Input("i_news", "n_intervals")])
-def update_data_table_italy_vaccines():
+def update_data_table_italy_vaccines(self):
     df = df_vaccines_italy_summary_latest.copy()
     df['dosi_consegnate'] = df['dosi_consegnate'].apply(format_value_string_to_locale)
     df['dosi_somministrate'] = df['dosi_somministrate'].apply(format_value_string_to_locale)
@@ -981,15 +981,26 @@ def update_language(language):
 
 
 @app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
-def update_news():
+def update_news(self):
     log.info('Updating news')
     return create_news()
 
 
 @app.callback(Output("last_check_update_text", "children"), [Input("i_news", "n_intervals")])
-def update_last_data_check():
+def update_last_data_check(self):
     log.info('Updating last data check')
     string_last_data_check = load_resource('label_last_check_update') + last_check_for_update + ' CET'
+    return string_last_data_check
+
+
+@app.callback(Output("unique_visitors_text", "children"), [Input("i_news", "n_intervals")])
+def update_last_data_check(self):
+    log.info('Updating unique visitors')
+    address = request.remote_addr
+    if address not in visitors:
+        visitors.append(address)
+    string_last_data_check = load_resource('unique_visistors') + len(visitors)
+
     return string_last_data_check
 
 
