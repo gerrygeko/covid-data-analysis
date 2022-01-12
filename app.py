@@ -1001,7 +1001,7 @@ def update_last_data_check(self):
     address = request.remote_addr
     if address not in visitors:
         visitors.append(address)
-    string_last_data_check = load_resource('unique_visistors') + len(visitors)
+    string_last_data_check = load_resource('unique_visitors') + str(len(visitors))
 
     return string_last_data_check
 
