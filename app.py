@@ -1402,6 +1402,11 @@ def show_application_started_messages():
     log.info("----------------------------------------------------------------------")
 
 
+@server.route('/sw.js', methods=['GET'])
+def sw():
+    return app.send_static_file('/sw.js')
+
+
 if __name__ == '__main__':
     show_application_started_messages()
     time.sleep(0.01)  # Sleep for few milliseconds otherwise log messages get messed up with the app running
