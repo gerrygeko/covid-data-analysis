@@ -24,19 +24,26 @@ from custom_dash_app import CustomDash
 import logger
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation, standard_colors
-from utils import is_debug_mode_enabled, layout, load_csv_from_file, load_csv
+from utils import is_debug_mode_enabled, is_macos_mode_enabled, layout, load_csv_from_file, load_csv
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
-# curr = locale.getdefaultlocale()
-locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 logger.initialize_logger()
 log = logger.get_logger()
 debug_mode_enabled = is_debug_mode_enabled()
+macos_mode_enabled = is_macos_mode_enabled()
+
+if macos_mode_enabled:
+    curr = ""
+else:
+    curr = "it_IT.utf8"
+locale.setlocale(locale.LC_ALL, curr)
+
 
 if not debug_mode_enabled:
     t = Thread(name="translation-thread", target=start_translation)
     t.start()
+
 
 app_title = "Coronavirus Data"
 

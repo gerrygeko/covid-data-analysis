@@ -8,7 +8,7 @@ import requests
 import pandas as pd
 import json as js
 import logger
-from constants import GITHUB_USER_ENV_VAR, GITHUB_ACCESS_TOKEN_ENV_VAR, DEBUG_MODE_ENV_VAR, REPO_NAME
+from constants import GITHUB_USER_ENV_VAR, GITHUB_ACCESS_TOKEN_ENV_VAR, DEBUG_MODE_ENV_VAR, REPO_NAME, CURRENT_LOCALE_ENV_VAR
 from resources import load_resource
 
 log = logger.get_logger()
@@ -50,6 +50,21 @@ def load_git_environment_variables():
     user = get_environment_variable(GITHUB_USER_ENV_VAR)
     token = get_environment_variable(GITHUB_ACCESS_TOKEN_ENV_VAR)
     return user, token
+
+
+def is_macos_mode_enabled():
+    macos_mode = get_environment_variable(CURRENT_LOCALE_ENV_VAR)
+    if macos_mode.lower() == 'true':
+        log.info(f"{CURRENT_LOCALE_ENV_VAR} is enabled. Never do this in production")
+        return True
+    elif macos_mode.lower() == 'false':
+        return False
+    elif macos_mode == "":
+        log.info(f"{CURRENT_LOCALE_ENV_VAR} is not set in your Environment Configuration. Setting False as default")
+        return False
+    else:
+        log.error(f"{CURRENT_LOCALE_ENV_VAR} was not set correctly, it expect True or False as value. Setting False as default")
+        return False
 
 
 def is_debug_mode_enabled():
