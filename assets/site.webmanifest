@@ -1,16 +1,25 @@
 {
     "name": "Coronavirus Data",
     "short_name": "Coronavirus Data",
+    "start_url": "/",
     "icons": [
         {
             "src": "/assets/android-chrome-192x192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable any"
         },
         {
             "src": "/assets/android-chrome-384x384.png",
             "sizes": "384x384",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/assets/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
         }
     ],
     "theme_color": "#ffffff",

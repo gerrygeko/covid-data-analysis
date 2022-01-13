@@ -8,7 +8,7 @@ from dash import html
 from datetime import timedelta
 from threading import Thread
 
-from flask import request
+from flask import request, make_response, send_from_directory
 
 import pandas as pd
 import plotly.express as px
@@ -1402,9 +1402,13 @@ def show_application_started_messages():
     log.info("----------------------------------------------------------------------")
 
 
-@server.route('/sw.js', methods=['GET'])
-def sw():
-    return app.send_static_file('/sw.js')
+@server.route('/assets/sw.js', methods=['GET'])
+def service_worker():
+    response = make_response(send_from_directory('assets', 'sw.js'))
+    response.headers['Content-Type'] = 'application/javascript'
+    # If service worker file is not served from root, header Service-Worker-Allowed is needed in order to allow it
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
 
 
 if __name__ == '__main__':
