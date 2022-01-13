@@ -26,7 +26,7 @@ class CustomDash(dash.Dash):
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="msapplication-config" content="/assets/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
-        <script type='text/javascript' src='/static/register-sw.js'></script>
+        <script type='text/javascript' src='/assets/register-sw.js'></script>
 
         {css}
     </head>
