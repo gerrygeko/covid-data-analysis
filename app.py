@@ -48,7 +48,7 @@ if not debug_mode_enabled:
 app_title = "Coronavirus Data"
 
 app = CustomDash(
-    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"},
+    __name__, compress=True, meta_tags=[{"name": "viewport", "content": "width=device-width"},
                          {"property": "og:title", "content": app_title},
                          {"property": "og:image", "content": "https://i.ibb.co/86dGbRM/metatag-splash-1200x630.png"},
                          {"property": "og:description", "content": "Coronavirus Data - Gellex: This web application "
