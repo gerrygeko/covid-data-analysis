@@ -1,5 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Add a robots.txt for webcrawler rules
 - Add detailed information about each vaccine brand
 - Streamline app.py class
 - Tab switched to Italy when changing language
