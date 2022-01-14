@@ -12,7 +12,7 @@ class CustomDash(dash.Dash):
     def interpolate_index(self, **kwargs):
         return '''
 <!DOCTYPE html>
-<html>
+<html lang="it">
     <head>
         {metas}
         <title>{title}</title>
