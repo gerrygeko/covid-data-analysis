@@ -39,25 +39,23 @@ else:
     curr = "it_IT.utf8"
 locale.setlocale(locale.LC_ALL, curr)
 
-
 if not debug_mode_enabled:
     t = Thread(name="translation-thread", target=start_translation)
     t.start()
 
-
 app_title = "Coronavirus Data"
+description = "Coronavirus Data - Gellex: This web application gathers and shows World data for the COVID-19, " \
+              "with particular attention to the details of the Italy country. It gives the possibility to arrange " \
+              "and visualize the data in different ways using different graphs. "
 
 app = CustomDash(
     __name__, compress=True, meta_tags=[{"name": "viewport", "content": "width=device-width"},
-                         {"property": "og:title", "content": app_title},
-                         {"property": "og:image", "content": "https://i.ibb.co/86dGbRM/metatag-splash-1200x630.png"},
-                         {"property": "og:description", "content": "Coronavirus Data - Gellex: This web application "
-                                                                   "gathers and shows World data for the COVID-19, "
-                                                                   "with particular attention to the details of the "
-                                                                   "Italy country. It gives the possibility to "
-                                                                   "arrange and visualize the data in different ways "
-                                                                   "using different graphs."},
-                         {"property": "og:url", "content": "https://www.data-covid.com/"}]
+                                        {"name": "description", "content": description},
+                                        {"property": "og:title", "content": app_title},
+                                        {"property": "og:image",
+                                         "content": "https://i.ibb.co/86dGbRM/metatag-splash-1200x630.png"},
+                                        {"property": "og:description", "content": description},
+                                        {"property": "og:url", "content": "https://www.data-covid.com/"}]
 )
 
 server = app.server
