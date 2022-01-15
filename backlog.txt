@@ -1,5 +1,9 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Introduce the app version for PWA
+- Implement push notification for new data available
+- Create test modules
+- Create Heroku/Git pipeline
 - Add a robots.txt for webcrawler rules
 - Add detailed information about each vaccine brand
 - Streamline app.py class
@@ -13,8 +17,6 @@ NEW FEATURES AND BUG TO SOLVE
 - Italian Tab: calculate the ratio(percentage) between new positives and swabs N.B. include color control for < or > 3%
 - LearnMore Button like https://dash-gallery.plotly.host/dash-manufacture-spc-dashboard/(Description of the project) (2)
 - Introduce Integration Tests
-- Create Heroku/Git pipeline
-- PWA upgrade
 - Scheduler use CET time to not rely on the server time zone (2)
 - Make all Graphs listen the interval
 - Text is not displayed entirely in the hoverbox showed in the Bar Graph (Tab 2)
@@ -35,6 +37,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- PWA upgrade
 - IMPORTANT: Use fixed version of dependencies in the Pipfile, so dependabot can check for vulnerabilities
 - 'Donate' button
 - Prediction of the date of achievement of the 70% vaccinated people target
