@@ -23,7 +23,12 @@ class CustomDash(dash.Dash):
         <link rel="manifest" href="/assets/site.webmanifest">
         <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#5bbad5">
         <link rel="shortcut icon" href="/assets/favicon.ico">
-        <meta name="msapplication-TileColor" content="#da532c">
+        <!-- Android: Chrome, Firefox OS and Opera -->
+        <meta name="theme-color" content="#7bc7ff">
+        <!-- iOS N.B. the color bar will be the same of body background-->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="msapplication-TileColor" content="#7bc7ff">
         <meta name="msapplication-config" content="/assets/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
         <script type='text/javascript' src='/assets/register-sw.js'></script>
