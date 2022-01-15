@@ -1,37 +1,57 @@
-var CACHE_NAME = 'offline-coronavirus-data';
+var CACHE_STATIC_NAME = 'offline-static-data-v1';
+var CACHE_DYNAMIC_NAME = 'offline-dynamic-data-v1';
 var urlsToCache = [
+  '/',
   '/assets/styles.css',
   '/assets/s1.css',
   '/assets/register-sw.js'
 ];
 self.addEventListener('install', function(event) {
-  // install files needed offline
+  console.log('[Service Worker] Installing Service Worker ...', event);
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(CACHE_STATIC_NAME)
       .then(function(cache) {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        console.log('[Service Worker] Precaching App Shell');
+        cache.addAll(urlsToCache);
+      })
+  )
+});
+
+self.addEventListener('activate', function(event) {
+  console.log('[Service Worker] Activating Service Worker ....', event);
+  event.waitUntil(
+    caches.keys()
+      .then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if (key !== CACHE_STATIC_NAME && key !== CACHE_DYNAMIC_NAME) {
+            console.log('[Service Worker] Removing old cache.', key);
+            return caches.delete(key);
+          }
+        }));
       })
   );
+  return self.clients.claim();
 });
-self.addEventListener('fetch', event => {
-  console.log('Fetch event for ', event.request.url);
+
+self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
-    .then(response => {
-      if (response) {
-        console.log('Found ', event.request.url, ' in cache');
-        return response;
-      }
-      console.log('Network request for ', event.request.url);
-      return fetch(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        } else {
+          return fetch(event.request)
+            .then(function(res) {
+              return caches.open(CACHE_DYNAMIC_NAME)
+                .then(function(cache) {
+                  cache.put(event.request.url, res.clone());
+                  return res;
+                })
+            })
+            .catch(function(err) {
 
-      // TODO 4 - Add fetched files to the cache
-
-    }).catch(error => {
-
-      // TODO 6 - Respond with custom offline page
-
-    })
+            });
+        }
+      })
   );
 });
