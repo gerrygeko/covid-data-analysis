@@ -1,5 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Http should redirect to https
 - Introduce the app version for PWA
 - Implement push notification for new data available
 - Create test modules
