@@ -9,6 +9,7 @@ from datetime import timedelta
 from threading import Thread
 
 from flask import request, make_response, send_from_directory
+from flask_talisman import Talisman
 
 import pandas as pd
 import plotly.express as px
@@ -1408,6 +1409,9 @@ def service_worker():
     # If service worker file is not served from root, header Service-Worker-Allowed is needed in order to allow it
     response.headers['Service-Worker-Allowed'] = '/'
     return response
+
+
+Talisman(server, content_security_policy=None)
 
 
 if __name__ == '__main__':
