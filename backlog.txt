@@ -38,6 +38,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Redirection HTTP request to HTTPS
 - PWA upgrade
 - IMPORTANT: Use fixed version of dependencies in the Pipfile, so dependabot can check for vulnerabilities
 - 'Donate' button
