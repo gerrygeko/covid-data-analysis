@@ -63,7 +63,8 @@ def is_macos_mode_enabled():
         log.info(f"{CURRENT_LOCALE_ENV_VAR} is not set in your Environment Configuration. Setting False as default")
         return False
     else:
-        log.error(f"{CURRENT_LOCALE_ENV_VAR} was not set correctly, it expect True or False as value. Setting False as default")
+        log.error(f"{CURRENT_LOCALE_ENV_VAR} was not set correctly, it expect True or False as value. Setting False "
+                  f"as default")
         return False
 
 
@@ -78,7 +79,8 @@ def is_debug_mode_enabled():
         log.info(f"{DEBUG_MODE_ENV_VAR} is not set in your Environment Configuration. Setting False as default")
         return False
     else:
-        log.error(f"{DEBUG_MODE_ENV_VAR} was not set correctly, it expect True or False as value. Setting False as default")
+        log.error(f"{DEBUG_MODE_ENV_VAR} was not set correctly, it expect True or False as value. Setting False as "
+                  f"default")
         return False
 
 

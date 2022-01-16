@@ -1411,10 +1411,11 @@ def service_worker():
     return response
 
 
+# Redirect all the traffic to HTTPS if the server is not running in debug mode. Check 'DEBUG_MODE' env var for this.
 Talisman(server, content_security_policy=None)
 
 
 if __name__ == '__main__':
     show_application_started_messages()
     time.sleep(0.01)  # Sleep for few milliseconds otherwise log messages get messed up with the app running
-    app.server.run(debug=False)  # debug=True active a button in the bottom right corner of the web page
+    app.server.run(debug=is_debug_mode_enabled(), use_reloader=False)
