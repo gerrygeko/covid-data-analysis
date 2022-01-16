@@ -1,3 +1,10 @@
+# 4.0.10
+#### Updated
+* Introduce performance improvements that speed up the loading of the page
+
+#### Changed
+* Http traffic is always redirect to Https from now on
+
 # 4.0.9
 #### Updated
 * Python has been upgraded from version 3.7 to version 3.10 bringing in updates and security fixes
