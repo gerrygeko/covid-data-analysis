@@ -1026,7 +1026,8 @@ def create_news():
                                         className="td-link",
                                         children=df_news.iloc[i]["title"],
                                         href=df_news.iloc[i]["url"],
-                                        target="_blank"
+                                        target="_blank",
+                                        rel="noopener"
                                     )]
                             )
                         ]
