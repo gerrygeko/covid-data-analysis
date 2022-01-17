@@ -1,7 +1,7 @@
 NEW FEATURES AND BUG TO SOLVE
 
-- Http should redirect to https
-- Introduce the app version for PWA
+- Remove "recovered" data from world tab because is not more supported by DataHub repo
+- Introduce accessibility to website
 - Implement push notification for new data available
 - Create test modules
 - Create Heroku/Git pipeline
@@ -38,6 +38,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Redirect root domain to a subdomain (Introduction of Cloudflare for DNS services - production environment)
 - Redirection HTTP request to HTTPS
 - PWA upgrade
 - IMPORTANT: Use fixed version of dependencies in the Pipfile, so dependabot can check for vulnerabilities
