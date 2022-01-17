@@ -1,5 +1,6 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Show only top 20 world country in the table component (world tab), not the whole list
 - Remove "recovered" data from world tab because is not more supported by DataHub repo
 - Introduce accessibility to website
 - Implement push notification for new data available
