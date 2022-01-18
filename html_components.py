@@ -990,7 +990,11 @@ def create_credits(app):
 
 def create_news():
     news_requests = requests.get(URL_NEWS_UPDATE)
-    json_data = news_requests.json()["articles"]
+    json_data = []
+    if news_requests.status_code is 200:
+        json_data = news_requests.json()["articles"]
+    else:
+        log.error("Impossible to fetch Italian news")
     df_news = pd.DataFrame(json_data)
     df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
     max_rows = 6
