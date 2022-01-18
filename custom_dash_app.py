@@ -39,7 +39,7 @@ def create_onesignal_js_init():
         allow_local_host = "true"
     else:
         app_id = production_app_id
-        safari_id = local_safari_id
+        safari_id = production_safari_id
         allow_local_host = "false"
 
     return onesignal_js_init_template.format(app_id=app_id, safari_id=safari_id, allow_local_host=allow_local_host)
