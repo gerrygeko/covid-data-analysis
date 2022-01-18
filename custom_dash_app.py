@@ -3,6 +3,25 @@ import logger
 
 log = logger.get_logger()
 
+onesignal_js_init = '''
+            var OneSignal = window.OneSignal || [];
+            var initConfig = {
+               appId: "ead5eb43-3ae1-4e43-8dab-1cd349942ffa",
+               notifyButton: {
+                   enable: true,
+               },
+               // This is needed for now for localtesting
+               allowLocalhostAsSecureOrigin: true,
+               subdomainName: 'http://127.0.0.1:5000'
+            };
+            OneSignal.push(function () {
+                OneSignal.SERVICE_WORKER_PARAM = { scope: '/assets/' };
+                OneSignal.SERVICE_WORKER_PATH = 'assets/OneSignalSDKWorker.js'
+                OneSignal.SERVICE_WORKER_UPDATER_PATH = 'assets/OneSignalSDKUpdaterWorker.js'
+                OneSignal.init(initConfig);
+            });
+        '''
+
 
 class CustomDash(dash.Dash):
     def __init__(self, *args, **kwargs):
@@ -10,6 +29,7 @@ class CustomDash(dash.Dash):
         super().__init__(*args, **kwargs)
 
     def interpolate_index(self, **kwargs):
+
         return '''
 <!DOCTYPE html>
 <html lang="it">
@@ -33,8 +53,7 @@ class CustomDash(dash.Dash):
         <meta name="theme-color" content="#ffffff">
         <script type='text/javascript' src='/assets/register-sw.js'></script>
         <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
-        <script type='text/javascript' src='/assets/OneSignalInit.js'></script>
-
+        <script>{onesignal_js_init}</script>
         {css}
     </head>
     <body>
@@ -46,4 +65,4 @@ class CustomDash(dash.Dash):
         </footer>
     </body>
 </html>
-        '''.format(**kwargs)
+        '''.format(onesignal_js_init=onesignal_js_init, **kwargs)
