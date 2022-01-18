@@ -108,7 +108,7 @@ resources = {DEFAULT_LANGUAGE: {
     'suppliers': 'Fornitori',
     'sex': 'Sesso',
     'doses': 'Dosi',
-    'doses_first_second': 'Prime e seconde dosi',
+    'doses_first_second': 'Prima e seconda dose',
     'additional_doses': 'Dosi addizionali',
     'sex_male': 'Maschi',
     'sex_female': 'Femmine',
