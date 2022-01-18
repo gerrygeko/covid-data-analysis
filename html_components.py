@@ -991,7 +991,7 @@ def create_credits(app):
 def create_news():
     news_requests = requests.get(URL_NEWS_UPDATE)
     json_data = []
-    if news_requests.status_code is 200:
+    if news_requests.status_code == 200:
         json_data = news_requests.json()["articles"]
     else:
         log.error("Impossible to fetch Italian news")
