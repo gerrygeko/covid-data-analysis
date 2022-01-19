@@ -116,11 +116,11 @@ def create_scatter_plot(data_frame, title, x_axis_data, y_axis_data_mapping):
     else:
         for y_data_name, label in y_axis_data_mapping:
             scatter = go.Scattergl(x=x_axis_data,
-                                 y=data_frame[y_data_name],
-                                 mode='lines',
-                                 opacity=0.7,
-                                 name=label,
-                                 textposition='bottom center')
+                                   y=data_frame[y_data_name],
+                                   mode='lines',
+                                   opacity=0.7,
+                                   name=label,
+                                   textposition='bottom center')
             scatter_list.append(scatter)
 
     figure = create_figure(scatter_list, title)
@@ -132,11 +132,11 @@ def create_scatter_plot_by_region(data_frame, title, x_axis_data, y_axis_data_ma
     y_axis_data_mapping_region.sort(key=lambda tup: tup[1])
     for field, region in y_axis_data_mapping_region:
         scatter = go.Scattergl(x=x_axis_data, y=data_frame[data_frame['denominazione_regione'] == region][field],
-                             mode='lines',
-                             opacity=0.7,
-                             name=region,
-                             # line=dict(shape="spline", smoothing=1, width=1),
-                             textposition='bottom center')
+                               mode='lines',
+                               opacity=0.7,
+                               name=region,
+                               # line=dict(shape="spline", smoothing=1, width=1),
+                               textposition='bottom center')
         scatter_list.append(scatter)
     figure = create_figure(scatter_list, title)
     return figure
@@ -147,11 +147,11 @@ def create_scatter_plot_by_country_world(data_frame, title, x_axis_data, y_axis_
     y_axis_data_mapping_country_world.sort(key=lambda tup: tup[1])
     for field, country in y_axis_data_mapping_country_world:
         scatter = go.Scattergl(x=x_axis_data, y=data_frame[data_frame['Country'] == country][field],
-                             mode='lines',
-                             opacity=0.7,
-                             name=country,
-                             # line=dict(shape="spline", smoothing=1, width=1),
-                             textposition='bottom center')
+                               mode='lines',
+                               opacity=0.7,
+                               name=country,
+                               # line=dict(shape="spline", smoothing=1, width=1),
+                               textposition='bottom center')
         scatter_list.append(scatter)
     figure = create_figure(scatter_list, title)
     return figure
@@ -1275,6 +1275,8 @@ def load_national_data():
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
         last_update_content_national_data = current_update_content_national_data
+        send_one_signal_notification('notification_text_repo_pandemic_data_ita_updated',
+                                     'prod-updated italy pandemic data')
     else:
         log.info('No updates required for National data')
 
@@ -1297,6 +1299,8 @@ def load_country_world_data():
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
         last_update_content_country_world_data = current_update_content_country_world_data
+        send_one_signal_notification('notification_text_repo_pandemic_data_world_updated',
+                                     'prod-updated world pandemic data')
     else:
         log.info('No updates required for Country World data')
 
@@ -1350,6 +1354,8 @@ def load_vaccines_italy_data():
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
         log.info(f"New Content-length: {current_update_content_vaccines_italy_data} bytes")
         last_update_content_vaccines_italy_data = current_update_content_vaccines_italy_data
+        send_one_signal_notification('notification_text_repo_vaccines_data_ita_updated',
+                                     'prod-updated italy immunization data')
     else:
         log.info('No updates required for Italian Vaccines data')
 
@@ -1420,7 +1426,6 @@ def test_notify():
 
 # Redirect all the traffic to HTTPS if the server is not running in debug mode. Check 'DEBUG_MODE' env var for this.
 Talisman(server, content_security_policy=None)
-
 
 if __name__ == '__main__':
     show_application_started_messages()

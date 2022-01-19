@@ -124,7 +124,10 @@ resources = {DEFAULT_LANGUAGE: {
     'rolling_average_7_days': 'Media mobile a 7 giorni',
     'string_italy_herd_immunity': 'Data raggiungimento 90% popolazione vaccinabile: ',
     'unique_visitors': 'Visitatori unici: ',
-    'test_update': 'Test di notifica'
+    'test_update': 'Test di notifica',
+    'notification_text_repo_pandemic_data_ita_updated': 'Italian data have been updated!',
+    'notification_text_repo_pandemic_data_world_updated': 'World data have been updated!',
+    'notification_text_repo_vaccines_data_ita_updated': 'Immunization data has been updated!'
 }
 }
 
