@@ -125,9 +125,12 @@ resources = {DEFAULT_LANGUAGE: {
     'string_italy_herd_immunity': 'Data raggiungimento 90% popolazione vaccinabile: ',
     'unique_visitors': 'Visitatori unici: ',
     'test_update': 'Test di notifica',
-    'notification_text_repo_pandemic_data_ita_updated': 'Italian data have been updated!',
-    'notification_text_repo_pandemic_data_world_updated': 'World data have been updated!',
-    'notification_text_repo_vaccines_data_ita_updated': 'Immunization data has been updated!'
+    'notification_text_repo_pandemic_data_ita_updated': '"Nuovi dati giornalieri dalla Protezione Civile Italiana, '
+                                                        'controlla gli aggiornamenti!"',
+    'notification_text_repo_pandemic_data_world_updated': 'Nuovi dati mondiali sui contagi Covid-19, controlla gli '
+                                                          'aggiornamenti!',
+    'notification_text_repo_vaccines_data_ita_updated': 'Nuovi dati sulla situazione vaccini in Italia, controlla gli '
+                                                        'aggiornamenti! '
 }
 }
 

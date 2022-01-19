@@ -155,6 +155,12 @@ def send_one_signal_notification(resource_key, notification_type):
         log.error(f"Notification failure for: {notification_type}, Reason was: {response.text}")
 
 
+def send_one_signal_notification_for_dataframe_update(resource_key, notification_type, last_update_size):
+    # If last_update_size is equal to 0 it means we are starting up the app, so we want to avoid sending notifications
+    if last_update_size != 0:
+        send_one_signal_notification(resource_key, notification_type)
+
+
 def get_one_signal_init_javascript():
     return one_signal_client.create_onesignal_js_init()
 

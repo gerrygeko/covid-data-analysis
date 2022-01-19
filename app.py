@@ -26,7 +26,7 @@ import logger
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation, standard_colors
 from utils import is_debug_mode_enabled, is_macos_mode_enabled, layout, load_csv_from_file, load_csv, \
-    send_one_signal_notification
+    send_one_signal_notification, send_one_signal_notification_for_dataframe_update
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
@@ -1274,9 +1274,9 @@ def load_national_data():
                                                    constants.TOTAL_ICU_ITALY) * 100), 2)
         log.info(f"Old Content-length: {last_update_content_national_data} bytes")
         log.info(f"New Content-length: {current_update_content_national_data} bytes")
-        if last_update_content_national_data != 0: #avoid to send notification on startup
-            send_one_signal_notification('notification_text_repo_pandemic_data_ita_updated',
-                                         'prod-updated italy pandemic data')
+        send_one_signal_notification_for_dataframe_update('notification_text_repo_pandemic_data_ita_updated',
+                                                          'Italy data update',
+                                                          last_update_content_national_data)
         last_update_content_national_data = current_update_content_national_data
 
     else:
@@ -1300,9 +1300,9 @@ def load_country_world_data():
         df_rate_country_world = load_country_world_rate_data_frame(df_country_world_data)
         log.info(f"Old Content-length: {last_update_content_country_world_data} bytes")
         log.info(f"New Content-length: {current_update_content_country_world_data} bytes")
-        if last_update_content_country_world_data != 0:  # avoid to send notification on startup
-            send_one_signal_notification('notification_text_repo_pandemic_data_world_updated',
-                                         'prod-updated world pandemic data')
+        send_one_signal_notification_for_dataframe_update('notification_text_repo_pandemic_data_world_updated',
+                                                          'World data update',
+                                                          last_update_content_country_world_data)
         last_update_content_country_world_data = current_update_content_country_world_data
     else:
         log.info('No updates required for Country World data')
@@ -1357,8 +1357,9 @@ def load_vaccines_italy_data():
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
         log.info(f"New Content-length: {current_update_content_vaccines_italy_data} bytes")
         if last_update_content_vaccines_italy_data != 0:
-            send_one_signal_notification('notification_text_repo_vaccines_data_ita_updated',
-                                         'prod-updated italy immunization data')
+            send_one_signal_notification_for_dataframe_update('notification_text_repo_vaccines_data_ita_updated',
+                                                              'Vaccine data update',
+                                                              last_update_content_vaccines_italy_data)
         last_update_content_vaccines_italy_data = current_update_content_vaccines_italy_data
 
     else:
