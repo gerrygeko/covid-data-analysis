@@ -13,7 +13,26 @@ onesignal_js_init_template = '''
                }},
                // This is needed for now for localtesting
                allowLocalhostAsSecureOrigin: {allow_local_host},
-               subdomainName: 'http://127.0.0.1:5000'
+               subdomainName: 'http://127.0.0.1:5000',
+               promptOptions: {{
+                  slidedown: {{
+                    prompts: [
+                      {{
+                        type: "push",
+                        autoPrompt: true,
+                        text: {{
+                          actionMessage: "We'd like to show you notifications for the latest Covid updates.",
+                          acceptButton: "Allow",
+                          cancelButton: "Cancel"
+                        }},
+                        delay: {{
+                          pageViews: 1,
+                          timeDelay: 3
+                        }}
+                      }}
+                    ]
+                  }}
+                }}
             }};
             OneSignal.push(function () {{
                 OneSignal.SERVICE_WORKER_PARAM = {{ scope: '/assets/' }};
