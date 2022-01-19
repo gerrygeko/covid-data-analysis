@@ -1,48 +1,8 @@
 import dash
 import logger
-
-from utils import is_debug_mode_enabled
+import utils
 
 log = logger.get_logger()
-
-local_app_id = "ead5eb43-3ae1-4e43-8dab-1cd349942ffa"
-production_app_id = "520730fb-1d3b-4218-a9c1-09d9b8342340"
-
-local_safari_id = "web.onesignal.auto.13f7d09c-87f4-478e-9a86-b96c3b883b5b"
-production_safari_id = "web.onesignal.auto.0d6d1ede-d24a-45d0-ba73-2f88839c0735"
-
-onesignal_js_init_template = '''
-            var OneSignal = window.OneSignal || [];
-            var initConfig = {{
-               appId: "{app_id}",
-               safari_web_id: "{safari_id}",
-               notifyButton: {{
-                   enable: true,
-               }},
-               // This is needed for now for localtesting
-               allowLocalhostAsSecureOrigin: {allow_local_host},
-               subdomainName: 'http://127.0.0.1:5000'
-            }};
-            OneSignal.push(function () {{
-                OneSignal.SERVICE_WORKER_PARAM = {{ scope: '/assets/' }};
-                OneSignal.SERVICE_WORKER_PATH = 'assets/OneSignalSDKWorker.js'
-                OneSignal.SERVICE_WORKER_UPDATER_PATH = 'assets/OneSignalSDKUpdaterWorker.js'
-                OneSignal.init(initConfig);
-            }});
-        '''
-
-
-def create_onesignal_js_init():
-    if is_debug_mode_enabled():
-        app_id = local_app_id
-        safari_id = local_safari_id
-        allow_local_host = "true"
-    else:
-        app_id = production_app_id
-        safari_id = production_safari_id
-        allow_local_host = "false"
-
-    return onesignal_js_init_template.format(app_id=app_id, safari_id=safari_id, allow_local_host=allow_local_host)
 
 
 class CustomDash(dash.Dash):
@@ -51,7 +11,7 @@ class CustomDash(dash.Dash):
         super().__init__(*args, **kwargs)
 
     def interpolate_index(self, **kwargs):
-        onesignal_js = create_onesignal_js_init()
+        onesignal_js = utils.get_one_signal_init_javascript()
 
         return '''
 <!DOCTYPE html>

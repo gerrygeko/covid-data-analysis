@@ -1,7 +1,6 @@
 var CACHE_STATIC_NAME = 'offline-static-data-v1';
 var CACHE_DYNAMIC_NAME = 'offline-dynamic-data-v1';
 var urlsToCache = [
-  '/',
   '/assets/styles.css',
   '/assets/s1.css',
   '/assets/register-sw.js'

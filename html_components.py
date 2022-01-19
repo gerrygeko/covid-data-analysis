@@ -11,7 +11,7 @@ import logger
 from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
     LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
 from resources import language_list, load_resource, locale_language
-from utils import get_options_from_list, get_options, get_version, style_vaccines_italy_tab, \
+from utils import get_options, get_version, style_vaccines_italy_tab, \
     style_vaccines_italy_herd_immunity
 
 encoded_image_gerardo = base64.b64encode(open('assets/gerardo.png', 'rb').read()).decode('ascii')
@@ -41,6 +41,14 @@ def create_page_components(app, df_regional_data, df_country_world_data):
         create_bottom_line(app),
         create_footer()
     ]
+
+
+def get_options_from_list(field_list):
+    dict_list = []
+    for data in field_list:
+        dict_list.append({'label': str(load_resource(data)), 'value': str(data)})
+
+    return dict_list
 
 
 def create_logo_and_header(app):

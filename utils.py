@@ -8,10 +8,17 @@ import requests
 import pandas as pd
 import json as js
 import logger
-from constants import GITHUB_USER_ENV_VAR, GITHUB_ACCESS_TOKEN_ENV_VAR, DEBUG_MODE_ENV_VAR, REPO_NAME, CURRENT_LOCALE_ENV_VAR
-from resources import load_resource
+from constants import GITHUB_USER_ENV_VAR, GITHUB_ACCESS_TOKEN_ENV_VAR, DEBUG_MODE_ENV_VAR, REPO_NAME, \
+    CURRENT_LOCALE_ENV_VAR, ONE_SIGNAL_TEST_API_KEY_ENV_VAR, ONE_SIGNAL_PROD_API_KEY_ENV_VAR
+from one_signal import OneSignal
 
 log = logger.get_logger()
+
+local_app_id = "ead5eb43-3ae1-4e43-8dab-1cd349942ffa"
+production_app_id = "520730fb-1d3b-4218-a9c1-09d9b8342340"
+
+local_safari_id = "web.onesignal.auto.13f7d09c-87f4-478e-9a86-b96c3b883b5b"
+production_safari_id = "web.onesignal.auto.0d6d1ede-d24a-45d0-ba73-2f88839c0735"
 
 
 class GitApiData:
@@ -25,14 +32,6 @@ def get_options(list_value):
     dict_list = []
     for i in list_value:
         dict_list.append({'label': i, 'value': i})
-
-    return dict_list
-
-
-def get_options_from_list(field_list):
-    dict_list = []
-    for data in field_list:
-        dict_list.append({'label': str(load_resource(data)), 'value': str(data)})
 
     return dict_list
 
@@ -87,8 +86,8 @@ def is_debug_mode_enabled():
 git_user_data = GitApiData(*load_git_environment_variables())
 
 
-# TODO Remember to set the environment variables for the GitHub user and token in your IDE to get access to the Git API locally
-# TODO Remember to set these also in Heroku Config Vars
+# TODO Remember to set the environment variables for the GitHub user and token in your IDE to get access to the Git
+#  API locally TODO Remember to set these also in Heroku Config Vars
 def get_version():
     resp = requests.get(f'https://api.github.com/repos/{git_user_data.user}/{REPO_NAME}/tags',
                         auth=(git_user_data.user, git_user_data.token))
@@ -129,6 +128,35 @@ def load_geojson(url):
     with urlopen(url) as response:
         json = js.load(response)
     return json
+
+
+def create_one_signal():
+    if is_debug_mode_enabled():
+        app_id = local_app_id
+        safari_id = local_safari_id
+        allow_local_host = "true"
+        api_key = get_environment_variable(ONE_SIGNAL_TEST_API_KEY_ENV_VAR)
+    else:
+        app_id = production_app_id
+        safari_id = production_safari_id
+        allow_local_host = "false"
+        api_key = get_environment_variable(ONE_SIGNAL_PROD_API_KEY_ENV_VAR)
+    return OneSignal(app_id, safari_id, allow_local_host, api_key, is_debug_mode_enabled())
+
+
+one_signal_client = create_one_signal()
+
+
+def send_one_signal_notification(resource_key, notification_type):
+    response = one_signal_client.send(resource_key)
+    if response.status_code == 200:
+        log.info(f"Notification was sent for: {notification_type}")
+    else:
+        log.error(f"Notification failure for: {notification_type}, Reason was: {response.text}")
+
+
+def get_one_signal_init_javascript():
+    return one_signal_client.create_onesignal_js_init()
 
 
 #component style

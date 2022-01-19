@@ -4,13 +4,13 @@ import logger
 import time
 from constants import DEFAULT_LANGUAGE
 
-language_list = [{'label': 'Italiano', 'value': 'IT'},
-                 {'label': 'English', 'value': 'EN'},
-                 {'label': 'Dutch', 'value': 'NL'},
-                 {'label': 'German', 'value': 'DE'},
-                 {'label': 'French', 'value': 'FR'},
-                 {'label': 'Spanish', 'value': 'ES'},
-                 {'label': 'Portuguese', 'value': 'PT'}
+language_list = [{'label': 'Italiano', 'value': 'it'},
+                 {'label': 'English', 'value': 'en'},
+                 {'label': 'Dutch', 'value': 'nl'},
+                 {'label': 'German', 'value': 'de'},
+                 {'label': 'French', 'value': 'fr'},
+                 {'label': 'Spanish', 'value': 'es'},
+                 {'label': 'Portuguese', 'value': 'pt'}
                  ]
 
 standard_colors = dict(light_blue="rgb(123, 199, 255)",
@@ -123,7 +123,8 @@ resources = {DEFAULT_LANGUAGE: {
     'daily_administrations': ' Somministrazioni',
     'rolling_average_7_days': 'Media mobile a 7 giorni',
     'string_italy_herd_immunity': 'Data raggiungimento 90% popolazione vaccinabile: ',
-    'unique_visitors': 'Visitatori unici: '
+    'unique_visitors': 'Visitatori unici: ',
+    'test_update': 'Test di notifica'
 }
 }
 
@@ -146,6 +147,17 @@ def find_resource(name):
     if name not in resources[locale_language.language].keys():
         raise KeyError(f"The resource you are trying to load is not present. Resource: {name}")
     return resources[locale_language.language][name]
+
+
+def create_resource_dict_for_languages(resource_key, is_debug):
+    if is_debug:
+        # If in debug mode we pass the italian resource as an english resource,
+        # because the OneSignal API require 'en' to be default, but in debug we have only 'IT' resources.
+        return {"en": resources[DEFAULT_LANGUAGE][resource_key]}
+    else:
+        languages = [language_dict['value'] for language_dict in language_list]
+    resource_dict = {language.lower(): resources[language][resource_key] for language in languages}
+    return resource_dict
 
 
 def add_translations_to_resource_dict(translations, language):

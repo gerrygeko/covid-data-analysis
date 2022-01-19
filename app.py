@@ -25,7 +25,8 @@ from custom_dash_app import CustomDash
 import logger
 from html_components import create_news, create_page_components, locale_language
 from resources import load_resource, start_translation, standard_colors
-from utils import is_debug_mode_enabled, is_macos_mode_enabled, layout, load_csv_from_file, load_csv
+from utils import is_debug_mode_enabled, is_macos_mode_enabled, layout, load_csv_from_file, load_csv, \
+    send_one_signal_notification
 
 app_start_time = time.time()
 threading.current_thread().name = "main-thread"
@@ -1409,6 +1410,12 @@ def service_worker():
     # If service worker file is not served from root, header Service-Worker-Allowed is needed in order to allow it
     response.headers['Service-Worker-Allowed'] = '/'
     return response
+
+
+@server.route('/notify', methods=['GET'])
+def test_notify():
+    send_one_signal_notification('test_update', 'test endpoint')
+    return "Notification sent", 200
 
 
 # Redirect all the traffic to HTTPS if the server is not running in debug mode. Check 'DEBUG_MODE' env var for this.
