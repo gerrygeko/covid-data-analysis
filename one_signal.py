@@ -3,12 +3,6 @@ import requests
 
 from resources import create_resource_dict_for_languages
 
-local_app_id = "ead5eb43-3ae1-4e43-8dab-1cd349942ffa"
-production_app_id = "520730fb-1d3b-4218-a9c1-09d9b8342340"
-
-local_safari_id = "web.onesignal.auto.13f7d09c-87f4-478e-9a86-b96c3b883b5b"
-production_safari_id = "web.onesignal.auto.0d6d1ede-d24a-45d0-ba73-2f88839c0735"
-
 onesignal_js_init_template = '''
             var OneSignal = window.OneSignal || [];
             var initConfig = {{
