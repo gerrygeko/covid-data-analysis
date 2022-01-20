@@ -8,8 +8,7 @@ from pytz import timezone
 
 import constants
 import logger
-from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, \
-    LIST_OF_WORLD_FIELDS, URL_NEWS_UPDATE
+from constants import SECONDS_FOR_NEWS_UPDATE, PAGE_TITLE, LIST_OF_WORLD_FIELDS
 from resources import language_list, load_resource, locale_language
 from utils import get_options, get_version, style_vaccines_italy_tab, \
     style_vaccines_italy_herd_immunity
@@ -735,15 +734,11 @@ def create_bottom_line(app):
     return html.Div(
         [
             html.Div(
-                children=[html.Div(id="news", children=create_news())],
-                className="pretty_container six columns",
-            ),
-            html.Div(
                 children=[
                     create_contacts(app),
                     create_credits(app)
                 ],
-                className="pretty_container six columns",
+                className="pretty_container twelve columns",
             ),
         ],
         className="row flex-display",
@@ -903,123 +898,67 @@ def create_contacts(app):
 
 
 def create_credits(app):
-    return html.Div(
-        [
-            html.H5(className='p-news title',
-                    children=load_resource('label_credits')),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("github_gellex.png"),
-                    className='credits_icon',
-                    id="github-image",
-                ),
-                href="https://github.com/gerrygeko/covid-data-analysis",
-            ),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("datahub-cube-edited.svg"),
-                    className='credits_icon',
-                    id="datahub-image",
-                ),
-                href="https://github.com/datasets/covid-19"
-            ),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("jh.png"),
-                    className='credits_icon',
-                    id="jh-image",
-                ),
-                href="https://github.com/CSSEGISandData/COVID-19"
-            ),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("protezione_civile.png"),
-                    className='credits_icon',
-                    id="protezione-civile-image",
-                ),
-                href="https://github.com/pcm-dpc",
-            ),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("istat.png"),
-                    className='credits_icon',
-                    id="istat-image",
-                ),
-                href="http://dati.istat.it/",
-            ),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("logo_vax.png"),
-                    className='credits_icon',
-                    id="vax-image",
-                ),
-                href="https://github.com/italia/covid19-opendata-vaccini",
-            ),
-            html.A(
-                children=html.Img(
-                    src=app.get_asset_url("dbc_logo.png"),
-                    className='credits_icon',
-                    id="dbc-image",
-                ),
-                href="https://datibenecomune.it/",
-            )
-        ]
-    )
-
-
-def create_news():
-    news_requests = requests.get(URL_NEWS_UPDATE)
-    json_data = []
-    if news_requests.status_code == 200:
-        json_data = news_requests.json()["articles"]
-    else:
-        log.error("Impossible to fetch Italian news")
-    df_news = pd.DataFrame(json_data)
-    df_news = pd.DataFrame(df_news[["urlToImage", "title", "url"]])
-    max_rows = 6
-    news_title = load_resource('label_news')
-    return html.Div(
-        children=[
-            html.H5(className="p-news title", children=news_title),
-            html.P(
-                className="p-news title",
-                children=load_resource('label_last_news_update')
-                         + datetime.now().astimezone(timezone('Europe/Rome')).strftime("%d/%m/%Y %H:%M:%S") + ' CET',
-            ),
-            html.Table(
-                className="table-news",
-                children=[
-                    html.Tr(
-                        children=[
-                            html.Td(
-                                children=[
-                                    html.Img(
-                                        src=df_news.iloc[i]["urlToImage"],
-                                        style={
-                                            "height": "40px",
-                                            "width": "60px",
-                                            "float": "center",
-                                            "border-radius": "8px"
-                                        })
-                                ]
+    return html.Div(className='center',
+                    children=[
+                        html.H5(className='p-news title',
+                                children=load_resource('label_credits')),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("github_gellex.png"),
+                                className='credits_icon',
+                                id="github-image",
                             ),
-                            html.Td(
-                                children=[
-                                    html.A(
-                                        className="td-link",
-                                        children=df_news.iloc[i]["title"],
-                                        href=df_news.iloc[i]["url"],
-                                        target="_blank",
-                                        rel="noopener"
-                                    )]
-                            )
-                        ]
-                    )
-                    for i in range(min(len(df_news), max_rows))
-                ],
-            ),
-        ]
-    )
+                            href="https://github.com/gerrygeko/covid-data-analysis",
+                        ),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("datahub-cube-edited.svg"),
+                                className='credits_icon',
+                                id="datahub-image",
+                            ),
+                            href="https://github.com/datasets/covid-19"
+                        ),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("jh.png"),
+                                className='credits_icon',
+                                id="jh-image",
+                            ),
+                            href="https://github.com/CSSEGISandData/COVID-19"
+                        ),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("protezione_civile.png"),
+                                className='credits_icon',
+                                id="protezione-civile-image",
+                            ),
+                            href="https://github.com/pcm-dpc",
+                        ),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("istat.png"),
+                                className='credits_icon',
+                                id="istat-image",
+                            ),
+                            href="http://dati.istat.it/",
+                        ),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("logo_vax.png"),
+                                className='credits_icon',
+                                id="vax-image",
+                            ),
+                            href="https://github.com/italia/covid19-opendata-vaccini",
+                        ),
+                        html.A(
+                            children=html.Img(
+                                src=app.get_asset_url("dbc_logo.png"),
+                                className='credits_icon',
+                                id="dbc-image",
+                            ),
+                            href="https://datibenecomune.it/",
+                        )
+                    ])
 
 
 def create_footer():

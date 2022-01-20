@@ -23,7 +23,7 @@ from dash.exceptions import PreventUpdate
 import constants
 from custom_dash_app import CustomDash
 import logger
-from html_components import create_news, create_page_components, locale_language
+from html_components import create_page_components, locale_language
 from resources import load_resource, start_translation, standard_colors
 from utils import is_debug_mode_enabled, is_macos_mode_enabled, layout, load_csv_from_file, load_csv, \
     send_one_signal_notification, send_one_signal_notification_for_dataframe_update
@@ -991,12 +991,6 @@ def update_language(language):
     locale_language.language = language
     log.info(f"User switching language to: {language}")
     return create_page_components(app, df_regional_data, df_country_world_data)
-
-
-@app.callback(Output("news", "children"), [Input("i_news", "n_intervals")])
-def update_news(self):
-    log.info('Updating news')
-    return create_news()
 
 
 @app.callback(Output("last_check_update_text", "children"), [Input("i_news", "n_intervals")])
