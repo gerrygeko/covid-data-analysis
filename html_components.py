@@ -1,10 +1,6 @@
 import base64
-from datetime import datetime
 
-import pandas as pd
-import requests
 from dash import html, dcc
-from pytz import timezone
 
 import constants
 import logger
