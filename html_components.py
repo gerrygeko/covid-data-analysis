@@ -149,18 +149,7 @@ def create_world_tab(df_country_world_data):
                                                     html.P(load_resource('confirmed_worldwide_aggregate'))],
                                                    id="total_confirmed_worldwide_aggregate",
                                                    className="mini_container",
-                                               )
-                                           ],
-                                           id="world-container-1",
-                                           className="row container-display",
-                                       ),
-                                   ],
-                                   className="ghosty_container six columns",
-                               ),
-                               html.Div(
-                                   [
-                                       html.Div(
-                                           [
+                                               ),
                                                html.Div(
                                                    [html.H6(id="deaths_text_worldwide_aggregate", children=''),
                                                     html.H6(id="deaths_variation_worldwide_aggregate", children=''),
@@ -181,7 +170,7 @@ def create_world_tab(df_country_world_data):
                                            className="row container-display",
                                        ),
                                    ],
-                                   className="ghosty_container six columns",
+                                   className="ghosty_container twelve columns",
                                ),
                            ],
                            className="row flex-display",
