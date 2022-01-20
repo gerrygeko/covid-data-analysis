@@ -123,7 +123,7 @@ def create_donate_button(app):
 
 
 def create_tabs(df_country_world_data, df_regional_data):
-    return dcc.Tabs(id='tabs_master', value='tab_vaccines_italy', children=[
+    return dcc.Tabs(id='tabs_master', value='tab_master_ita', children=[
         create_vaccines_italy_tab(),
         create_italy_tab(df_regional_data),
         create_regions_tab(df_regional_data),
