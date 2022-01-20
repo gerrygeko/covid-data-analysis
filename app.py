@@ -495,11 +495,9 @@ def update_national_cards_color(self):
 
 
 @app.callback([Output('confirmed_text_worldwide_aggregate', 'children'),
-               Output('recovered_text_worldwide_aggregate', 'children'),
                Output('deaths_text_worldwide_aggregate', 'children'),
                Output('increase_rate_text_worldwide_aggregate', 'children'),
                Output('confirmed_variation_worldwide_aggregate', 'children'),
-               Output('recovered_variation_worldwide_aggregate', 'children'),
                Output('deaths_variation_worldwide_aggregate', 'children'),
                Output('increase_rate_variation_worldwide_aggregate', 'children'),
                Output('sub_header_worldwide_update', 'children')
@@ -508,7 +506,7 @@ def update_world_cards_text(self):
     log.info('Updating World Cards')
     last_df_data_update = get_last_df_data_update(df_worldwide_aggregate_data, constants.DATE_PROPERTY_NAME_EN)
     sub_header_worldwide_text = load_resource('header_last_update_world') + last_df_data_update
-    field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
+    field_list = ['Confirmed', 'Deaths', 'Increase rate']
     total_text_values = []
     variation_text_values = []
     for field in field_list:
@@ -524,19 +522,17 @@ def update_world_cards_text(self):
 
 
 @app.callback([Output('confirmed_variation_worldwide_aggregate', 'style'),
-               Output('recovered_variation_worldwide_aggregate', 'style'),
                Output('deaths_variation_worldwide_aggregate', 'style'),
                Output('increase_rate_variation_worldwide_aggregate', 'style')
                ], [Input("i_news", "n_intervals")])
 def update_world_cards_color(self):
-    field_list = ['Confirmed', 'Recovered', 'Deaths', 'Increase rate']
+    field_list = ['Confirmed', 'Deaths', 'Increase rate']
     color_cards_list = []
     for field in field_list:
         card_value = df_worldwide_aggregate_data[field].iloc[-1]
         card_value_previous_day = df_worldwide_aggregate_data[field].iloc[-2]
         variation_previous_day = card_value - card_value_previous_day
-        if variation_previous_day <= 0 and field == 'Confirmed' or \
-                variation_previous_day > 0 and field == 'Recovered':
+        if variation_previous_day <= 0 and field == 'Confirmed':
             color = 'limegreen'
             color_cards_list.append(color)
         else:
@@ -544,8 +540,7 @@ def update_world_cards_color(self):
             color_cards_list.append(color)
     dictionary_color = [{'color': color_cards_list[0]},
                         {'color': color_cards_list[1]},
-                        {'color': color_cards_list[2]},
-                        {'color': color_cards_list[3]}]
+                        {'color': color_cards_list[2]}]
     return dictionary_color
 
 
@@ -973,7 +968,7 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
                 bar_italian_regions_administered_doses]
         layout_administrations_by_day["title"] = load_resource('ratio_percentage_administrations')
         layout_administrations_by_day["showlegend"] = True
-        layout_administrations_by_day["barmode"] ='overlay'
+        layout_administrations_by_day["barmode"] = 'overlay'
         layout_administrations_by_day["autosize"] = True
         layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("dark_blue"))
         layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
@@ -1112,7 +1107,6 @@ def add_excluded_country_world(df):
         list_of_row.append({'Date': last_date_df,
                             'Country': country_without_data,
                             'Confirmed': 0,
-                            'Recovered': 0,
                             'Deaths': 0,
                             'Active_cases': 0
                             })
@@ -1155,16 +1149,16 @@ def add_variation_new_swabs_column_df_italy(df):
 
 
 def add_variation_columns_for_world_aggregate_data(df):
-    df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0, 0, 0]
+    df['New Confirmed'], df['New Deaths'] = [0, 0]
     for index, row in df.iterrows():
         for col in df.columns:
-            if col in ('Confirmed', 'Recovered', 'Deaths') and (index != 0):
+            if col in ('Confirmed', 'Deaths') and (index != 0):
                 df.at[index, f"New {col}"] = row[col] - df.loc[index - 1, f"{col}"]
     return df
 
 
 def add_variation_columns_for_world_countries(df):
-    df['New Confirmed'], df['New Recovered'], df['New Deaths'] = [0.0, 0.0, 0.0]
+    df['New Confirmed'], df['New Deaths'] = [0.0, 0.0]
     country = ""
     previous_row = ""
     for index, row in df.iterrows():
@@ -1173,7 +1167,7 @@ def add_variation_columns_for_world_countries(df):
             previous_row = row
         else:
             for col in df.columns:
-                if col in ('Confirmed', 'Recovered', 'Deaths'):
+                if col in ('Confirmed', 'Deaths'):
                     variation_value = row[col] - previous_row[col]
                     df.at[index, f"New {col}"] = variation_value
             previous_row = row
@@ -1302,8 +1296,7 @@ def load_country_world_data():
     elif current_update_content_country_world_data != last_update_content_country_world_data:
         log.info('Country World data update required')
         df_country_world_data = load_csv(constants.URL_CSV_WORLD_COUNTRIES_DATA, constants.DATE_PROPERTY_NAME_EN)
-        df_country_recovered_and_death = (df_country_world_data['Recovered'] + df_country_world_data['Deaths'])
-        df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - df_country_recovered_and_death
+        df_country_world_data['Active_cases'] = df_country_world_data['Confirmed'] - df_country_world_data['Deaths']
         df_country_world_data = adjust_df_world_to_geojson(df_country_world_data)
         df_country_world_data = add_excluded_country_world(df_country_world_data)
         df_country_world_data = add_variation_columns_for_world_countries(df_country_world_data)
@@ -1330,8 +1323,7 @@ def load_worldwide_aggregate_data():
         df_worldwide_aggregate_data = load_csv(constants.URL_CSV_WORLDWIDE_AGGREGATE_DATA,
                                                constants.DATE_PROPERTY_NAME_EN)
         df_worldwide_aggregate_data['Active_cases'] = df_worldwide_aggregate_data['Confirmed'] - \
-                                                      (df_worldwide_aggregate_data['Recovered'] +
-                                                       df_worldwide_aggregate_data['Deaths'])
+                                                      df_worldwide_aggregate_data['Deaths']
         df_worldwide_aggregate_data = add_variation_columns_for_world_aggregate_data(df_worldwide_aggregate_data)
         log.info(f"Old Content-length: {last_update_content_worldwide_aggregate_data} bytes")
         log.info(f"New Content-length: {current_update_content_worldwide_aggregate_data} bytes")

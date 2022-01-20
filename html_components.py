@@ -149,13 +149,6 @@ def create_world_tab(df_country_world_data):
                                                     html.P(load_resource('confirmed_worldwide_aggregate'))],
                                                    id="total_confirmed_worldwide_aggregate",
                                                    className="mini_container",
-                                               ),
-                                               html.Div(
-                                                   [html.H6(id="recovered_text_worldwide_aggregate", children=''),
-                                                    html.H6(id="recovered_variation_worldwide_aggregate", children=''),
-                                                    html.P(load_resource('recovered_worldwide_aggregate'))],
-                                                   id="total_recovered_worldwide_aggregate",
-                                                   className="mini_container",
                                                )
                                            ],
                                            id="world-container-1",

@@ -46,6 +46,6 @@ URL_VACCINES_WORLD = "https://github.com/owid/covid-19-data/tree/master/public/d
 
 
 LIST_OF_WORLD_COUNTRIES_WITHOUT_DATA = ('Turkmenistan', 'Myanmar', 'North Korea', 'Greenland')
-LIST_OF_WORLD_FIELDS = ('Confirmed', 'Recovered', 'Deaths', 'New Confirmed', 'New Recovered', 'New Deaths', 'Active_cases')
-LIST_OF_WORLD_FIELDS_TO_RATE = ('Confirmed', 'Recovered', 'Deaths', 'Active_cases', 'New Confirmed', 'New Recovered', 'New Deaths')
+LIST_OF_WORLD_FIELDS = ('Confirmed', 'Deaths', 'New Confirmed', 'New Deaths', 'Active_cases')
+LIST_OF_WORLD_FIELDS_TO_RATE = ('Confirmed', 'Deaths', 'Active_cases', 'New Confirmed', 'New Deaths')
 LIST_OF_NOT_LOCATED_COUNTRIES_ON_MAP = ('Diamond Princess', 'MS Zaandam', 'Holy See')
