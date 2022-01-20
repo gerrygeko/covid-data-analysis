@@ -297,13 +297,6 @@ def create_world_tab(df_country_world_data):
 
                                                        ),
                                                        html.Div(
-                                                           [html.H6(id="total_recovered_text_world", children=''),
-                                                            html.H6(id="total_recovered_variation_world", children=''),
-                                                            html.P(load_resource('dimessi_guariti'))],
-                                                           id="total_recovered_world",
-                                                           className="mini_container",
-                                                       ),
-                                                       html.Div(
                                                            [html.H6(id="total_deaths_text_world", children=''),
                                                             html.H6(id="total_deaths_variation_world", children=''),
                                                             html.P(load_resource('deceduti'))],
