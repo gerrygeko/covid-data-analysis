@@ -170,12 +170,11 @@ def initialize_dropdown_region_data_selected(data_selected):
 def update_regions_line_chart(region_list, data_selected):
     regions_list_mapping = []
     # if no region selected, create empty figure
-    x_axis_data = df_regional_data[df_regional_data['denominazione_regione'] == "Abruzzo"]['data']
     if len(region_list) == 0 or data_selected is None:
-        figure = create_scatter_plot(df_regional_data, '', x_axis_data, [])
-        return figure
+        raise PreventUpdate
     for region in region_list:
         regions_list_mapping.append((data_selected, region))
+    x_axis_data = df_regional_data[df_regional_data['denominazione_regione'] == "Abruzzo"]['data']
     title = load_resource(data_selected)
     figure = create_scatter_plot_by_region(df_regional_data, title,
                                            x_axis_data, regions_list_mapping)
@@ -197,12 +196,11 @@ def initialize_dropdown_country_data_selected(data_selected):
 def update_country_world_line_chart(country_list, data_selected):
     countries_list_mapping = []
     # if no country was selected, create empty figure
-    x_axis_data = df_country_world_data[df_country_world_data['Country'] == "Italy"][constants.DATE_PROPERTY_NAME_EN]
     if len(country_list) == 0 or data_selected is None:
-        figure = create_scatter_plot(df_country_world_data, '', x_axis_data, [])
-        return figure
+        raise PreventUpdate
     for country in country_list:
         countries_list_mapping.append((data_selected, country))
+    x_axis_data = df_country_world_data[df_country_world_data['Country'] == "Italy"][constants.DATE_PROPERTY_NAME_EN]
     title = load_resource(data_selected)
     figure = create_scatter_plot_by_country_world(df_country_world_data, title,
                                                   x_axis_data, countries_list_mapping)
