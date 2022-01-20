@@ -709,11 +709,14 @@ def create_vaccines_italy_tab():
                                    [
                                        html.Div(
                                            [
+                                               html.P(load_resource('filter_by'), className="control_label"),
                                                dcc.RadioItems(
                                                    id="radio_buttons_italian_vaccines_daily_administrations",
                                                    options=[
                                                        {'label': load_resource('total_vaccines'), 'value': 'totale'},
-                                                       {'label': load_resource('suppliers'), 'value': 'fornitore'}
+                                                       {'label': load_resource('suppliers'), 'value': 'fornitore'},
+                                                       {'label': load_resource('label_tab_master_ita_regions'),
+                                                        'value': 'regione'}
                                                    ],
                                                    value='totale',
                                                    labelStyle={'display': 'inline-block'}

@@ -910,6 +910,11 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day_ita = df_vaccines_italy_admin_summary_latest_grouped_by_ITA
     df_ita_admin = df_vaccines_italy_administration.groupby('fornitore').sum()
+    df = df_vaccines_italy_summary_latest.copy()
+    df['dosi_consegnate'] = df['dosi_consegnate'].apply(format_value_string_to_locale)
+    df['dosi_somministrate'] = df['dosi_somministrate'].apply(format_value_string_to_locale)
+    df = df.sort_values(by=['percentuale_somministrazione'], ascending=False)
+    df['percentuale_somministrazione'] = df['percentuale_somministrazione'].apply(format_value_string_to_locale)
     df_ita_admin.reset_index(inplace=True)
     df_ita_admin['total_administrations'] = df_ita_admin["prima_dose"] + \
                                             df_ita_admin["seconda_dose"] + \
@@ -928,6 +933,25 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     bar_suppliers = create_data_dict_for_bar(type_graph="bar", data_x=df_ita_admin["fornitore"],
                                              data_y=df_ita_admin["total_administrations"],
                                              name=load_resource('suppliers'))
+
+    bar_italian_regions_administered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['nome_area'],
+                                                                      data_y=df['dosi_somministrate'],
+                                                                      name=load_resource('administered_doses'),
+                                                                      color=standard_colors.get("dark_blue"))
+
+    bar_italian_regions_delivered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['nome_area'],
+                                                                   data_y=df['dosi_consegnate'],
+                                                                   name=load_resource('delivered_doses'),
+                                                                   color=standard_colors.get('light_blue'))
+
+    scatter_italian_regions_percentage_administrations = create_data_dict_for_bar(type_graph="scatter",
+                                                                                  data_x=df['nome_area'],
+                                                                                  data_y=df['percentuale_somministrazione'],
+                                                                                  name=load_resource(
+                                                                                  'percentage_administrations'),
+                                                                                  mode="lines+markers",
+                                                                                  color=standard_colors.get('pink'),
+                                                                                  yaxis='y2')
     data = []
     if data_selected == 'totale':
         data = [scatter_total_admin, bar_total_admin]
@@ -948,6 +972,21 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
         layout_administrations_by_day["showlegend"] = True
         layout_administrations_by_day["autosize"] = True
         layout_administrations_by_day["xaxis"] = dict(type='category')
+
+    elif data_selected == 'regione':
+        data = [scatter_italian_regions_percentage_administrations, bar_italian_regions_administered_doses,
+                bar_italian_regions_delivered_doses]
+        layout_administrations_by_day["title"] = load_resource('percentage_administrations')
+        layout_administrations_by_day["showlegend"] = True
+        layout_administrations_by_day["autosize"] = True
+        layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("light_blue"))
+        layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
+                                                       side='right',
+                                                       showgrid=False,
+                                                       showline=False,
+                                                       zeroline=False,
+                                                       color=standard_colors.get("dark_blue")
+                                                       )
 
     figure = dict(data=data, layout=layout_administrations_by_day)
     return figure
