@@ -3,3 +3,4 @@ complete.log
 Pipfile.lock
 __pycache__/
 venv/
+logs/
