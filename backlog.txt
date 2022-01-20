@@ -1,9 +1,9 @@
 NEW FEATURES AND BUG TO SOLVE
 
+- Remove test notify endpoint once we are sure the notification is working also in prod
 - Show only top 20 world country in the table component (world tab), not the whole list
 - Remove "recovered" data from world tab because is not more supported by DataHub repo
 - Introduce accessibility to website
-- Implement push notification for new data available
 - Create test modules
 - Create Heroku/Git pipeline
 - Add a robots.txt for webcrawler rules
@@ -39,6 +39,7 @@ NEW FEATURES AND BUG TO SOLVE
 
 SOLVED
 
+- Implement push notification for new data available
 - Redirect root domain to a subdomain (Introduction of Cloudflare for DNS services - production environment)
 - Redirection HTTP request to HTTPS
 - PWA upgrade
