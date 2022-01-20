@@ -130,7 +130,8 @@ resources = {DEFAULT_LANGUAGE: {
     'notification_text_repo_pandemic_data_world_updated': 'Nuovi dati mondiali sui contagi Covid-19, controlla gli '
                                                           'aggiornamenti!',
     'notification_text_repo_vaccines_data_ita_updated': 'Nuovi dati sulla situazione vaccini in Italia, controlla gli '
-                                                        'aggiornamenti! '
+                                                        'aggiornamenti! ',
+    'notification_text_daily_italian_update': "Update! Oggi {} nuovi positivi in Italia!"
 }
 }
 
@@ -155,14 +156,14 @@ def find_resource(name):
     return resources[locale_language.language][name]
 
 
-def create_resource_dict_for_languages(resource_key, is_debug):
+def create_resource_dict_for_languages(resource_key, is_debug, *args):
     if is_debug:
         # If in debug mode we pass the italian resource as an english resource,
         # because the OneSignal API require 'en' to be default, but in debug we have only 'IT' resources.
-        return {"en": resources[DEFAULT_LANGUAGE][resource_key]}
+        return {"en": resources[DEFAULT_LANGUAGE][resource_key].format(*args)}
     else:
         languages = [language_dict['value'] for language_dict in language_list]
-    resource_dict = {language.lower(): resources[language][resource_key] for language in languages}
+    resource_dict = {language.lower(): resources[language][resource_key].format(*args) for language in languages}
     return resource_dict
 
 

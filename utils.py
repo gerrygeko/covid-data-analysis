@@ -147,8 +147,8 @@ def create_one_signal():
 one_signal_client = create_one_signal()
 
 
-def send_one_signal_notification(resource_key, notification_type):
-    response = one_signal_client.send(resource_key)
+def send_one_signal_notification(resource_key, notification_type, *args):
+    response = one_signal_client.send(resource_key, *args)
     if response.status_code == 200:
         log.info(f"Notification was sent for: {notification_type}")
     else:

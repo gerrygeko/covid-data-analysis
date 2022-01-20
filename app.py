@@ -414,6 +414,13 @@ def update_regional_graph_active_cases(region_selected):
     return figure
 
 
+def calculate_total_and_variation_for_national_data(field):
+    card_value = df_national_data[field].iloc[-1]
+    card_value_previous_day = df_national_data[field].iloc[-2]
+    variation_previous_day = card_value - card_value_previous_day
+    return card_value, variation_previous_day
+
+
 @app.callback([Output('total_cases_text', 'children'),
                Output('total_positive_text', 'children'),
                Output('total_recovered_text', 'children'),
@@ -442,9 +449,7 @@ def update_national_cards_text(self):
     total_text_values = []
     variation_text_values = []
     for field in field_list:
-        card_value = df_national_data[field].iloc[-1]
-        card_value_previous_day = df_national_data[field].iloc[-2]
-        variation_previous_day = card_value - card_value_previous_day
+        card_value, variation_previous_day = calculate_total_and_variation_for_national_data(field)
         percentage = ' %' if field in percentage_list else ''
         total_text = f'{card_value:n}{percentage}'
         total_text_values.append(total_text)
@@ -470,9 +475,7 @@ def update_national_cards_color(self):
     green_negative_results = ['terapia_intensiva', 'totale_positivi', 'ratio_n_pos_tamponi', 'pressure_ICU']
     color_cards_list = []
     for field in field_list:
-        card_value = df_national_data[field].iloc[-1]
-        card_value_previous_day = df_national_data[field].iloc[-2]
-        variation_previous_day = card_value - card_value_previous_day
+        _, variation_previous_day = calculate_total_and_variation_for_national_data(field)
         if field in green_positive_results and variation_previous_day > 0 or \
                 field in green_negative_results and variation_previous_day < 0:
             color = 'limegreen'
@@ -1356,10 +1359,9 @@ def load_vaccines_italy_data():
         df_vaccines_italy_administration_point = load_csv(constants.URL_VACCINES_ITA_ADMINISTRATION_POINT)
         log.info(f"Old Content-length: {last_update_content_vaccines_italy_data} bytes")
         log.info(f"New Content-length: {current_update_content_vaccines_italy_data} bytes")
-        if last_update_content_vaccines_italy_data != 0:
-            send_one_signal_notification_for_dataframe_update('notification_text_repo_vaccines_data_ita_updated',
-                                                              'Vaccine data update',
-                                                              last_update_content_vaccines_italy_data)
+        send_one_signal_notification_for_dataframe_update('notification_text_repo_vaccines_data_ita_updated',
+                                                          'Vaccine data update',
+                                                          last_update_content_vaccines_italy_data)
         last_update_content_vaccines_italy_data = current_update_content_vaccines_italy_data
 
     else:
@@ -1374,9 +1376,16 @@ def app_layout():
     )
 
 
+def send_daily_italian_notification():
+    new_positives = df_national_data['nuovi_positivi'].iloc[-1]
+    # We are assuming the dataset is updated every day, we could check or add the last date in the message
+    send_one_signal_notification("notification_text_daily_italian_update", "Italy daily update", new_positives)
+
+
 schedule.every(30).minutes.do(load_data_from_web)
 schedule.every().day.at("08:15").do(load_data_from_web)
 schedule.every().day.at("18:05").do(load_data_from_web)
+schedule.every().day.at("21:00").do(send_daily_italian_notification)
 
 
 def run_schedule():

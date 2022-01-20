@@ -53,12 +53,12 @@ class OneSignal:
         self.rest_api_key = api_key
         self.is_debug = is_debug
 
-    def send(self, resource_key):
+    def send(self, resource_key, *args):
         auth_header = f"Basic {self.rest_api_key}"
         header = {"Content-Type": "application/json; charset=utf-8",
                   "Authorization": auth_header}
 
-        message_content = create_resource_dict_for_languages(resource_key, self.is_debug)
+        message_content = create_resource_dict_for_languages(resource_key, self.is_debug, *args)
         payload = {"app_id": self.app_id,
                    "included_segments": ["Subscribed Users"],
                    "contents": message_content}
