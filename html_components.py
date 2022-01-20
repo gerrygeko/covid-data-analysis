@@ -700,10 +700,14 @@ def create_vaccines_italy_tab():
                                                dcc.Graph(id="bar_chart_administrations_daily_total")
 
                                            ],
-                                           className="pretty_container six columns",
+                                           className="pretty_container twelve columns",
                                        ),
+                                   ],
+                                   className="row flex-display",
+                               ),
+                               html.Div(
+                                   [
                                        html.Div(
-
                                            [
                                                dcc.RadioItems(
                                                    id="radio_buttons_italian_vaccines_daily_administrations",
@@ -718,12 +722,8 @@ def create_vaccines_italy_tab():
                                            ],
                                            className="pretty_container six columns",
                                        ),
-                                   ],
-                                   className="row flex-display",
-                               ),
-                               html.Div(
-                                   [
                                        html.Div(
+
                                            [
                                                html.P(load_resource('filter_by'), className="control_label"),
                                                dcc.RadioItems(
@@ -740,13 +740,6 @@ def create_vaccines_italy_tab():
                                                    labelStyle={'display': 'inline-block'}
                                                ),
                                                dcc.Graph(id="bar_chart_administrations_by_age")
-                                           ],
-                                           className="pretty_container six columns",
-                                       ),
-                                       html.Div(
-
-                                           [
-                                               dcc.Graph(id="table_italy_vaccines")
                                            ],
                                            className="pretty_container six columns",
                                        ),
