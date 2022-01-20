@@ -826,7 +826,7 @@ def update_bar_chart_administrations_italy_daily_total(self):
         )
     ]
 
-    layout_administrations_by_day["title"] = load_resource('daily_administrations')
+    layout_administrations_by_day["title"] = load_resource('immunization_rate_label')
     layout_administrations_by_day["showlegend"] = True
     layout_administrations_by_day["autosize"] = True
     layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("light_blue"))
@@ -937,18 +937,19 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     bar_italian_regions_administered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['nome_area'],
                                                                       data_y=df['dosi_somministrate'],
                                                                       name=load_resource('administered_doses'),
-                                                                      color=standard_colors.get("dark_blue"))
+                                                                      color=standard_colors.get("light_blue"))
 
     bar_italian_regions_delivered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['nome_area'],
                                                                    data_y=df['dosi_consegnate'],
                                                                    name=load_resource('delivered_doses'),
-                                                                   color=standard_colors.get('light_blue'))
+                                                                   color=standard_colors.get('dark_blue'))
 
     scatter_italian_regions_percentage_administrations = create_data_dict_for_bar(type_graph="scatter",
                                                                                   data_x=df['nome_area'],
-                                                                                  data_y=df['percentuale_somministrazione'],
+                                                                                  data_y=df[
+                                                                                      'percentuale_somministrazione'],
                                                                                   name=load_resource(
-                                                                                  'percentage_administrations'),
+                                                                                      'ratio_percentage_administrations'),
                                                                                   mode="lines+markers",
                                                                                   color=standard_colors.get('pink'),
                                                                                   yaxis='y2')
@@ -968,24 +969,24 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
                                                        )
     elif data_selected == 'fornitore':
         data = [bar_suppliers]
-        layout_administrations_by_day["title"] = load_resource('administered_doses')
+        layout_administrations_by_day["title"] = load_resource('total_administered_doses')
         layout_administrations_by_day["showlegend"] = True
         layout_administrations_by_day["autosize"] = True
         layout_administrations_by_day["xaxis"] = dict(type='category')
-
     elif data_selected == 'regione':
-        data = [scatter_italian_regions_percentage_administrations, bar_italian_regions_administered_doses,
-                bar_italian_regions_delivered_doses]
-        layout_administrations_by_day["title"] = load_resource('percentage_administrations')
+        data = [scatter_italian_regions_percentage_administrations, bar_italian_regions_delivered_doses,
+                bar_italian_regions_administered_doses]
+        layout_administrations_by_day["title"] = load_resource('ratio_percentage_administrations')
         layout_administrations_by_day["showlegend"] = True
+        layout_administrations_by_day["barmode"] ='overlay'
         layout_administrations_by_day["autosize"] = True
-        layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("light_blue"))
+        layout_administrations_by_day["yaxis"] = dict(color=standard_colors.get("dark_blue"))
         layout_administrations_by_day["yaxis2"] = dict(overlaying='y',
                                                        side='right',
                                                        showgrid=False,
                                                        showline=False,
                                                        zeroline=False,
-                                                       color=standard_colors.get("dark_blue")
+                                                       color=standard_colors.get("pink")
                                                        )
 
     figure = dict(data=data, layout=layout_administrations_by_day)
@@ -1001,7 +1002,7 @@ def update_data_table_italy_vaccines(self):
     df['percentuale_somministrazione'] = df['percentuale_somministrazione'].astype(str) + '%'
     df['percentuale_somministrazione'] = [x.replace('.', ',') for x in df['percentuale_somministrazione']]
     figure = go.Figure(data=[go.Table(
-        header=dict(values=(load_resource('denominazione_regione'), load_resource('percentage_administrations'),
+        header=dict(values=(load_resource('denominazione_regione'), load_resource('ratio_percentage_administrations'),
                             load_resource('delivered_doses'), load_resource('administered_doses')
                             ),
                     fill_color='lightskyblue',
