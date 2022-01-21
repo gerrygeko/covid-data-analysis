@@ -1421,6 +1421,7 @@ def service_worker():
     response.headers['Content-Type'] = 'application/javascript'
     # If service worker file is not served from root, header Service-Worker-Allowed is needed in order to allow it
     response.headers['Service-Worker-Allowed'] = '/'
+    response.headers['Cache-Control'] = 'no-cache'
     return response
 
 
