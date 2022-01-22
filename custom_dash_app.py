@@ -34,6 +34,7 @@ class CustomDash(dash.Dash):
         <meta name="msapplication-TileColor" content="#7bc7ff">
         <meta name="msapplication-config" content="/assets/browserconfig.xml">
         <meta name="theme-color" content="#ffffff">
+        
         <script type='text/javascript' src='/assets/register-sw.js'></script>
         <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
         <script>{onesignal_js_init}</script>

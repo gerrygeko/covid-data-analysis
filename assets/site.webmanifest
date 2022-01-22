@@ -1,6 +1,7 @@
 {
     "name": "Coronavirus Data",
     "short_name": "Coronavirus Data",
+    "scope": "/",
     "start_url": "/",
     "icons": [
         {

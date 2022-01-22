@@ -1421,10 +1421,13 @@ def service_worker():
     response.headers['Content-Type'] = 'application/javascript'
     # If service worker file is not served from root, header Service-Worker-Allowed is needed in order to allow it
     response.headers['Service-Worker-Allowed'] = '/'
+    # The no-cache directive means that a browser may cache a response,
+    # but must first submit a validation request to an origin server.
+    response.headers['Cache-Control'] = 'no-cache'
     return response
 
 
-@server.route('/notify', methods=['GET'])
+@server.route('/notify', methods=['GET'], endpoint='test_notify')
 def test_notify():
     send_one_signal_notification('test_update', 'test endpoint')
     return "Notification sent", 200

@@ -1,12 +1,17 @@
-if ('serviceWorker' in navigator) {
-   // we are checking here to see if the browser supports the  service worker api
-    window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/assets/sw.js', {scope: '/'}).then(function(registration) {
-      // Registration was successful
-      console.log('Service Worker registration was successful with scope: ', registration.scope);
-    }, function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
+(function() {
+  if('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/assets/sw.js')
+               .then(function(registration) {
+               console.log('Service Worker Registered');
+               return registration;
+      })
+      .catch(function(err) {
+        console.error('Unable to register service worker.', err);
+      });
+      navigator.serviceWorker.ready.then(function(registration) {
+        console.log('Service Worker Ready');
+      });
     });
-  });
-}
+  }
+})();
