@@ -51,13 +51,17 @@ description = "Coronavirus Data - Gellex: This web application gathers and shows
               "and visualize the data in different ways using different graphs. "
 
 app = CustomDash(
-    __name__, compress=True, meta_tags=[{"name": "viewport", "content": "width=device-width"},
-                                        {"name": "description", "content": description},
-                                        {"property": "og:title", "content": app_title},
-                                        {"property": "og:image",
-                                         "content": "https://i.ibb.co/86dGbRM/metatag-splash-1200x630.png"},
-                                        {"property": "og:description", "content": description},
-                                        {"property": "og:url", "content": "https://www.data-covid.com/"}]
+    __name__,
+    compress=True,
+    eager_loading=True,
+    meta_tags=[{"name": "viewport", "content": "width=device-width"},
+               {"name": "description", "content": description},
+               {"property": "og:title", "content": app_title},
+               {"property": "og:image",
+                "content": "https://i.ibb.co/86dGbRM/metatag-splash-1200x630.png"},
+               {"property": "og:description", "content": description},
+               {"property": "og:url",
+                "content": "https://www.data-covid.com/"}]
 )
 
 server = app.server
