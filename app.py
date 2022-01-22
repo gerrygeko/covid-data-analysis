@@ -1373,8 +1373,10 @@ def app_layout():
 
 def send_daily_italian_notification():
     new_positives = df_national_data['nuovi_positivi'].iloc[-1]
+    date_string = df_national_data.iloc[-1]['data'].strftime('%d/%m/%Y')
     # We are assuming the dataset is updated every day, we could check or add the last date in the message
-    send_one_signal_notification("notification_text_daily_italian_update", "Italy daily update", new_positives)
+    send_one_signal_notification("notification_text_daily_italian_update", "Italy daily update", date_string,
+                                 new_positives)
 
 
 schedule.every(30).minutes.do(load_data_from_web)

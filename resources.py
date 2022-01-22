@@ -133,7 +133,7 @@ resources = {DEFAULT_LANGUAGE: {
                                                           'aggiornamenti!',
     'notification_text_repo_vaccines_data_ita_updated': 'Nuovi dati sulla situazione vaccini in Italia, controlla gli '
                                                         'aggiornamenti! ',
-    'notification_text_daily_italian_update': "Update! Oggi {} nuovi positivi in Italia!"
+    'notification_text_daily_italian_update': "Bollettino giornalerio del {}: {} casi covid in Italia!"
 }
 }
 
