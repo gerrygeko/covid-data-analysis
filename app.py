@@ -772,7 +772,7 @@ def update_vaccines_italy_cards_text(self):
     last_df_data_update = get_last_df_data_update(df_vaccines_italy_summary_latest,
                                                   constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
     sub_header_vaccines_italy_text = load_resource('header_last_update_vaccines_italy') + last_df_data_update
-    field_list = ['dosi_somministrate', 'dosi_consegnate', 'seconda_dose']
+    field_list = ['dosi_somministrate', 'dosi_consegnate', 'd2']
     df_custom = pd.concat([df_vaccines_italy_summary_latest[field_list[0]],
                            df_vaccines_italy_summary_latest[field_list[1]],
                            df_vaccines_italy_registry_summary_latest[field_list[2]]], axis=1,
@@ -783,7 +783,7 @@ def update_vaccines_italy_cards_text(self):
         card_value = int(df_custom[field].sum())
         total_text = f'{card_value:n}'
         total_text_values.append(total_text)
-    card_value = round((float(df_custom['seconda_dose'].sum()) / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
+    card_value = round((float(df_custom['d2'].sum()) / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
     percentage = ' %'
     total_text = f'{card_value:n}{percentage}'
     total_text_values.append(total_text)
@@ -801,7 +801,7 @@ def update_bar_chart_administrations_italy_daily_total(self):
     data = [
         dict(
             type="bar",
-            x=df_by_day["data_somministrazione"],
+            x=df_by_day["data"],
             y=df_by_day["totale"],
             name=load_resource('daily_administrations'),
             marker=dict(color=standard_colors.get("light_blue")),
@@ -810,7 +810,7 @@ def update_bar_chart_administrations_italy_daily_total(self):
         dict(
             type="scatter",
             mode="lines+markers",
-            x=df_by_day["data_somministrazione"],
+            x=df_by_day["data"],
             y=df_by_day["mov_avg"],
             name=load_resource('rolling_average_7_days'),
             marker=dict(color=standard_colors.get("pink")),
@@ -848,15 +848,15 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
                                        name=load_resource('sex_male'), color=standard_colors.get("dark_blue"))
     bar_women = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
                                          name=load_resource('sex_female'), color=standard_colors.get("pink"))
-    bar_first_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["prima_dose"],
+    bar_first_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["d1"],
                                               name=load_resource('first_vaccine_dose'),
                                               color=standard_colors.get("light_blue"))
     bar_second_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
-                                               data_y=df["seconda_dose"],
+                                               data_y=df["d2"],
                                                name=load_resource('second_vaccine_dose'),
                                                color=standard_colors.get("dark_blue"))
     bar_previous_infection_vaccine_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
-                                                                   data_y=df["pregressa_infezione"],
+                                                                   data_y=df["dpi"],
                                                                    name=load_resource(
                                                                        'previous_infection_vaccine_dose'),
                                                                    color=standard_colors.get("pink"))
@@ -908,16 +908,16 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     df = df.sort_values(by=['percentuale_somministrazione'], ascending=False)
     df['percentuale_somministrazione'] = df['percentuale_somministrazione'].apply(format_value_string_to_locale)
     df_ita_admin.reset_index(inplace=True)
-    df_ita_admin['total_administrations'] = df_ita_admin["prima_dose"] + \
-                                            df_ita_admin["seconda_dose"] + \
+    df_ita_admin['total_administrations'] = df_ita_admin["d1"] + \
+                                            df_ita_admin["d2"] + \
                                             df_ita_admin["dose_addizionale_booster"]
 
-    scatter_total_admin = create_data_dict_for_bar(type_graph="scatter", data_x=df_by_day_ita["data_somministrazione"],
+    scatter_total_admin = create_data_dict_for_bar(type_graph="scatter", data_x=df_by_day_ita["data"],
                                                    data_y=df_by_day_ita["total_on_today"],
                                                    name=load_resource('total_administrations'),
                                                    mode="markers", color=standard_colors.get("dark_blue"), yaxis='y2')
 
-    bar_total_admin = create_data_dict_for_bar(type_graph="bar", data_x=df_by_day_ita["data_somministrazione"],
+    bar_total_admin = create_data_dict_for_bar(type_graph="bar", data_x=df_by_day_ita["data"],
                                                data_y=df_by_day_ita["totale"],
                                                name=load_resource('administrations_by_day'),
                                                color=standard_colors.get("light_blue"), yaxis='y1')
@@ -1172,7 +1172,7 @@ def add_variation_columns_for_world_countries(df):
 
 def add_total_on_day_administrations_vaccines_italy(df):
     df['total_on_today'] = 0
-    df = df.groupby('data_somministrazione').sum()
+    df = df.groupby('data').sum()
     df.reset_index(inplace=True)
     df['total_on_today'] = df['totale'].cumsum()
     return df
@@ -1180,12 +1180,12 @@ def add_total_on_day_administrations_vaccines_italy(df):
 
 def add_daily_administrations_italy(df):
     df['administrated_people'] = 0
-    df = df.groupby('data_somministrazione').sum()
+    df = df.groupby('data').sum()
     df.reset_index(inplace=True)
-    df['administrated_people'] = df['prima_dose'].cumsum() + df['seconda_dose'].cumsum() + df[
-        'pregressa_infezione'].cumsum()
+    df['administrated_people'] = df['d1'].cumsum() + df['d2'].cumsum() + df[
+        'dpi'].cumsum()
     # we need to consider only the audience of people actually immunized
-    df['remaining_administrations'] = df['seconda_dose'].cumsum() + df['pregressa_infezione'].cumsum()
+    df['remaining_administrations'] = df['d2'].cumsum() + df['dpi'].cumsum()
     previous_row = pd.Series
     for index, row in df.iterrows():
         if index == 0:
@@ -1194,7 +1194,7 @@ def add_daily_administrations_italy(df):
             variation_value = row['administrated_people'] - previous_row['administrated_people']
             df.at[index, "totale"] = variation_value
             previous_row = row
-    # df.drop(df[df.seconda_dose == 0].index, inplace=True)
+    # df.drop(df[df.d2 == 0].index, inplace=True)
     df['mov_avg'] = round(df.totale.rolling(window=7, min_periods=1).mean(), 0)
     return df
 
@@ -1203,7 +1203,7 @@ def calculate_date_of_herd_immunity():
     df = df_vaccines_italy_daily_summary_latest_grouped_by_ITA
     df = df.head(-1)
     pd.set_option("display.max_rows", None, "display.max_columns", None)
-    first_useful_date = df['data_somministrazione'].iloc[-1]
+    first_useful_date = df['data'].iloc[-1]
     remaining_administrations = df['remaining_administrations'].iloc[-1]
     last_update_rolling_avg = df['mov_avg'].iloc[-1]
     target_audience_people = round(((constants.VACCINABLE_ITALIAN_POPULATION * 90) / 100), 0)
@@ -1215,9 +1215,9 @@ def calculate_date_of_herd_immunity():
 
 def add_percentage_vaccination_italy_phases(df):
     df['percentage_vaccinated_population'] = 0
-    df = df.groupby('data_somministrazione').sum()
+    df = df.groupby('data').sum()
     df.reset_index(inplace=True)
-    df['percentage_vaccinated_population'] = round(((df['seconda_dose'] + df['pregressa_infezione'])
+    df['percentage_vaccinated_population'] = round(((df['d2'] + df['dpi'])
                                                     / constants.VACCINABLE_ITALIAN_POPULATION) * 100, 2)
     df['percentage_vaccinated_population'] = df['percentage_vaccinated_population'].cumsum()
     return df
@@ -1344,9 +1344,9 @@ def load_vaccines_italy_data():
         df_vaccines_italy_registry_summary_latest = load_csv(constants.URL_VACCINES_ITA_REGISTRY_SUMMARY_LATEST,
                                                              constants.DATE_PROPERTY_NAME_VACCINES_ITA_LAST_UPDATE)
         df_vaccines_italy_admin_summary_latest = \
-            load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST, "data_somministrazione")
+            load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS_SUMMARY_LATEST, "data")
         df_vaccines_italy_administration = \
-            load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS, "data_somministrazione")
+            load_csv(constants.URL_VACCINES_ITA_ADMINISTRATIONS, "data")
         df_vaccines_italy_admin_summary_latest_grouped_by_ITA = \
             add_total_on_day_administrations_vaccines_italy(df_vaccines_italy_admin_summary_latest)
         df_vaccines_italy_daily_summary_latest_grouped_by_ITA = \
