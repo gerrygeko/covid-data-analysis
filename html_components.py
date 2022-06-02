@@ -684,9 +684,9 @@ def create_vaccines_italy_tab():
                                                    id="radio_buttons_italian_vaccines_daily_administrations",
                                                    options=[
                                                        {'label': load_resource('total_vaccines'), 'value': 'totale'},
-                                                       {'label': load_resource('suppliers'), 'value': 'fornitore'},
+                                                       {'label': load_resource('suppliers'), 'value': 'forn'},
                                                        {'label': load_resource('label_tab_master_ita_regions'),
-                                                        'value': 'regione'}
+                                                        'value': 'reg'}
                                                    ],
                                                    value='totale',
                                                    labelStyle={'display': 'inline-block'}

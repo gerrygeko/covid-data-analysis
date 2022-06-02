@@ -841,27 +841,27 @@ def update_bar_chart_vaccines_italy_administrations_by_age(data_selected):
     layout_administrations_by_age = copy.deepcopy(layout)
     df = df_vaccines_italy_registry_summary_latest
 
-    bar_total = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["totale"],
+    bar_total = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"], data_y=df["totale"],
                                          name=load_resource('administrations_by_age'),
                                          color=standard_colors.get("light_blue"))
-    bar_men = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_maschile"],
+    bar_men = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"], data_y=df["m"],
                                        name=load_resource('sex_male'), color=standard_colors.get("dark_blue"))
-    bar_women = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["sesso_femminile"],
+    bar_women = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"], data_y=df["f"],
                                          name=load_resource('sex_female'), color=standard_colors.get("pink"))
-    bar_first_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"], data_y=df["d1"],
+    bar_first_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"], data_y=df["d1"],
                                               name=load_resource('first_vaccine_dose'),
                                               color=standard_colors.get("light_blue"))
-    bar_second_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
+    bar_second_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"],
                                                data_y=df["d2"],
                                                name=load_resource('second_vaccine_dose'),
                                                color=standard_colors.get("dark_blue"))
-    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
+    bar_previous_infection_vaccine_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"],
                                                                    data_y=df["dpi"],
                                                                    name=load_resource(
                                                                        'previous_infection_vaccine_dose'),
                                                                    color=standard_colors.get("pink"))
-    bar_additional_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["fascia_anagrafica"],
-                                                   data_y=df["dose_addizionale_booster"],
+    bar_additional_dose = create_data_dict_for_bar(type_graph="bar", data_x=df["eta"],
+                                                   data_y=df["db1"],
                                                    name=load_resource('additional_vaccine_dose'),
                                                    color=standard_colors.get("aqua"))
 
@@ -901,7 +901,7 @@ def create_data_dict_for_bar(type_graph="", data_x=None, data_y=None, color=None
 def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     layout_administrations_by_day = copy.deepcopy(layout)
     df_by_day_ita = df_vaccines_italy_admin_summary_latest_grouped_by_ITA
-    df_ita_admin = df_vaccines_italy_administration.groupby('fornitore').sum()
+    df_ita_admin = df_vaccines_italy_administration.groupby('forn').sum()
     df = df_vaccines_italy_summary_latest.copy()
     df['dosi_consegnate'] = df['dosi_consegnate'].apply(format_value_string_to_locale)
     df['dosi_somministrate'] = df['dosi_somministrate'].apply(format_value_string_to_locale)
@@ -910,7 +910,7 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
     df_ita_admin.reset_index(inplace=True)
     df_ita_admin['total_administrations'] = df_ita_admin["d1"] + \
                                             df_ita_admin["d2"] + \
-                                            df_ita_admin["dose_addizionale_booster"]
+                                            df_ita_admin["db1"]
 
     scatter_total_admin = create_data_dict_for_bar(type_graph="scatter", data_x=df_by_day_ita["data"],
                                                    data_y=df_by_day_ita["total_on_today"],
@@ -922,22 +922,22 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
                                                name=load_resource('administrations_by_day'),
                                                color=standard_colors.get("light_blue"), yaxis='y1')
 
-    bar_suppliers = create_data_dict_for_bar(type_graph="bar", data_x=df_ita_admin["fornitore"],
+    bar_suppliers = create_data_dict_for_bar(type_graph="bar", data_x=df_ita_admin["forn"],
                                              data_y=df_ita_admin["total_administrations"],
                                              name=load_resource('suppliers'))
 
-    bar_italian_regions_administered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['nome_area'],
+    bar_italian_regions_administered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['area'],
                                                                       data_y=df['dosi_somministrate'],
                                                                       name=load_resource('administered_doses'),
                                                                       color=standard_colors.get("light_blue"))
 
-    bar_italian_regions_delivered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['nome_area'],
+    bar_italian_regions_delivered_doses = create_data_dict_for_bar(type_graph="bar", data_x=df['area'],
                                                                    data_y=df['dosi_consegnate'],
                                                                    name=load_resource('delivered_doses'),
                                                                    color=standard_colors.get('dark_blue'))
 
     scatter_italian_regions_percentage_administrations = create_data_dict_for_bar(type_graph="scatter",
-                                                                                  data_x=df['nome_area'],
+                                                                                  data_x=df['area'],
                                                                                   data_y=df[
                                                                                       'percentuale_somministrazione'],
                                                                                   name=load_resource(
@@ -959,13 +959,13 @@ def update_bar_chart_vaccines_italy_daily_administrations(data_selected):
                                                        zeroline=False,
                                                        color=standard_colors.get("dark_blue")
                                                        )
-    elif data_selected == 'fornitore':
+    elif data_selected == 'forn':
         data = [bar_suppliers]
         layout_administrations_by_day["title"] = load_resource('total_administered_doses')
         layout_administrations_by_day["showlegend"] = True
         layout_administrations_by_day["autosize"] = True
         layout_administrations_by_day["xaxis"] = dict(type='category')
-    elif data_selected == 'regione':
+    elif data_selected == 'reg':
         data = [scatter_italian_regions_percentage_administrations, bar_italian_regions_delivered_doses,
                 bar_italian_regions_administered_doses]
         layout_administrations_by_day["title"] = load_resource('ratio_percentage_administrations')
