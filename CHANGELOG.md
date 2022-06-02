@@ -1,3 +1,7 @@
+# 4.0.11
+#### Updated
+* Data update according to the new standards of data providers
+
 # 4.0.10
 #### Updated
 * Introduce performance improvements that speed up the loading of the page
